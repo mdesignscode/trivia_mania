@@ -1,3 +1,5 @@
+import { Button } from "./styledComponents"
+
 export interface IQuestionProps {
   category: string,
   answers: Array<string>
@@ -7,18 +9,26 @@ export interface IQuestionProps {
   difficulty: string
 }
 
-export default function Question(props: IQuestionProps) {
-  shuffleAnswers(props.answers)
+type AppProps = {
+  questionObj: IQuestionProps
+}
+
+export default function Question({ questionObj }: AppProps) {
+  shuffleAnswers(questionObj.answers)
 
   return (
-    <div className="question">
-      <h1>{props.question}</h1>
+    <div className="question mx-auto w-2/3">
+      <div className="flex">
+        <h1>{questionObj.question}</h1>
 
-      <ul className="question_options">
-        {props.answers.map(answer => {
-          return <li key={answer}>{answer}</li>
+        <p>{questionObj.difficulty}</p>
+      </div>
+
+      <div className="question_options grid grid-cols-2 grid-rows-2">
+        {questionObj.answers.map(answer => {
+          return <Button key={answer}>{answer}</Button>
         })}
-      </ul>
+      </div>
     </div>
   );
 }

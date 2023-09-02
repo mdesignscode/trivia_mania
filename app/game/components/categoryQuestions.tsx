@@ -20,6 +20,7 @@ export default function CategoryQuestions({ category }: AppProps) {
 		enter="transition-opacity duration-300"
 		enterFrom="opacity-0"
 		enterTo="opacity-100"
+		className="flex flex-col justify-center h-full"
 	>
 		<Question {...{questionObj}} />
 	</Transition>

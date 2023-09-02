@@ -1,41 +1,83 @@
-import { Button } from "./styledComponents"
+import { MouseEvent, ReactElement, ReactNode, useEffect, useState } from "react";
+import { Button, QuestionBox } from "./styledComponents";
+import Timer from "./timerCountdown";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
 export interface IQuestionProps {
-  category: string,
-  answers: Array<string>
-  correctAnswer: string,
-  id: string,
-  question: string,
-  difficulty: string
+  category: string;
+  answers: Array<string>;
+  correctAnswer: string;
+  id: string;
+  question: string;
+  difficulty: string;
 }
 
 type AppProps = {
-  questionObj: IQuestionProps
-}
+  questionObj: IQuestionProps;
+};
 
-export default function Question({ questionObj }: AppProps) {
-  shuffleAnswers(questionObj.answers)
+export default function Question({ questionObj: { answers, correctAnswer, question, difficulty } }: AppProps) {
+  const [answerFeedback, setAnswerFeedback] = useState<ReactNode[]>([<></>, <></>, <></>, <></>])
+
+  useEffect(() => {
+    shuffleAnswers(answers)
+  }, []);
+
+  const handleUserAnswer = (value: string, i: number) => {
+    setAnswerFeedback((state) =>
+      state.map((_, j) => {
+        if (i === j) {
+          return value === correctAnswer ? (
+            <CheckCircleIcon width={30} />
+          ) : (
+            <XCircleIcon width={30} />
+          );
+        }
+
+        return j === answers.indexOf(correctAnswer) ? <CheckCircleIcon width={30} /> : <></>;
+      })
+    );
+  };
+
+  const colorMap: { [key: string]: string; } = {
+    easy: 'green',
+    medium: 'gold',
+    hard: 'red'
+  };
 
   return (
-    <div className="question mx-auto w-2/3">
-      <div className="flex">
-        <h1>{questionObj.question}</h1>
+    <QuestionBox className="question flex flex-col gap-5 mx-auto rounded-lg pb-6 pt-2 px-6 w-2/3">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl">{question}</h1>
 
-        <p>{questionObj.difficulty}</p>
+        <p style={{ color: colorMap[difficulty] }}>{difficulty}</p>
       </div>
 
-      <div className="question_options grid grid-cols-2 grid-rows-2">
-        {questionObj.answers.map(answer => {
-          return <Button key={answer}>{answer}</Button>
+      <Timer />
+
+      <div className="question_options grid grid-cols-2 grid-rows-2 gap-4">
+        {answers.map((answer, i) => {
+          return (
+            <Button
+              className="relative"
+              onClick={() => handleUserAnswer(answer, i)}
+              key={answer}
+            >
+              {answer}
+              <span id={answer} className="absolute top-0 left-0">
+                {answerFeedback[i]}
+              </span>
+            </Button>
+          );
         })}
       </div>
-    </div>
+    </QuestionBox>
   );
 }
 
 function shuffleAnswers(answers: Array<string>) {
   for (let i = answers.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [answers[i], answers[j]] = [answers[j], answers[i]]; // Swap elements
+    [answers[i], answers[j]] = [answers[j], answers[i]];
   }
 }

@@ -25,3 +25,7 @@ export const Button = styled.button<{ $primary?: boolean; }>`
     }
   `}
 `;
+
+export const QuestionBox = styled.div`
+  border: 2px solid ${color};
+`

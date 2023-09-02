@@ -11,8 +11,8 @@ export default function GamePage() {
   }
 
   return (
-    <div className="game-page px-8 pt-4 flex-1">
-      <div className="w-3/5 h-4/5 mx-auto">
+    <div className="game-page h-full flex-1">
+      <div className="w-3/5 h-6/12 h-full mx-auto">
         <SelectCategory category={category} handleCategorySelect={handleCategorySelect} />
         <CategoryQuestions category={category} />
       </div>

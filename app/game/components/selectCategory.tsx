@@ -14,6 +14,7 @@ export default function SelectCategory({ handleCategorySelect, category }: AppPr
     leave="transition-opacity duration-300"
     leaveFrom="opacity-100"
     leaveTo="opacity-0"
+    className="mt-4"
   >
     <h1 className="text-2xl mb-2">Select category</h1>
 

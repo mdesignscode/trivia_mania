@@ -1,9 +1,9 @@
-import { MouseEvent, ReactElement, ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Button, QuestionBox } from "./styledComponents";
 import Timer from "./timerCountdown";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
-export interface IQuestionProps {
+export  interface IQuestionProps {
   category: string;
   answers: Array<string>;
   correctAnswer: string;
@@ -59,14 +59,14 @@ export default function Question({ questionObj: { answers, correctAnswer, questi
         {answers.map((answer, i) => {
           return (
             <Button
-              className="relative"
+              className="flex items-center"
               onClick={() => handleUserAnswer(answer, i)}
               key={answer}
             >
-              {answer}
-              <span id={answer} className="absolute top-0 left-0">
+              <span>
                 {answerFeedback[i]}
               </span>
+              <p className="flex-1">{answer}</p>
             </Button>
           );
         })}

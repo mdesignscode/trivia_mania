@@ -19,10 +19,6 @@ type AppProps = {
 export default function Question({ questionObj: { answers, correctAnswer, question, difficulty } }: AppProps) {
   const [answerFeedback, setAnswerFeedback] = useState<ReactNode[]>([<></>, <></>, <></>, <></>])
 
-  useEffect(() => {
-    shuffleAnswers(answers)
-  }, []);
-
   const handleUserAnswer = (value: string, i: number) => {
     setAnswerFeedback((state) =>
       state.map((_, j) => {
@@ -46,7 +42,7 @@ export default function Question({ questionObj: { answers, correctAnswer, questi
   };
 
   return (
-    <QuestionBox className="question flex flex-col gap-5 mx-auto rounded-lg pb-6 pt-2 px-6 w-2/3">
+    <QuestionBox className="question flex flex-col gap-7 mx-auto rounded-lg pb-6 pt-2 px-6 w-2/3">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl">{question}</h1>
 
@@ -73,11 +69,4 @@ export default function Question({ questionObj: { answers, correctAnswer, questi
       </div>
     </QuestionBox>
   );
-}
-
-function shuffleAnswers(answers: Array<string>) {
-  for (let i = answers.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [answers[i], answers[j]] = [answers[j], answers[i]];
-  }
 }

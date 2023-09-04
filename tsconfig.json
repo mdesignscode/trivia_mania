@@ -18,10 +18,11 @@
         "name": "next"
       }
     ],
-    "baseUrl": "./app/",
+    "baseUrl": ".",
     "paths": {
-      "@/components/*": ["components/*"],
-      "@/styles/*": ["styles/*"]
+      "@/components/*": ["app/components/*"],
+      "@/styles/*": ["app/styles/*"],
+      "@/models/*": ["models/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/timerCountdown.tsx"],

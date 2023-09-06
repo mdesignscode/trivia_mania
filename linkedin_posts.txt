@@ -1,0 +1,44 @@
+LinkedIn Updated on Trivia Mania
+
+Post 1 [28-08-2023]:
+
+🚀 Exciting News! Starting a New Project: Trivia Mania! 🎉Hey LinkedIn community! 👋 I'm thrilled to announce that I'm diving into a brand new project, Trivia Mania! 🎮🧠 As a self-taught software engineer passionate about problem-solving and technology, I can't wait to share this journey with all of you.🔧 Tools I'll be using:- MERN Stack (MongoDB, Express.js, React with Next.js, Node.js)- Typescript for enhanced development- Vercel for frontend deployment- Render for backend deployment🎯 Trivia Mania is more than just a project for me. It's an opportunity to apply my skills in a real-world context, enhance my full stack development expertise, and create something engaging and fun!I'll be sharing updates along the way, from design and development challenges to coding triumphs. Your support and insights mean the world to me, and I'd love for you to join me on this exciting journey. 🌟Stay tuned for more updates, and feel free to reach out if you're interested in tech, coding, or just want to connect. Let's learn, grow, and have a blast together! 🚀👩‍💻
+
+
+Post 2 [03-09-2023]:
+
+🚀 Trivia Mania Project Update! 🎉
+Hey there, LinkedIn community! 👋 It's time for another exciting update on my Trivia Mania project. 🕹️
+
+Here's what's been happening in the Trivia Mania world:
+🛠️ Tech Stack Evolution: I've been doing some deep dives into styling libraries, and I'm thrilled to announce that I've decided to incorporate headlessui, Tailwind CSS, and Styled Components JS 💅 into the tech stack. These tools are fantastic for creating sleek and responsive user interfaces, and I can't wait to see how they enhance the project's overall look and feel. 💅
+👩‍💻 Building Blocks: I've been hard at work creating essential components for Trivia Mania. So far, I've designed a homepage that sets the stage, a dynamic question component to keep the brain juices flowing, and a captivating game page to host the trivia challenges. Tailwind CSS has been a game-changer for quick and effective styling, and I've even implemented a responsive navbar using headlessui.
+🧠 Gameplay Logic: In the spirit of making Trivia Mania engaging and fun, I've started adding some basic logic. Now, when users click on an answer, they'll receive immediate feedback in the form of icons indicating whether they've picked the right answer. It's all about that interactive experience! 🎮
+
+What's on the Horizon: The next exciting task on my list is creating a robust questions database and defining question objects. This is a pivotal step, as it will lay the foundation for the trivia content that will keep players hooked and entertained.
+
+I'm incredibly excited about the progress we're making, and I can't wait to share more updates with you all soon. If you're as passionate about tech, coding, and problem-solving as I am, please feel free to connect, share your insights, or simply join in on the fun. Let's learn, grow, and have a blast together as we navigate the world of Trivia Mania! 🚀👩‍💻
+Stay tuned for more updates! 🌐
+
+
+Post 3 [05-09-2023]:
+
+🚀 Trivia Mania Project Update: Building Momentum! 🎉
+
+Hey everyone, I hope you're as excited about Trivia Mania as I am! 🕹️ It's time for another update on the project's journey. Here's what's been happening lately:
+
+✅ File Storage Engine & Question Model: I've been hard at work creating a robust file storage engine and a solid question model. Plus, I've written unit tests for each component using Jest and Sinon to ensure everything runs smoothly. It's all about making Trivia Mania rock-solid from the ground up! 💪
+
+🌐 Fetching Questions from Trivia APIs: One of the key aspects of Trivia Mania is, of course, the trivia questions themselves. I've successfully implemented a module that fetches trivia questions from The Trivia API and Open Trivia DB, creates question models, and adds them to storage. It's all coming together! 🧠
+
+What's Next on the Horizon:
+
+🔌 Building the API: In the upcoming phase, I'll be working on creating a robust API for the frontend to communicate with the backend using Express. This is a crucial step in ensuring a seamless user experience.
+
+🧪 Testing with Jest and Supertest: To maintain the project's quality and reliability, I'll be rigorously testing the API with Jest and Supertest. Testing is the foundation of robust software, and I'm committed to delivering the best possible product.
+
+🔄 UI Enhancements: For a slick and engaging user interface, I'll be adding BarbaJS for smooth page transitions. Plus, I'll be implementing Redux for state management, allowing for a seamless and dynamic user experience. 🚀
+
+I'm thrilled about the progress we're making and the future possibilities of Trivia Mania. If you're as passionate about technology, coding, and creating engaging experiences as I am, please feel free to connect, share your insights, or simply join in on the excitement. Let's continue to learn, grow, and have a blast together as we navigate the world of Trivia Mania! 🌟👩‍💻
+
+Stay tuned for more updates, and thank you for being a part of this incredible journey! 🌐

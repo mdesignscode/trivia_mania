@@ -57,12 +57,10 @@ async function fetchOpenTriviaDB(url: string) {
 }
 
 async function main() {
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 5; i++) {
     await fetchOpenTriviaDB(
       "https://opentdb.com/api.php?amount=50&type=multiple"
     );
-  }
-  for (let i = 0; i < 200; i++) {
     await fetchTheTriviaAPI();
   }
 
@@ -70,9 +68,12 @@ async function main() {
 
   noDuplicates.forEach((question: IQuestion) => {
     const questionObj = new Question(question)
-    storage.new(questionObj)
+    storage.newQuestion(questionObj)
   })
   storage.save()
+
+  console.log('Storage populated 💾🚀');
+
 }
 
 function removeDuplicateQuestions(

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { readFileSync, writeFileSync } from 'fs';
-import { IQuestion } from '../interfaces';
+import Question from '../question';
 
 interface IFilters {
   difficulty?: string,
@@ -19,29 +19,112 @@ class FileStorage {
   private objects: Record<string, any> = {};
 
   /**
-   * Adds an object to storage
-   * @param obj the object to be added to storage
+   * Adds a question to storage
+   * @date 05/09/2023 - 20:36:02
+   *
+   * @param {Question} obj - the question to be added
    */
-  new(obj: Record<string, any>): void {
-    this.objects[`${obj.constructor.name}.${obj.id}`] = { ...obj, __class__: obj.constructor.name };
+  newQuestion(obj: Question): void {
+    this.objects[`Question.${obj.difficulty}`] = {
+      ...this.objects[`Question.${obj.difficulty}`],
+      [`Question.${obj.id}`]: {
+        ...obj,
+        __class__: 'Question'
+      },
+      __class__: 'Question'
+    };
+    this.objects[`Question.${obj.category}`] = {
+      ...this.objects[`Question.${obj.difficulty}`],
+      [`Question.${obj.id}`]: {
+        ...obj,
+        __class__: 'Question'
+      },
+      __class__: 'Question'
+    };
   }
 
   /**
-   * Returns all objects of type `Constructor` or all objects in storage
-   * @param cls the name of the class to retrieve objects from
-   * @returns {{}} all objects in storage
+   * Retrieves all questions by filter
+   * @date 05/09/2023 - 21:01:14
+   *
+   * @param {string} filter - Either `difficulty name` or `category name`
+   * @returns {Record<string, Question>}
    */
-  all(cls?: { name: string }): Record<string, any> {
-    const objects: Record<string, any> = {};
-    if (!cls)
-      Object.assign(objects, this.objects);
-    else {
-      Object.keys(this.objects).forEach((obj) => {
-        if (this.objects[obj].__class__ === cls.name)
-          objects[obj] = this.objects[obj];
-      });
+  getQuestionsByFilter(filter: string): Record<string, Question> {
+    const filteredQuestions = this.objects[`Question.${filter}`]
+    delete filteredQuestions.__class__
+    return filteredQuestions
+  }
+
+  /**
+   * Retrieve a question of a specific filter from storage
+   * @date 05/09/2023 - 20:51:30
+   *
+   * @param {string} filter - Either `difficulty name` or `category name`
+   * @param {string} id - the id of the question
+   * @returns {Question}
+   */
+  getQuestion(filter: string, id: string): Question {
+    return this.objects[`Question.${filter}`][`Question.${id}`]
+  }
+
+
+  /**
+   * Retrieves all questions in storage
+   * @date 06/09/2023 - 12:28:50
+   *
+   * @param {boolean} [byFilter=true] - Set to false to get all questions in a single record
+   * @returns {Record<string, Question>}
+   */
+  getAllQuestions(byFilter: boolean = true): Record<string, Question> {
+    const questions: Record<string, Question> = {};
+
+    // get all questions
+    for (const key in this.objects)
+      if (this.objects[key].__class__ === 'Question') {
+        delete this.objects[key].__class__
+        if (byFilter) {
+          questions[key] = this.objects[key]
+        } else {
+          for (const subKey in this.objects[key]) {
+            delete this.objects[key][subKey].__class__
+            questions[subKey] = this.objects[key][subKey]
+          }
+        }
+      }
+
+    return questions
+  }
+
+  /**
+   * Returns a list of filtered questions based on provided filters
+   * @date 04/09/2023 - 13:11:21
+   *
+   * @param {IFilters} filters
+   * @returns {Array<Question>}
+   */
+  filterQuestions(filters: IFilters): Array<Question> {
+    const questions: Record<string, Question> = this.getAllQuestions(false);
+    const filteredCategories: Array<Question> = filters.categories
+      ? Object.values(questions).filter((question) => filters.categories?.includes(question.category))
+      : Object.values(questions).map((question) => question)
+    const filteredQuestions = filters.difficulty
+      ? filteredCategories.filter(question => question.difficulty === filters.difficulty)
+      : filteredCategories
+
+    return filteredQuestions
+  }
+
+  questionsStats(): Record<string, number> {
+    const stats: Record<string, number> = {}
+    const allQuestions = this.getAllQuestions()
+
+    for (const key in allQuestions) {
+      const stat = key.split('.')[1]
+      stats[stat] = Object.keys(allQuestions[key]).length
     }
-    return objects;
+
+    return stats
   }
 
   /**
@@ -66,42 +149,11 @@ class FileStorage {
   }
 
   /**
-   * Removes an object from storage
-   * @param obj the object to be destroyed
+   * Clears objects in memory. For testing purposes only!
+   * @date 06/09/2023 - 13:28:43
    */
-  delete(obj: Record<string, any>): void {
-    delete this.objects[`${obj.constructor.name}.${obj.id}`];
-    this.save();
-  }
-
-  /**
-   * Retrieves an object from a class
-   * @param {constructor} cls the cls to retrieve the object from
-   * @param {string} id the object's id
-   * @returns the object based on the `cls` and `id`
-   */
-  get(cls: { name: string }, id: string): Record<string, any> {
-    const all = this.all(cls);
-    return all[`${cls.name}.${id}`];
-  }
-
-  /**
-   * Returns a list of filtered questions based on provided filters
-   * @date 04/09/2023 - 13:11:21
-   *
-   * @param {IFilters} filters
-   * @returns {Array<IQuestion>}
-   */
-  filterQuestions(filters: IFilters): Array<IQuestion> {
-    const questions: Record<string, IQuestion> = this.all({ name: 'Question' });
-    const filteredCategories: Array<IQuestion> = filters.categories
-      ? Object.values(questions).filter((question) => filters.categories?.includes(question.category))
-      : Object.values(questions).map((question) => question)
-    const filteredQuestions = filters.difficulty
-      ? filteredCategories.filter(question => question.difficulty === filters.difficulty)
-      : filteredCategories
-
-    return filteredQuestions
+  clearMemory(): void {
+    this.objects = {}
   }
 }
 

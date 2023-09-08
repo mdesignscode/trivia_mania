@@ -68,7 +68,6 @@ class FileStorage {
     return this.objects[`Question.${filter}`][`Question.${id}`]
   }
 
-
   /**
    * Retrieves all questions in storage
    * @date 06/09/2023 - 12:28:50
@@ -76,24 +75,27 @@ class FileStorage {
    * @param {boolean} [byFilter=true] - Set to false to get all questions in a single record
    * @returns {Record<string, Question>}
    */
-  getAllQuestions(byFilter: boolean = true): Record<string, Question> {
-    const questions: Record<string, Question> = {};
+  getAllQuestions(byFilter: boolean = true): Record<string, Question> | Record<string, Record<string, Question>> {
+    const allQuestions: Record<string, Record<string, Question>> = {};
+    const uniqueQuestions: Record<string, Question> = {};
 
-    // get all questions
-    for (const key in this.objects)
-      if (this.objects[key].__class__ === 'Question') {
-        delete this.objects[key].__class__
-        if (byFilter) {
-          questions[key] = this.objects[key]
-        } else {
-          for (const subKey in this.objects[key]) {
-            delete this.objects[key][subKey].__class__
-            questions[subKey] = this.objects[key][subKey]
+    for (const key in this.objects) {
+      if (this.objects[key].__class__ === "Question") {
+        for (const subKey in this.objects[key]) {
+          if (subKey !== '__class__') {
+            uniqueQuestions[subKey] = this.objects[key][subKey]
+            allQuestions[key] = {
+              ...allQuestions[key],
+              [subKey]: this.objects[key][subKey]
+            }
           }
         }
       }
+    }
 
-    return questions
+    return byFilter
+      ? allQuestions
+      : uniqueQuestions
   }
 
   /**
@@ -104,7 +106,7 @@ class FileStorage {
    * @returns {Array<Question>}
    */
   filterQuestions(filters: IFilters): Array<Question> {
-    const questions: Record<string, Question> = this.getAllQuestions(false);
+    const questions = this.getAllQuestions(false) as Record<string, Question>;
     const filteredCategories: Array<Question> = filters.categories
       ? Object.values(questions).filter((question) => filters.categories?.includes(question.category))
       : Object.values(questions).map((question) => question)
@@ -115,14 +117,24 @@ class FileStorage {
     return filteredQuestions
   }
 
+  /**
+   * Counts each filter in storage
+   * @date 06/09/2023 - 22:00:59
+   *
+   * @returns {Record<string, number>}
+   */
   questionsStats(): Record<string, number> {
     const stats: Record<string, number> = {}
+    const uniqueQuestions = this.getAllQuestions(false)
     const allQuestions = this.getAllQuestions()
 
     for (const key in allQuestions) {
       const stat = key.split('.')[1]
       stats[stat] = Object.keys(allQuestions[key]).length
     }
+
+    stats['all difficulties'] = Object.keys(uniqueQuestions).length
+    stats['all categories'] = Object.keys(uniqueQuestions).length
 
     return stats
   }

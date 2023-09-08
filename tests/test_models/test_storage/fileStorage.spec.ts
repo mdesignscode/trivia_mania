@@ -155,6 +155,7 @@ describe("FileStorage", function () {
     storage.newQuestion(Question4);
 
     const stats = storage.questionsStats()
+
     const easyCount = stats.easy
     const mediumCount = stats.medium
     const hardCount = stats.hard

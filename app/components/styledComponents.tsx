@@ -22,9 +22,8 @@ export const Button = styled.button<{ $primary?: boolean; }>`
     color: white;
 
     &:hover {
-      background-color: ${color};
-      color: white;
-      border-color: white;
+      background-color: white;
+      color: ${color};
     }
   `}
 `;

@@ -22,7 +22,8 @@
     "paths": {
       "@/components/*": ["app/components/*"],
       "@/styles/*": ["app/styles/*"],
-      "@/models/*": ["models/*"]
+      "@/models/*": ["models/*"],
+      "@/store/*": ["app/components/store/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/timerCountdown.tsx"],

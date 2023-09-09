@@ -67,3 +67,30 @@ What's Next on the Horizon:
 I'm incredibly excited about the progress we've made and the journey ahead. If you share my passion for technology, coding, and creating engaging experiences, please feel free to connect, share your insights, or simply be a part of this exciting project. Let's continue to learn, grow, and have a blast together as we navigate the world of Trivia Mania! 🌟👩‍💻
 
 Stay tuned for more updates, and thank you for being a part of this incredible journey! 🌐 #TriviaMania #SoftwareEngineering #UIUX #APIDevelopment
+
+
+Post 5 [09-09-2023]:
+
+🚀 Trivia Mania Project Update: Progress Continues! 🎉
+
+Hello, LinkedIn community! 👋 It's time for another exciting update on the Trivia Mania project. I'm thrilled to share the latest developments with you all:
+
+Home Page Improvements: Users can now enhance their Trivia Mania experience by selecting their preferred difficulty level and choosing from various categories right from the home page. It's all about customization and making your trivia adventure even more exciting! 🎯🏆
+
+Game Page Enhancements: The game page has seen significant improvements. A request to the API is now sent to fetch a list of filtered questions based on the user's selections. Plus, I've added the play functionality, so users can dive right into the trivia action. To make the experience even more engaging, I've incorporated headlessui's transitions for seamless question transitions. It's all about creating a user-friendly and responsive game UI that keeps players hooked! 🎮🔥
+
+API Upgrades: On the backend side, I've added a new endpoint to retrieve a list of filtered questions, ensuring that users have a wide variety of trivia challenges to choose from. It's all about expanding the trivia database and offering more fun and entertainment! 🌐📡
+
+What's on the Horizon: Now that we've made these exciting enhancements, it's time to shift focus to the user's side of the Trivia Mania experience. Here's what's coming up:
+
+    User Authentication: I'll be starting with the creation of a sign-in page, enabling users to have personalized experiences and track their progress.
+
+    Backend Logic for Users: Once the user authentication is in place, I'll dive into the backend logic for managing user profiles, scores, and stats. Of course, I'll be writing unit tests to ensure everything runs smoothly and securely.
+
+    Scoreboard and Stats: To add a competitive edge to Trivia Mania, I'll be implementing a scoreboard where users can see how they stack up against others. Additionally, there will be an option to view detailed stats of a finished round, allowing users to track their performance and progress.
+
+I'm incredibly excited about these upcoming features and the overall progress of Trivia Mania. If you share my passion for technology, coding, and creating engaging experiences, please feel free to connect, share your insights, or simply be a part of this exciting project. Let's continue to learn, grow, and have a blast together as we navigate the world of Trivia Mania! 🌟👩‍💻
+
+Stay tuned for more updates, and thank you for being a part of this incredible journey! 🌐 #TriviaMania #SoftwareEngineering #UIUX #APIDevelopment
+  
+

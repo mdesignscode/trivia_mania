@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-import { readFileSync, writeFileSync } from 'fs';
-import Question from '../question';
+import { readFileSync, writeFileSync } from "fs";
+import Question from "../question";
+import { IQuestion } from "../interfaces";
 
 interface IFilters {
-  difficulty?: string,
-  categories?: Array<string>
+  difficulty?: string;
+  categories?: Array<string>;
 }
 
 /**
@@ -15,7 +16,7 @@ interface IFilters {
  * @typedef {FileStorage}
  */
 class FileStorage {
-  private filePath: string = 'file.json';
+  private filePath: string = "file.json";
   private objects: Record<string, any> = {};
 
   /**
@@ -29,17 +30,17 @@ class FileStorage {
       ...this.objects[`Question.${obj.difficulty}`],
       [`Question.${obj.id}`]: {
         ...obj,
-        __class__: 'Question'
+        __class__: "Question",
       },
-      __class__: 'Question'
+      __class__: "Question",
     };
     this.objects[`Question.${obj.category}`] = {
       ...this.objects[`Question.${obj.difficulty}`],
       [`Question.${obj.id}`]: {
         ...obj,
-        __class__: 'Question'
+        __class__: "Question",
       },
-      __class__: 'Question'
+      __class__: "Question",
     };
   }
 
@@ -51,9 +52,11 @@ class FileStorage {
    * @returns {Record<string, Question>}
    */
   getQuestionsByFilter(filter: string): Record<string, Question> {
-    const filteredQuestions = this.objects[`Question.${filter}`]
-    delete filteredQuestions.__class__
-    return filteredQuestions
+    const filteredQuestions = this.objects[`Question.${filter}`];
+    try {
+      delete filteredQuestions.__class__;
+    } catch (error) {}
+    return filteredQuestions;
   }
 
   /**
@@ -65,7 +68,7 @@ class FileStorage {
    * @returns {Question}
    */
   getQuestion(filter: string, id: string): Question {
-    return this.objects[`Question.${filter}`][`Question.${id}`]
+    return this.objects[`Question.${filter}`][`Question.${id}`];
   }
 
   /**
@@ -75,27 +78,28 @@ class FileStorage {
    * @param {boolean} [byFilter=true] - Set to false to get all questions in a single record
    * @returns {Record<string, Question>}
    */
-  getAllQuestions(byFilter: boolean = true): Record<string, Question> | Record<string, Record<string, Question>> {
+  getAllQuestions(
+    byFilter: boolean = true
+  ): Record<string, Question> | Record<string, Record<string, Question>> {
     const allQuestions: Record<string, Record<string, Question>> = {};
     const uniqueQuestions: Record<string, Question> = {};
 
     for (const key in this.objects) {
       if (this.objects[key].__class__ === "Question") {
         for (const subKey in this.objects[key]) {
-          if (subKey !== '__class__') {
-            uniqueQuestions[subKey] = this.objects[key][subKey]
+          if (subKey !== "__class__") {
+            const questionObj = this.objects[key][subKey];
+            uniqueQuestions[subKey] = questionObj;
             allQuestions[key] = {
               ...allQuestions[key],
-              [subKey]: this.objects[key][subKey]
-            }
+              [subKey]: questionObj,
+            };
           }
         }
       }
     }
 
-    return byFilter
-      ? allQuestions
-      : uniqueQuestions
+    return byFilter ? allQuestions : uniqueQuestions;
   }
 
   /**
@@ -108,35 +112,58 @@ class FileStorage {
   filterQuestions(filters: IFilters): Array<Question> {
     const questions = this.getAllQuestions(false) as Record<string, Question>;
     const filteredCategories: Array<Question> = filters.categories
-      ? Object.values(questions).filter((question) => filters.categories?.includes(question.category))
-      : Object.values(questions).map((question) => question)
+      ? Object.values(questions).filter((question) =>
+          filters.categories?.includes(question.category)
+        )
+      : Object.values(questions).map((question) => question);
     const filteredQuestions = filters.difficulty
-      ? filteredCategories.filter(question => question.difficulty === filters.difficulty)
-      : filteredCategories
+      ? filteredCategories.filter(
+          (question) => question.difficulty === filters.difficulty
+        )
+      : filteredCategories;
 
-    return filteredQuestions
+    return filteredQuestions;
   }
 
   /**
-   * Counts each filter in storage
-   * @date 06/09/2023 - 22:00:59
+   * If no difficulty is specified, counts all all filters in storage, else count categories by difficulty
+   * @date 08/09/2023 - 11:18:18
    *
+   * @param {IFilters} filters
    * @returns {Record<string, number>}
    */
-  questionsStats(): Record<string, number> {
-    const stats: Record<string, number> = {}
-    const uniqueQuestions = this.getAllQuestions(false)
-    const allQuestions = this.getAllQuestions()
+  questionsStats(difficulty: string = ""): Record<string, number> {
+    const stats: Record<string, number> = {};
+    let uniqueQuestions: Record<string, Question>;
 
-    for (const key in allQuestions) {
-      const stat = key.split('.')[1]
-      stats[stat] = Object.keys(allQuestions[key]).length
+    uniqueQuestions = difficulty
+      ? this.getQuestionsByFilter(difficulty)
+      : (this.getAllQuestions(false) as Record<string, Question>);
+
+    const uniqueValues = Object.values(uniqueQuestions);
+    if (difficulty) {
+      for (const value of uniqueValues) {
+        const category = value.category;
+        if (!stats[category]) {
+          const statCount = uniqueValues.filter((question) => {
+            return question.category === category;
+          });
+          stats[category] = statCount.length;
+        }
+      }
+      stats["all categories"] = Object.keys(uniqueQuestions).length;
+    } else {
+      const allQuestions = this.getAllQuestions();
+      for (const key in allQuestions) {
+        const stat = key.split(".")[1];
+        stats[stat] = Object.keys(allQuestions[key]).length;
+      }
+
+      stats["all difficulties"] = Object.keys(uniqueQuestions).length;
+      stats["all categories"] = Object.keys(uniqueQuestions).length;
     }
 
-    stats['all difficulties'] = Object.keys(uniqueQuestions).length
-    stats['all categories'] = Object.keys(uniqueQuestions).length
-
-    return stats
+    return stats;
   }
 
   /**
@@ -144,19 +171,35 @@ class FileStorage {
    */
   save(): void {
     const jsonData = JSON.stringify(this.objects);
-    writeFileSync(this.filePath, jsonData, 'utf-8');
+    writeFileSync(this.filePath, jsonData, "utf-8");
   }
 
   /**
    * Deserializes objects in file storage
    */
   reload(): void {
-    let data: Record<string, any>;
+    const data: Record<string, any> = {};
     try {
-      data = JSON.parse(readFileSync(this.filePath, 'utf-8'));
-    } catch (error) {
-      data = {};
-    }
+      const parsedData: Record<string, Record<string, any>> = JSON.parse(
+        readFileSync(this.filePath, "utf-8")
+      );
+
+      // recreate Question models
+      for (const parsedKey in parsedData) {
+        const parsedObj = parsedData[parsedKey];
+        if (parsedObj.__class__ === 'Question') {
+          data[parsedKey] = {};
+          for (const key in parsedObj) {
+            if (key !== '__class__') {
+              const question = new Question(parsedObj[key])
+              data[parsedKey][key] = question
+            } else {
+              data[parsedKey][key] = parsedObj[key]
+            }
+          }
+        }
+      };
+    } catch (error) {}
     Object.assign(this.objects, data);
   }
 
@@ -165,7 +208,7 @@ class FileStorage {
    * @date 06/09/2023 - 13:28:43
    */
   clearMemory(): void {
-    this.objects = {}
+    this.objects = {};
   }
 }
 

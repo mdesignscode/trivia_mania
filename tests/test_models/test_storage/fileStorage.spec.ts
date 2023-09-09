@@ -1,6 +1,5 @@
 // Unit tests for FileStorage class
 
-import { IQuestion } from '@/models/interfaces';
 import FileStorage from '../../../models/storage/fileStorage';
 import { readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { stub } from 'sinon';
@@ -16,7 +15,7 @@ afterAll(function () {
 
 describe("FileStorage", function () {
   const storage = new FileStorage();
-  function generateFakeData (): Record<string, Question> {
+  function generateFakeData(): Record<string, Question> {
     return {
       Question1: new Question({
         answers: ['Answer 1', 'Answer 2', 'Answer 3', 'Answer 4'],
@@ -147,24 +146,40 @@ describe("FileStorage", function () {
   });
 
   describe("questionsStats method", function () {
-    const { Question1, Question2, Question3, Question4 } = generateFakeData();
+    beforeEach(function () {
+      const { Question1, Question2, Question3, Question4 } = generateFakeData();
 
-    storage.newQuestion(Question1);
-    storage.newQuestion(Question2);
-    storage.newQuestion(Question3);
-    storage.newQuestion(Question4);
+      storage.newQuestion(Question1);
+      storage.newQuestion(Question2);
+      storage.newQuestion(Question3);
+      storage.newQuestion(Question4);
+    })
 
-    const stats = storage.questionsStats()
+    test("Return an object with stats count for all filters", function () {
+      const stats = storage.questionsStats()
 
-    const easyCount = stats.easy
-    const mediumCount = stats.medium
-    const hardCount = stats.hard
-    const scienceCount = stats.Science
+      const easyCount = stats.easy
+      const mediumCount = stats.medium
+      const hardCount = stats.hard
+      const scienceCount = stats.Science
 
-    expect(easyCount).toStrictEqual(2)
-    expect(mediumCount).toStrictEqual(1)
-    expect(hardCount).toStrictEqual(1)
-    expect(scienceCount).toStrictEqual(1)
+      expect(easyCount).toStrictEqual(2)
+      expect(mediumCount).toStrictEqual(1)
+      expect(hardCount).toStrictEqual(1)
+      expect(scienceCount).toStrictEqual(1)
+    })
+
+    test("Return an object with stats count based on filters", function () {
+      const easyStats = storage.questionsStats('easy')
+
+      const easyCount = Object.keys(easyStats).length
+      const generalCount = easyStats['General Knowledge']
+      const allEasy = easyStats['all categories']
+
+      expect(easyCount).toStrictEqual(2)
+      expect(generalCount).toStrictEqual(2)
+      expect(allEasy).toStrictEqual(2)
+    })
   });
 
   describe("save method", function () {
@@ -207,5 +222,17 @@ describe("FileStorage", function () {
         expect(Object.keys(allQuestions).length).toStrictEqual(0)
       }
     );
+
+    test("Should deserialize objects back to their original class", function () {
+      const { Question2 } = generateFakeData();
+
+      storage.newQuestion(Question2)
+      storage.save()
+
+      storage.reload();
+
+      const mediumQuestion = storage.getQuestion('medium', '2');
+      expect(mediumQuestion).toBeInstanceOf(Question);
+    });
   });
 });

@@ -1,20 +1,41 @@
 "use client";
-import { MouseEvent, useState } from "react";
-import SelectCategory from "./components/selectCategory";
-import CategoryQuestions from "./components/categoryQuestions";
+import { useSearchParams } from 'next/navigation'
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import Question from '@/models/question';
+import QuestionComponent, { IQuestionProps } from '@/components/question';
+import { useEffect } from 'react';
+import { IQuestion } from '@/models/interfaces';
 
 export default function GamePage() {
-  const [category, setCategory] = useState("");
+  const params = useSearchParams()
 
-  const handleCategorySelect = (e: MouseEvent<HTMLButtonElement>) => {
-    setCategory((e.target as HTMLButtonElement).innerHTML)
+  const difficulty = params.get('difficulty')
+  const categories = params.get('categories')
+
+  async function getQuestions() {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+    const url = `${baseUrl}questions/play?difficulty=${difficulty}&categories=${categories}`
+
+    const { data } = await axios.get(url)
+    return data
   }
+  
+  const { data } = useQuery({
+    queryKey: ['play'],
+    queryFn: getQuestions,
+    initialData: []
+  })
 
   return (
     <div className="game-page h-full flex-1">
       <div className="w-3/5 h-6/12 h-full mx-auto">
-        <SelectCategory category={category} handleCategorySelect={handleCategorySelect} />
-        <CategoryQuestions category={category} />
+        {data 
+        ? data.map((question: IQuestion) => {
+          return <QuestionComponent questionObj={question} />
+        })
+        : <h1>Loading...</h1>
+        }
       </div>
     </div>
   );

@@ -42,9 +42,12 @@ function generateFakeData (): Record<string, Question> {
 
 const { Question1, Question2, Question3, Question4 } = generateFakeData();
 
-storage.newQuestion(Question1);
-storage.newQuestion(Question2);
-storage.newQuestion(Question3);
-storage.newQuestion(Question4);
+// storage.newQuestion(Question1);
+// storage.newQuestion(Question2);
+// storage.newQuestion(Question3);
+// storage.newQuestion(Question4);
 
-console.log(storage.questionsStats())
+// storage.save()
+storage.reload()
+
+Object.values(storage.filterQuestions({difficulty: 'easy', categories: ['History']})).forEach((obj: Question) => console.log(obj.isCorrectAnswer('Hello')))

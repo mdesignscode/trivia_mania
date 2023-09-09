@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "./styledComponents";
-import { useQuery } from '@tanstack/react-query'
 import axios from "axios";
 
 function HomePage({ stats }: Record<string, any>) {
@@ -10,36 +9,42 @@ function HomePage({ stats }: Record<string, any>) {
   const [categoryStats, setCategoryStats] = useState<Record<string, number>>({})
   const [difficultyChoice, setDifficultyChoice] = useState<Array<boolean>>([false, false, false])
   const [categoryChoice, setCategoryChoice] = useState<Array<boolean>>([false, false, false])
+  const [difficulty, setDifficulty] = useState('')
+  const [categories, setCategories] = useState<Array<string>>([])
 
-  async function getQuestionStats() {
+  async function getQuestionStats(difficulty: string) {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
-    const url = baseUrl + 'questions/stats'
+    const url = baseUrl + 'questions/stats?difficulty=' + difficulty
 
     const { data } = await axios.get(url)
-    return data
+    setCategoryStats(data)
   }
 
-  const { data } = useQuery({
-    queryKey: ['questionsStats'],
-    queryFn: getQuestionStats,
-    initialData: stats,
-  })
-
-  function handleDifficulty(index: number) {
+  function handleDifficulty(index: number, value: string) {
     setDifficultyChoice((state: Array<boolean>) => state.map((_, i) => {
       return i === index ? true : false
     }))
+    setDifficulty(value)
+
+    getQuestionStats(value)
   }
 
-  function handleCategories(index: number) {
+  function handleCategories(index: number, value: string) {
     setCategoryChoice((state: Array<boolean>) => {
       const newState = [...state]
-      newState[index] = true
+      newState[index] = !newState[index]
       return newState
+    })
+
+    setCategories((state: Array<string>) => {
+      const valueIndex = state.indexOf(value)
+      return valueIndex === -1
+        ? [...state, value]
+        : state.filter(category => category !== value)
     })
   }
 
-  // get questions stats
+  // set initial questions stats
   useEffect(() => {
     for (const key in stats) {
       // set difficulty stats
@@ -70,9 +75,16 @@ function HomePage({ stats }: Record<string, any>) {
           <div className="text-center flex flex-col gap-3">
             <h1>Choose difficulty</h1>
 
-            <div className="flex gap-2 justify-center">
+            <div className="flex gap-2 flex-wrap justify-center">
               {Object.keys(difficultyStats).map((stat, i) => {
-                return <Button key={stat} onClick={() => handleDifficulty(i)} $primary={difficultyChoice[i]}>
+                return <Button
+                  key={stat}
+                  onClick={() => {
+                    const value = stat === 'all difficulties' ? '' : stat
+                    handleDifficulty(i, value)
+                  }}
+                  $primary={difficultyChoice[i]}
+                >
                   {stat} ({difficultyStats[stat]})
                 </Button>
               })}
@@ -84,7 +96,14 @@ function HomePage({ stats }: Record<string, any>) {
 
             <div className="flex gap-2 flex-wrap justify-center">
               {Object.keys(categoryStats).map((stat, i) => {
-                return <Button key={stat} onClick={() => handleCategories(i)} $primary={categoryChoice[i]}>
+                return <Button
+                  key={stat}
+                  onClick={() => {
+                    const value = stat === 'all categories' ? '' : stat
+                    handleCategories(i, value)
+                  }}
+                  $primary={categoryChoice[i]}
+                >
                   {stat} ({categoryStats[stat]})
                 </Button>
               })}
@@ -92,7 +111,7 @@ function HomePage({ stats }: Record<string, any>) {
           </div>
         </div>
 
-        <Link className="start-button mt-4" href="/game">
+        <Link className="start-button mt-4" href={encodeURI(`/game?difficulty=${difficulty}&categories=${categories.join(',')}`)}>
           Start Playing
         </Link>
       </main>

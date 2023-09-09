@@ -3,7 +3,7 @@ import { Button, QuestionBox } from "./styledComponents";
 import Timer from "./timerCountdown";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
-export  interface IQuestionProps {
+export interface IQuestion {
   category: string;
   answers: Array<string>;
   correctAnswer: string;
@@ -12,12 +12,19 @@ export  interface IQuestionProps {
   difficulty: string;
 }
 
-type AppProps = {
-  questionObj: IQuestionProps;
-};
+export interface IQuestionProps {
+  questionObj: IQuestion
+}
 
-export default function Question({ questionObj: { answers, correctAnswer, question, difficulty } }: AppProps) {
-  const [answerFeedback, setAnswerFeedback] = useState<ReactNode[]>([<></>, <></>, <></>, <></>])
+export default function Question({
+  questionObj: { category, answers, correctAnswer, id, question, difficulty },
+}: IQuestionProps) {
+  const [answerFeedback, setAnswerFeedback] = useState<ReactNode[]>([
+    <></>,
+    <></>,
+    <></>,
+    <></>,
+  ]);
 
   const handleUserAnswer = (value: string, i: number) => {
     setAnswerFeedback((state) =>
@@ -35,18 +42,20 @@ export default function Question({ questionObj: { answers, correctAnswer, questi
     );
   };
 
-  const colorMap: { [key: string]: string; } = {
-    easy: 'green',
-    medium: 'gold',
-    hard: 'red'
+  const colorMap: { [key: string]: string } = {
+    easy: "green",
+    medium: "gold",
+    hard: "red",
   };
 
   return (
     <QuestionBox className="question flex flex-col gap-7 mx-auto rounded-lg pb-6 pt-2 px-6 w-2/3">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl">{question}</h1>
+        <h1 className="text-2xl">{decodeHTMLEntities(question)}</h1>
 
-        <p style={{ color: colorMap[difficulty] }}>{difficulty}</p>
+        <p style={{ color: colorMap[difficulty] }}>
+          {difficulty}
+        </p>
       </div>
 
       <Timer />
@@ -59,9 +68,7 @@ export default function Question({ questionObj: { answers, correctAnswer, questi
               onClick={() => handleUserAnswer(answer, i)}
               key={answer}
             >
-              <span>
-                {answerFeedback[i]}
-              </span>
+              <span>{answerFeedback[i]}</span>
               <p className="flex-1">{answer}</p>
             </Button>
           );
@@ -69,4 +76,10 @@ export default function Question({ questionObj: { answers, correctAnswer, questi
       </div>
     </QuestionBox>
   );
+}
+
+function decodeHTMLEntities(text: string) {
+  const parser = new DOMParser();
+  const decodedHTML = parser.parseFromString(text, "text/html");
+  return decodedHTML.body.textContent;
 }

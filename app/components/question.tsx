@@ -1,7 +1,9 @@
-import { ReactNode, useEffect, useState } from "react";
+"use client";
+import { ReactNode, Fragment, useState, useEffect } from "react";
 import { Button, QuestionBox } from "./styledComponents";
 import Timer from "./timerCountdown";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import { Transition } from "@headlessui/react";
 
 export interface IQuestion {
   category: string;
@@ -13,11 +15,19 @@ export interface IQuestion {
 }
 
 export interface IQuestionProps {
-  questionObj: IQuestion
+  questionObj: IQuestion;
+  index: number;
+  questionNumber: number;
+  setIndex: Function;
+  questionsLength: number;
 }
 
 export default function Question({
-  questionObj: { category, answers, correctAnswer, id, question, difficulty },
+  questionObj: { category, answers, correctAnswer, question, difficulty },
+  index,
+  questionNumber,
+  setIndex,
+  questionsLength,
 }: IQuestionProps) {
   const [answerFeedback, setAnswerFeedback] = useState<ReactNode[]>([
     <></>,
@@ -25,8 +35,11 @@ export default function Question({
     <></>,
     <></>,
   ]);
+  const [timesUp, setTimesUp] = useState(false);
+  const [CTA, setCTA] = useState("Next Question");
+  const [timerHasStarted, setTimerHasStarted] = useState(true);
 
-  const handleUserAnswer = (value: string, i: number) => {
+  function handleUserAnswer(value: string, i: number) {
     setAnswerFeedback((state) =>
       state.map((_, j) => {
         if (i === j) {
@@ -37,10 +50,36 @@ export default function Question({
           );
         }
 
-        return j === answers.indexOf(correctAnswer) ? <CheckCircleIcon width={30} /> : <></>;
+        return j === answers.indexOf(correctAnswer) ? (
+          <CheckCircleIcon width={30} />
+        ) : (
+          <></>
+        );
       })
     );
-  };
+
+    handleTimesUp();
+  }
+
+  function handleTimesUp() {
+    setTimesUp(true);
+    setTimerHasStarted(false);
+  }
+
+  function handleNextQuestion() {
+    if (CTA === "Back to home") window.location.href = "/";
+    else setIndex((index: number) => index + 1);
+  }
+
+  useEffect(() => {
+    setCTA(
+      !(index % 5)
+        ? "Play More"
+        : index === questionsLength
+        ? "Back to home"
+        : "Next Question"
+    );
+  });
 
   const colorMap: { [key: string]: string } = {
     easy: "green",
@@ -49,32 +88,54 @@ export default function Question({
   };
 
   return (
-    <QuestionBox className="question flex flex-col gap-7 mx-auto rounded-lg pb-6 pt-2 px-6 w-2/3">
-      <div className="flex justify-between items-center">
+    <Transition
+      as={Fragment}
+      show={questionNumber === index}
+      enter="transform transition duration-[400ms]"
+      enterFrom="opacity-0 rotate-[-120deg] scale-50"
+      enterTo="opacity-100 rotate-0 scale-100"
+      leave="transform duration-200 transition ease-in-out"
+      leaveFrom="opacity-100 rotate-0 scale-100 "
+      leaveTo="opacity-0 scale-95 "
+    >
+      <QuestionBox className="question flex flex-col gap-7 rounded-lg p-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-xl">{category}</h1>
+
+          <p className="text-xl" style={{ color: colorMap[difficulty] }}>
+            {difficulty}
+          </p>
+        </div>
+
         <h1 className="text-2xl">{decodeHTMLEntities(question)}</h1>
 
-        <p style={{ color: colorMap[difficulty] }}>
-          {difficulty}
-        </p>
-      </div>
+        <Timer
+          handleTimesUp={handleTimesUp}
+          timerHasStarted={timerHasStarted}
+        />
 
-      <Timer />
+        <div className="question_options grid grid-cols-2 grid-rows-2 gap-4">
+          {answers.map((answer, i) => {
+            return (
+              <Button
+                className="flex items-center"
+                onClick={() => handleUserAnswer(answer, i)}
+                key={answer}
+              >
+                <span>{answerFeedback[i]}</span>
+                <p className="flex-1">{answer}</p>
+              </Button>
+            );
+          })}
+        </div>
 
-      <div className="question_options grid grid-cols-2 grid-rows-2 gap-4">
-        {answers.map((answer, i) => {
-          return (
-            <Button
-              className="flex items-center"
-              onClick={() => handleUserAnswer(answer, i)}
-              key={answer}
-            >
-              <span>{answerFeedback[i]}</span>
-              <p className="flex-1">{answer}</p>
-            </Button>
-          );
-        })}
-      </div>
-    </QuestionBox>
+        {timesUp && (
+          <Button onClick={handleNextQuestion} $primary={true}>
+            {CTA}
+          </Button>
+        )}
+      </QuestionBox>
+    </Transition>
   );
 }
 

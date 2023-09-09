@@ -1,13 +1,20 @@
 "use client";
 import { useState, useEffect } from "react";
 
-const TIME_LIMIT = 30
+const TIME_LIMIT = 30;
 
-function Timer() {
+export interface ITimerProps {
+  handleTimesUp: Function;
+  timerHasStarted: boolean;
+}
+
+function Timer({ 
+  handleTimesUp,
+  timerHasStarted,
+ }: ITimerProps) {
   const [timePassed, setTimePassed] = useState(0);
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT);
   const [remainingPathColor, setRemainingPathColor] = useState("green");
-  const [timerHasStarted, setTimerHasStarted] = useState(true)
 
   useEffect(() => {
     if (timerHasStarted) {
@@ -19,7 +26,7 @@ function Timer() {
         );
 
         if (timeLeft === 1) {
-          onTimesUp();
+          handleTimesUp();
           clearInterval(timerInterval);
         }
       }, 1000);
@@ -28,10 +35,6 @@ function Timer() {
     }
   }, [timeLeft, timePassed, timerHasStarted]);
 
-  const onTimesUp = () => {
-    setTimerHasStarted(false)
-  };
-
   // Calculate the percentage of timeLeft
   const percentage = ((TIME_LIMIT - timeLeft) / TIME_LIMIT) * 100;
 
@@ -39,6 +42,7 @@ function Timer() {
     <svg
       viewBox="0 0 100 5"
       xmlns="http://www.w3.org/2000/svg"
+      style={{ border: "2px solid " + remainingPathColor, borderRadius: "5px" }}
     >
       <line
         x1="0"

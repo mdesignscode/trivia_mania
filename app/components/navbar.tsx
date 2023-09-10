@@ -1,13 +1,15 @@
 "use client";
 import Link from "next/link";
-import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
+import { usePathname } from 'next/navigation'
+import { useEffect } from "react";
+
 const navigation = [
-  { name: "Home", href: "/", current: true },
-  { name: "Play", href: "/game", current: false },
-  { name: "Sign In", href: "#", current: false }
+  { name: "Home", href: "/" },
+  { name: "Play", href: "/game" },
+  { name: "Sign In", href: "/signin" }
 ];
 
 function classNames(...classes: Array<string>) {
@@ -15,6 +17,8 @@ function classNames(...classes: Array<string>) {
 }
 
 export default function Navbar() {
+  const path = usePathname()
+  
   return (
     <Disclosure as="nav" className="bg-gray-800 sticky top-0">
       {({ open }) => (
@@ -41,17 +45,17 @@ export default function Navbar() {
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
-                    {navigation.map((item) => (
+                    {navigation.map((item, i) => (
                       <Link
                         key={item.name}
                         href={item.href}
                         className={classNames(
-                          item.current
+                          item.href === path
                             ? "bg-gray-900 text-white"
                             : "text-gray-300 hover:bg-gray-700 hover:text-white",
                           "rounded-md px-3 py-2 text-sm font-medium"
                         )}
-                        aria-current={item.current ? "page" : undefined}
+                        aria-current={item.href === path ? "page" : undefined}
                       >
                         {item.name}
                       </Link>
@@ -70,12 +74,12 @@ export default function Navbar() {
                   as="a"
                   href={item.href}
                   className={classNames(
-                    item.current
+                    item.href === path
                       ? "bg-gray-900 text-white"
                       : "text-gray-300 hover:bg-gray-700 hover:text-white",
                     "block rounded-md px-3 py-2 text-base font-medium"
                   )}
-                  aria-current={item.current ? "page" : undefined}
+                  aria-current={item.href === path ? "page" : undefined}
                 >
                   {item.name}
                 </Disclosure.Button>

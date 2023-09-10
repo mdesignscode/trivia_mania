@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 import { readFileSync, writeFileSync } from "fs";
 import Question from "../question";
-import { IQuestion } from "../interfaces";
+import User from "../user";
+
+type UserStats = Record<string, Record<string, number>>
 
 interface IFilters {
   difficulty?: string;
@@ -164,6 +166,58 @@ class FileStorage {
     }
 
     return stats;
+  }
+
+  /**
+   * Adds a new user to storage
+   * @date 11/09/2023 - 00:43:02
+   *
+   * @param {string} usename
+   * @param {string} password
+   */
+  newUser(usename: string, password: string) {}
+
+  /**
+   * Retrieves a user
+   * @date 11/09/2023 - 00:45:12
+   *
+   * @param {string} username
+   * @returns {User}
+   */
+  getUser(username: string): User {
+    return new User('', '')
+  }
+
+  /**
+   * Updates a user's progress on a round
+   * @date 11/09/2023 - 00:48:06
+   *
+   * @param {UserStats} stats
+   */
+  updateUserProgress(stats: UserStats) {}
+
+
+  /**
+   * Retrieves a user's progress
+   * @date 11/09/2023 - 00:51:09
+   *
+   * @param {string} username
+   * @returns {UserStats}
+   */
+  getUserStats(username: string): UserStats {
+    return {}
+  }
+
+  /**
+   * Retrieves top ten scoring users
+   * @date 11/09/2023 - 00:54:37
+   *
+   * @returns {Array<User>}
+   */
+  getTopTenUsers(): Array<User> {
+    return [
+      new User('', '')
+    ]
   }
 
   /**

@@ -1,6 +1,7 @@
 import { Express, NextFunction, Request, Response } from 'express';
 import QuestionsRouter from './routes/questions';
 import storage from './models';
+import UsersRouter from 'routes/users';
 const express = require('express')
 const cors = require('cors');
 
@@ -30,6 +31,7 @@ app.get('/status', (req: Request, res: Response) => {
 });
 
 app.use('/questions', QuestionsRouter)
+app.use('/users', UsersRouter)
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

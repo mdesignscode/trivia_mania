@@ -1,53 +1,35 @@
 import storage from "./models";
-import Question from "./models/question";
+import User from "./models/user";
 
-// console.log(storage.questionsStats())
+const mike = new User("mike", "")
+const joe = new User("joe", "")
+const mack = new User("mack", "")
 
-function generateFakeData (): Record<string, Question> {
-  return {
-    Question1: new Question({
-      answers: ['Answer 1', 'Answer 2', 'Answer 3', 'Answer 4'],
-      correctAnswer: 'Answer 2',
-      category: 'General Knowledge',
-      difficulty: 'easy',
-      id: '1',
-      question: 'Some test question'
-    }),
-    Question2: new Question({
-      answers: ['Answer 1', 'Answer 2', 'Answer 3', 'Answer 4'],
-      correctAnswer: 'Answer 2',
-      category: 'Science',
-      difficulty: 'medium',
-      id: '2',
-      question: 'Some test question 2'
-    }),
-    Question3: new Question({
-      answers: ['Answer 1', 'Answer 2', 'Answer 3', 'Answer 4'],
-      correctAnswer: 'Answer 2',
-      category: 'History',
-      difficulty: 'hard',
-      id: '3',
-      question: 'Some test question 3'
-    }),
-    Question4: new Question({
-      answers: ['Answer 1', 'Answer 2', 'Answer 3', 'Answer 4'],
-      correctAnswer: 'Answer 2',
-      category: 'General Knowledge',
-      difficulty: 'easy',
-      id: '4',
-      question: 'Some test question 4'
-    })
-  };
-};
+storage.newUser(mike)
+storage.newUser(joe)
+storage.newUser(mack)
 
-const { Question1, Question2, Question3, Question4 } = generateFakeData();
+const testStat = {
+  total: {
+    answered: 15,
+    correctAnswered: 10
+  }
+}
+const testStat2 = {
+  total: {
+    answered: 20,
+    correctAnswered: 15
+  }
+}
+const testStat3 = {
+  total: {
+    answered: 12,
+    correctAnswered: 8
+  }
+}
 
-// storage.newQuestion(Question1);
-// storage.newQuestion(Question2);
-// storage.newQuestion(Question3);
-// storage.newQuestion(Question4);
+mike.stats = testStat
+joe.stats = testStat2
+mack.stats = testStat3
 
-// storage.save()
-storage.reload()
-
-Object.values(storage.filterQuestions({difficulty: 'easy', categories: ['History']})).forEach((obj: Question) => console.log(obj.isCorrectAnswer('Hello')))
+storage.getTopTenUsers()

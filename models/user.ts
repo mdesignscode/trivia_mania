@@ -1,6 +1,6 @@
 #!/usr/bin/node
 
-type UserStats = Record<string, Record<string, number>>
+type UserStats = Record<string, Record<string, any>>
 
 /**
  * A class for a trivia mania player
@@ -11,8 +11,8 @@ type UserStats = Record<string, Record<string, number>>
  */
 class User {
   username;
-  private password;
-  private stats: UserStats;
+  private _password;
+  private _stats: UserStats;
   
   /**
    * Creates an instance of User.
@@ -24,27 +24,65 @@ class User {
    */
   constructor(username: string, password: string) {
     this.username = username;
-    this.password = password;
-    this.stats = {}
+    this._password = password;
+    this._stats = {}
   }
 
   /**
-   * Description placeholder
-   * @date 09/09/2023 - 23:48:12
+   * Retrieves a user's password
+   * @date 11/09/2023 - 19:53:51
    *
-   * @returns {Record<string, any>}
+   * @readonly
+   * @type {string}
    */
-  getUserStats(): UserStats {
-    return {}
+  get password(): string {
+    return this._password
   }
 
   /**
-   * Uploads a user's progress on one round
-   * @date 11/09/2023 - 00:39:41
+   * Retrieves a user's stats
+   * @date 11/09/2023 - 12:13:29
    *
-   * @param {UserStats} stats - User's progress
+   * @readonly
+   * @type {UserStats}
    */
-  submitRound(stats: UserStats) {}
+  get stats(): UserStats {
+    return this._stats
+  }
+
+  /**
+   * Updates a user's stats
+   */
+  set stats(stats: UserStats) {
+    const userStats = this.stats;
+
+    interface IStat {
+      answered: number;
+      correctAnswered: number;
+    }
+
+    for (const key in stats) {
+      if (["easy", "medium", "hard", "total"].includes(key)) {
+        if (userStats[key]) {
+          const stat = stats[key] as IStat;
+          const userStat = userStats[key] as IStat;
+          userStat.answered += stat.answered;
+          userStat.correctAnswered += stat.correctAnswered;
+        } else userStats[key] = stats[key];
+      } else {
+        if (userStats[key]) {
+          for (const subKey in stats[key] as Record<string, IStat>) {
+            if (userStats[key][subKey]) {
+              const stat = stats[key][subKey] as IStat;
+              const userStat = userStats[key][subKey] as IStat;
+              userStat.answered += stat.answered;
+              userStat.correctAnswered += stat.correctAnswered;
+            } else userStats[key][subKey] = stats[key][subKey];
+          }
+        } else userStats[key] = stats[key];
+      }
+    }
+  }
 }
 
 export default User;

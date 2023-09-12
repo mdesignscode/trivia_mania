@@ -9,7 +9,7 @@
     "lint": "next lint",
     "test": "jest",
     "api": "nodemon server.js",
-    "dev_env": "concurrently \"tsc --watch server.ts routes/questions.ts\" \"nodemon -q server.js\" \"npm run dev\""
+    "dev_env": "concurrently \"tsc --watch server.ts routes/users.ts routes/questions.ts\" \"tsc server.ts && nodemon -q server.js\" \"npm run dev\""
   },
   "dependencies": {
     "@algorithm.ts/huffman": "^3.1.1",

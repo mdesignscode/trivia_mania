@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from "fs";
 import Question from "../question";
 import User from "../user";
 
-type UserStats = Record<string, Record<string, number>>
+type UserStats = Record<string, Record<string, any>>;
 
 interface IFilters {
   difficulty?: string;
@@ -170,12 +170,18 @@ class FileStorage {
 
   /**
    * Adds a new user to storage
-   * @date 11/09/2023 - 00:43:02
+   * @date 11/09/2023 - 15:46:44
    *
-   * @param {string} usename
-   * @param {string} password
+   * @param {User} user
    */
-  newUser(usename: string, password: string) {}
+  newUser(user: User) {
+    if (!this.objects.Users) {
+      this.objects.Users = {};
+      this.objects.Users[user.username] = user;
+    } else {
+      this.objects.Users[user.username] = user;
+    }
+  }
 
   /**
    * Retrieves a user
@@ -185,17 +191,21 @@ class FileStorage {
    * @returns {User}
    */
   getUser(username: string): User {
-    return new User('', '')
+    return this.objects.Users[username];
   }
 
   /**
-   * Updates a user's progress on a round
-   * @date 11/09/2023 - 00:48:06
+   * Saves a user's progress on a round
+   * @date 11/09/2023 - 16:12:07
    *
+   * @param {string} username
    * @param {UserStats} stats
    */
-  updateUserProgress(stats: UserStats) {}
-
+  updateUserProgress(username: string, stats: UserStats) {
+    const user = this.getUser(username);
+    user.stats = stats;
+    this.save();
+  }
 
   /**
    * Retrieves a user's progress
@@ -205,7 +215,7 @@ class FileStorage {
    * @returns {UserStats}
    */
   getUserStats(username: string): UserStats {
-    return {}
+    return this.getUser(username).stats;
   }
 
   /**
@@ -215,9 +225,18 @@ class FileStorage {
    * @returns {Array<User>}
    */
   getTopTenUsers(): Array<User> {
-    return [
-      new User('', '')
-    ]
+    const users = Object.values(this.objects.Users);
+    const sortedUsers = users.sort((a, b) => {
+      const userA = calculateTotalScore(a as User);
+      const userB = calculateTotalScore(b as User);
+      return userB - userA;
+    });
+
+    function calculateTotalScore(user: User): number {
+      return user.stats.total.correctAnswered;
+    }
+
+    return sortedUsers.slice(0, 10) as Array<User>;
   }
 
   /**
@@ -241,18 +260,33 @@ class FileStorage {
       // recreate Question models
       for (const parsedKey in parsedData) {
         const parsedObj = parsedData[parsedKey];
-        if (parsedObj.__class__ === 'Question') {
+        if (parsedObj.__class__ === "Question") {
           data[parsedKey] = {};
           for (const key in parsedObj) {
-            if (key !== '__class__') {
-              const question = new Question(parsedObj[key])
-              data[parsedKey][key] = question
+            if (key !== "__class__") {
+              const question = new Question(parsedObj[key]);
+              data[parsedKey][key] = question;
             } else {
-              data[parsedKey][key] = parsedObj[key]
+              data[parsedKey][key] = parsedObj[key];
             }
           }
         }
-      };
+      }
+
+      // recreate User models
+      data.Users = {};
+      for (const key in parsedData.Users as Record<
+        string,
+        Record<string, any>
+      >) {
+        const model = parsedData.Users[key] as {
+          username: string;
+          password: string;
+        };
+        const user = new User(model.username, model.password);
+
+        data.Users[key] = user
+      }
     } catch (error) {}
     Object.assign(this.objects, data);
   }

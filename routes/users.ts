@@ -2,7 +2,7 @@ import { Express, NextFunction, Request, Response } from 'express';
 const express = require('express')
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-import crypto from 'crypto';
+const crypto =  require('crypto');
 import storage from '../models';
 const UsersRouter: Express = express.Router()
 

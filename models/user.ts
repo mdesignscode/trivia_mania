@@ -1,5 +1,7 @@
 #!/usr/bin/node
 
+import { randomUUID } from "crypto";
+
 type UserStats = Record<string, Record<string, any>>
 
 /**
@@ -13,6 +15,7 @@ class User {
   username;
   private _password;
   private _stats: UserStats;
+  id: string
   
   /**
    * Creates an instance of User.
@@ -26,6 +29,7 @@ class User {
     this.username = username;
     this._password = password;
     this._stats = {}
+    this.id = randomUUID()
   }
 
   /**

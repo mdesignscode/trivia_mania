@@ -1,15 +1,30 @@
 "use client";
 import Link from "next/link";
 import { Disclosure } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  Bars3Icon,
+  XMarkIcon,
+  HomeIcon,
+  PuzzlePieceIcon,
+  StarIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
-import { usePathname } from 'next/navigation'
-import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 const navigation = [
-  { name: "Home", href: "/" },
-  { name: "Play", href: "/game" },
-  { name: "Sign In", href: "/signin" }
+  { name: "Home", href: "/", icon: <HomeIcon height={25} width={25} /> },
+  {
+    name: "Play",
+    href: "/game",
+    icon: <PuzzlePieceIcon height={25} width={25} />,
+  },
+  {
+    name: "Score Board",
+    href: "/scoreboard",
+    icon: <StarIcon height={25} width={25} />,
+  },
 ];
 
 function classNames(...classes: Array<string>) {
@@ -17,10 +32,10 @@ function classNames(...classes: Array<string>) {
 }
 
 export default function Navbar() {
-  const path = usePathname()
-  
+  const path = usePathname();
+
   return (
-    <Disclosure as="nav" className="bg-gray-800 sticky top-0">
+    <Disclosure as="nav" className="bg-gray-800 z-10 sticky top-0">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -45,21 +60,39 @@ export default function Navbar() {
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
-                    {navigation.map((item, i) => (
+                    {navigation.map((item) => (
                       <Link
                         key={item.name}
                         href={item.href}
                         className={classNames(
                           item.href === path
-                            ? "bg-gray-900 text-white"
+                            ? "bg-gray-900 text-white flex gap-2 content-center items-center"
                             : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                          "rounded-md px-3 py-2 text-sm font-medium"
+                          "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"
                         )}
                         aria-current={item.href === path ? "page" : undefined}
                       >
+                        {item.icon}
                         {item.name}
                       </Link>
                     ))}
+
+                    <div className={classNames(
+                          /signin/.test(path)
+                            ? "bg-gray-900 text-white flex gap-2 content-center items-center"
+                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                          "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"
+                        )}>
+                      <SignedIn>
+                        {/* Mount the UserButton component */}
+                        <UserButton />
+                      </SignedIn>
+                      <SignedOut>
+                        <UserCircleIcon height={25} width={25} />
+                        {/* Signed out users get sign in button */}
+                        <SignInButton />
+                      </SignedOut>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -84,6 +117,17 @@ export default function Navbar() {
                   {item.name}
                 </Disclosure.Button>
               ))}
+
+              <div className="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium">
+                <SignedIn>
+                  {/* Mount the UserButton component */}
+                  <UserButton />
+                </SignedIn>
+                <SignedOut>
+                  {/* Signed out users get sign in button */}
+                  <SignInButton />
+                </SignedOut>
+              </div>
             </div>
           </Disclosure.Panel>
         </>

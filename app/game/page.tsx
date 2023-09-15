@@ -1,10 +1,10 @@
 "use client";
+import Loading from "app/loading";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import Question from "@/models/question";
-import QuestionComponent, { IQuestionProps } from "@/components/question";
-import { useEffect, useState } from "react";
+import QuestionComponent from "@/components/question";
+import { useState } from "react";
 import { IQuestion } from "@/models/interfaces";
 
 export default function GamePage() {
@@ -16,9 +16,10 @@ export default function GamePage() {
 
   async function getQuestions() {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const url = `${baseUrl}questions/play?difficulty=${difficulty}&categories=${categories}`;
+    const url = `${baseUrl}questions/play`;
 
-    const { data } = await axios.get(url);
+    const { data } = await axios.post(url, { difficulty, categories });
+
     return data;
   }
 
@@ -48,7 +49,7 @@ export default function GamePage() {
             })}
           </>
         ) : (
-          <h1>Loading...</h1>
+          <Loading />
         )}
       </div>
     </div>

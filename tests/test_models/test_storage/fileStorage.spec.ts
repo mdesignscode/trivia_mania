@@ -199,7 +199,7 @@ describe("FileStorage", function () {
     describe("newUser and getUser methods", function () {
       test("Adds a new user to storage", function () {
         storage.newUser(mike23);
-        const mike = storage.getUser("mike23");
+        const mike = storage.getUser(mike23.id);
 
         expect(mike).toBeDefined();
       });
@@ -231,56 +231,15 @@ describe("FileStorage", function () {
           },
         };
 
-        storage.updateUserProgress("mike23", testStat);
+        storage.updateUserProgress(mike23.id, testStat);
 
-        const mikeStats = storage.getUserStats("mike23");
+        const mikeStats = storage.getUserStats(mike23.id);
 
         expect(mikeStats).toEqual(testStat);
       });
     });
 
     describe("getTopTenUsers method", function () {
-      test("Returns an Array of users sorted by correct answers", function () {
-        const mike = new User("mike", "");
-        const joe = new User("joe", "");
-        const mack = new User("mack", "");
-
-        storage.newUser(mike);
-        storage.newUser(joe);
-        storage.newUser(mack);
-
-        const testStat = {
-          total: {
-            answered: 15,
-            correctAnswered: 10,
-          },
-        };
-        const testStat2 = {
-          total: {
-            answered: 20,
-            correctAnswered: 15,
-          },
-        };
-        const testStat3 = {
-          total: {
-            answered: 12,
-            correctAnswered: 8,
-          },
-        };
-
-        mike.stats = testStat;
-        joe.stats = testStat2;
-        mack.stats = testStat3;
-
-        const [joeStats, mikeStats, mackStats] = storage.getTopTenUsers();
-
-        expect(mikeStats.username).toStrictEqual("mike")
-        expect(joeStats.username).toStrictEqual("joe")
-        expect(mackStats.username).toStrictEqual("mack")
-      });
-    });
-
-    describe("getAllUsers method", function () {
       test("Returns an Array of users sorted by correct answers", function () {
         const mike = new User("mike", "");
         const joe = new User("joe", "");
@@ -371,8 +330,8 @@ describe("FileStorage", function () {
       storage.reload();
 
       const mediumQuestion = storage.getQuestion("medium", "2");
-      const mikeUser = storage.getUser("mike")
-      
+      const mikeUser = storage.getUser(mike.id)
+
       expect(mediumQuestion).toBeInstanceOf(Question);
       expect(mikeUser).toBeInstanceOf(User);
     });

@@ -15,8 +15,9 @@ class User {
   username;
   private _password;
   private _stats: UserStats;
-  id: string
-  
+  id: string;
+  isSignedIn: boolean
+
   /**
    * Creates an instance of User.
    * @date 09/09/2023 - 23:43:07
@@ -30,6 +31,7 @@ class User {
     this._password = password;
     this._stats = {}
     this.id = randomUUID()
+    this.isSignedIn = false
   }
 
   /**
@@ -41,6 +43,13 @@ class User {
    */
   get password(): string {
     return this._password
+  }
+
+  /**
+   * Updates a user's password
+   */
+  set password(password: string) {
+    this._password = password
   }
 
   /**

@@ -36,3 +36,5 @@ next-env.d.ts
 
 *.js
 tsES6_doc.txt
+main.ts
+file.json.bak

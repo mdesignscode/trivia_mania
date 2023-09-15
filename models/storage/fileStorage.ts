@@ -177,9 +177,9 @@ class FileStorage {
   newUser(user: User) {
     if (!this.objects.Users) {
       this.objects.Users = {};
-      this.objects.Users[user.username] = user;
+      this.objects.Users[user.id] = user;
     } else {
-      this.objects.Users[user.username] = user;
+      this.objects.Users[user.id] = user;
     }
   }
 
@@ -187,22 +187,22 @@ class FileStorage {
    * Retrieves a user
    * @date 11/09/2023 - 00:45:12
    *
-   * @param {string} username
+   * @param {string} id - the user's id
    * @returns {User}
    */
-  getUser(username: string): User {
-    return this.objects.Users[username];
+  getUser(id: string): User {
+    return this.objects.Users[id];
   }
 
   /**
    * Saves a user's progress on a round
    * @date 11/09/2023 - 16:12:07
    *
-   * @param {string} username
+   * @param {string} id - the user's id
    * @param {UserStats} stats
    */
-  updateUserProgress(username: string, stats: UserStats) {
-    const user = this.getUser(username);
+  updateUserProgress(id: string, stats: UserStats) {
+    const user = this.getUser(id);
     user.stats = stats;
     this.save();
   }
@@ -211,11 +211,11 @@ class FileStorage {
    * Retrieves a user's progress
    * @date 11/09/2023 - 00:51:09
    *
-   * @param {string} username
+   * @param {string} id - the user's id
    * @returns {UserStats}
    */
-  getUserStats(username: string): UserStats {
-    return this.getUser(username).stats;
+  getUserStats(id: string): UserStats {
+    return this.getUser(id).stats;
   }
 
   /**

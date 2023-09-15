@@ -184,6 +184,19 @@ class FileStorage {
   }
 
   /**
+   * deletes a user from storage
+   * @date 15/09/2023 - 13:36:47
+   *
+   * @param {string} id
+   */
+  deleteUser(id: string) {
+    const users = this.objects.Users
+
+    if (users && users[id])
+      delete users[id]
+  }
+
+  /**
    * Retrieves a user
    * @date 11/09/2023 - 00:45:12
    *
@@ -242,9 +255,13 @@ class FileStorage {
   /**
    * Serializes all objects to storage file
    */
-  save(): void {
+  save(): void | any {
     const jsonData = JSON.stringify(this.objects);
-    writeFileSync(this.filePath, jsonData, "utf-8");
+    try {
+      writeFileSync(this.filePath, jsonData, "utf-8");
+    } catch (error) {
+      return error
+    }
   }
 
   /**

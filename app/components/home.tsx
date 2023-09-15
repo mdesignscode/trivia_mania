@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "./styledComponents";
 import axios from "axios";
 import Loading from "app/loading";
+import AddUserToStorage from "./addUserToStorage";
 
 function HomePage({ stats }: Record<string, any>) {
   const [difficultyStats, setDifficultyStats] = useState<
@@ -26,6 +27,8 @@ function HomePage({ stats }: Record<string, any>) {
   const [categories, setCategories] = useState<Array<string>>([]);
   const [fetchingDifficulty, setFetchingDifficulty] = useState(true);
   const [fetchingCategories, setFetchingCategories] = useState(true);
+
+  AddUserToStorage()
 
   async function getQuestionStats(difficulty: string) {
     // load categories
@@ -85,6 +88,7 @@ function HomePage({ stats }: Record<string, any>) {
         }));
       }
     }
+    
 
     // display data
     setFetchingDifficulty(false);

@@ -2,7 +2,7 @@
 
 import { randomUUID } from "crypto";
 
-type UserStats = Record<string, Record<string, any>>
+type UserStats = Record<string, Record<string, any>>;
 
 /**
  * A class for a trivia mania player
@@ -13,8 +13,9 @@ type UserStats = Record<string, Record<string, any>>
  */
 class User {
   username;
-  private _stats: UserStats;
+  stats;
   id: string;
+  avatar;
 
   /**
    * Creates an instance of User.
@@ -24,27 +25,25 @@ class User {
    * @param {string} username
    * @param {string} [id=randomUUID()]
    */
-  constructor(username: string, id: string = randomUUID()) {
+  constructor(
+    username: string,
+    id: string = randomUUID(),
+    stats: UserStats = {},
+    avatar: string = "/avatar.png"
+  ) {
     this.username = username;
-    this._stats = {}
-    this.id = id
+    this.stats = stats;
+    this.id = id;
+    this.avatar = avatar
   }
 
   /**
-   * Retrieves a user's stats
-   * @date 11/09/2023 - 12:13:29
+   * Uploads a user's stats on a round
+   * @date 15/09/2023 - 15:05:00
    *
-   * @readonly
-   * @type {UserStats}
+   * @param {UserStats} stats - The user's results from one round
    */
-  get stats(): UserStats {
-    return this._stats
-  }
-
-  /**
-   * Updates a user's stats
-   */
-  set stats(stats: UserStats) {
+  submitRound(stats: UserStats) {
     const userStats = this.stats;
 
     interface IStat {

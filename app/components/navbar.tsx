@@ -54,7 +54,9 @@ export default function Navbar() {
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
-                  <h1 className="text-white text-3xl">Trivia Mania</h1>
+                  <Link className="hover:bg-gray-700 rounded-md px-3 py-1" href="/">
+                    <h1 className="text-white text-3xl">Trivia Mania</h1>
+                  </Link>
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
@@ -79,7 +81,7 @@ export default function Navbar() {
 
                     <div
                       className={classNames(
-                        /[signin|signup]/.test(path)
+                        /signin|signup/.test(path)
                           ? "bg-gray-900 text-white flex gap-2 content-center items-center"
                           : "text-gray-300 hover:bg-gray-700 hover:text-white",
                         "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"

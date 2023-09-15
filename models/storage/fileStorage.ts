@@ -169,17 +169,23 @@ class FileStorage {
   }
 
   /**
-   * Adds a new user to storage
-   * @date 11/09/2023 - 15:46:44
+   * Adds a user or a list of users to storage
+   * @date 15/09/2023 - 14:28:56
    *
-   * @param {User} user
+   * @param {(User | Array<User>)} user
    */
-  newUser(user: User) {
+  newUser(user: User | Array<User>) {
     if (!this.objects.Users) {
       this.objects.Users = {};
-      this.objects.Users[user.id] = user;
+    }
+
+    if (Array.isArray(user)) {
+      const users = user as Array<User>
+
+      users.forEach(user => this.objects.Users[user.id] = user)
     } else {
-      this.objects.Users[user.id] = user;
+      const NewUser = user as User
+      this.objects.Users[NewUser.id] = user
     }
   }
 
@@ -216,7 +222,7 @@ class FileStorage {
    */
   updateUserProgress(id: string, stats: UserStats) {
     const user = this.getUser(id);
-    user.stats = stats;
+    user.submitRound(stats);
     this.save();
   }
 
@@ -246,7 +252,7 @@ class FileStorage {
     });
 
     function calculateTotalScore(user: User): number {
-      return user.stats.total.correctAnswered;
+      return user.stats?.total?.correctAnswered || 0;
     }
 
     return sortedUsers.slice(0, 10) as Array<User>;
@@ -298,9 +304,10 @@ class FileStorage {
       >) {
         const model = parsedData.Users[key] as {
           username: string;
-          password: string;
+          id: string;
+          stats: {};
         };
-        const user = new User(model.username, model.password);
+        const user = new User(model.username, model.id, model.stats);
 
         data.Users[key] = user
       }

@@ -203,6 +203,20 @@ describe("FileStorage", function () {
 
         expect(mike).toBeDefined();
       });
+
+      test("Adds a list of new users to storage", function () {
+        const joe = new User("joe")
+        const sam = new User("sam")
+        storage.newUser([mike23, sam,joe]);
+
+        const mikeUser = storage.getUser(mike23.id);
+        const joeUser = storage.getUser(joe.id);
+        const samUser = storage.getUser(sam.id);
+
+        expect(mikeUser).toBeDefined();
+        expect(joeUser).toBeDefined();
+        expect(samUser).toBeDefined();
+      });
     });
 
     describe("deleteUser method", function () {
@@ -212,7 +226,7 @@ describe("FileStorage", function () {
 
         expect(mike).toBeDefined();
 
-        storage.deleteUser(mike.id)
+        storage.deleteUser(mike.id);
 
         const deletedMike = storage.getUser(mike23.id);
         expect(deletedMike).toBeUndefined();
@@ -288,9 +302,9 @@ describe("FileStorage", function () {
 
         const [joeStats, mikeStats, mackStats] = storage.getTopTenUsers();
 
-        expect(mikeStats.username).toStrictEqual("mike")
-        expect(joeStats.username).toStrictEqual("joe")
-        expect(mackStats.username).toStrictEqual("mack")
+        expect(mikeStats.username).toStrictEqual("mike");
+        expect(joeStats.username).toStrictEqual("joe");
+        expect(mackStats.username).toStrictEqual("mack");
       });
     });
   });
@@ -298,10 +312,10 @@ describe("FileStorage", function () {
   describe("save method", function () {
     test("Serializes objects to file storage", function () {
       const { Question1 } = generateFakeData();
-      const mike = new User("mike")
+      const mike = new User("mike");
 
       storage.newQuestion(Question1);
-      storage.newUser(mike)
+      storage.newUser(mike);
       storage.save();
 
       const data: Record<string, any> = JSON.parse(
@@ -349,7 +363,7 @@ describe("FileStorage", function () {
       storage.reload();
 
       const mediumQuestion = storage.getQuestion("medium", "2");
-      const mikeUser = storage.getUser(mike.id)
+      const mikeUser = storage.getUser(mike.id);
 
       expect(mediumQuestion).toBeInstanceOf(Question);
       expect(mikeUser).toBeInstanceOf(User);

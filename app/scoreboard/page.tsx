@@ -1,3 +1,8 @@
-export default function () {
-  return <h1>Score Board</h1>
+import Board from "@/components/scoreboard"
+import storage from "@/models/index"
+
+export default async function ScoreBoard () {
+  const topTenUsers = storage.getTopTenUsers()
+  
+  return <Board topTenUsers={topTenUsers} />
 }

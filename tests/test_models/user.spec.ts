@@ -32,7 +32,7 @@ describe("User class", function () {
     const initialStats = mike.stats
     expect(initialStats).toEqual({})
 
-    mike.stats = testStat
+    mike.submitRound(testStat)
 
     const mikeStats = mike.stats
     expect(mikeStats).toEqual(testStat)
@@ -53,7 +53,7 @@ describe("User class", function () {
         correctAnswered: 5
       }
     } 
-    mike.stats = testStat2
+    mike.submitRound(testStat2)
 
     const testStatResults = {
       easy: {

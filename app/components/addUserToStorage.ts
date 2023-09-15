@@ -7,6 +7,7 @@ export default async function AddUserToStorage() {
   const { user, isLoaded, isSignedIn } = useUser();
 
   if (isLoaded && isSignedIn) {
+    console.log(user)
     // get user from storage
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const url = baseUrl + "users/";

@@ -13,43 +13,21 @@ type UserStats = Record<string, Record<string, any>>
  */
 class User {
   username;
-  private _password;
   private _stats: UserStats;
   id: string;
-  isSignedIn: boolean
 
   /**
    * Creates an instance of User.
-   * @date 09/09/2023 - 23:43:07
+   * @date 15/09/2023 - 10:44:58
    *
    * @constructor
    * @param {string} username
-   * @param {string} password
+   * @param {string} [id=randomUUID()]
    */
-  constructor(username: string, password: string) {
+  constructor(username: string, id: string = randomUUID()) {
     this.username = username;
-    this._password = password;
     this._stats = {}
-    this.id = randomUUID()
-    this.isSignedIn = false
-  }
-
-  /**
-   * Retrieves a user's password
-   * @date 11/09/2023 - 19:53:51
-   *
-   * @readonly
-   * @type {string}
-   */
-  get password(): string {
-    return this._password
-  }
-
-  /**
-   * Updates a user's password
-   */
-  set password(password: string) {
-    this._password = password
+    this.id = id
   }
 
   /**

@@ -94,3 +94,27 @@ I'm incredibly excited about these upcoming features and the overall progress of
 Stay tuned for more updates, and thank you for being a part of this incredible journey! 🌐 #TriviaMania #SoftwareEngineering #UIUX #APIDevelopment
   
 
+
+Post 6 [15-09-2023]:
+
+🚀 Trivia Mania Project Update: Evolving and Advancing! 🎉
+
+Hello, LinkedIn community! 👋 It's time for another exciting update on the Trivia Mania project. The journey continues to be filled with innovation and progress, and I'm thrilled to share the latest developments with you all:
+
+🔐 User Authentication Upgrade: In our quest for a seamless and secure user experience, I've made some important decisions. I've switched from Passport.js to Clerk.js for user authentication. Clerk.js offers pre-built components for Sign Up and Sign In pages, making it easier than ever for users to join the Trivia Mania community. Security and user convenience remain top priorities! 🔒✍️
+
+🌐 API Transformation: Trivia Mania's backend has undergone a significant transformation. I've moved away from Express.js and embraced Next.js 13's powerful app folder's Route handlers for creating the API. This change enhances our API's structure and functionality, aligning it perfectly with the latest Next.js capabilities. It's all about keeping our technology stack modern and efficient! 🚀📡
+
+🔄 Loading UI Addition: User experience matters, and I've introduced a Loading UI to provide a seamless experience while fetching data. This addition ensures that users have a smooth and engaging interaction with Trivia Mania, even when data is being loaded in the background. It's all about optimizing the user journey! ⌛🖥️
+
+What's on the Horizon:
+
+🏆 Scoreboard Development: The next exciting task on my list is the development of the scoreboard. This feature will add a competitive edge to Trivia Mania, allowing users to see how they stack up against others. It's all about fostering a sense of achievement and competition within the community!
+
+📊 User Stats Integration: Alongside the scoreboard, I'll be working on user stats integration. Users will be able to track their performance and progress, making Trivia Mania not just about fun but also about personal growth and improvement.
+
+🌟 Future Possibilities: As the project continues to evolve, there are endless possibilities for new features and enhancements. I'm open to exploring ideas and innovations that can take Trivia Mania to even greater heights!
+
+I'm incredibly excited about these upcoming features and the overall direction of Trivia Mania. If you share my passion for technology, coding, and creating engaging experiences, please feel free to connect, share your insights, or simply be a part of this exciting project. Let's continue to learn, grow, and have a blast together as we navigate the world of Trivia Mania! 🌟👩‍💻
+
+Stay tuned for more updates, and thank you for being a part of this incredible journey! 🌐 #TriviaMania #SoftwareEngineering #UIUX #APIDevelopment

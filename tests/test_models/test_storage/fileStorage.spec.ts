@@ -194,7 +194,7 @@ describe("FileStorage", function () {
   });
 
   describe("Test User functionality", function () {
-    const mike23 = new User("mike23", "test_password");
+    const mike23 = new User("mike23");
 
     describe("newUser and getUser methods", function () {
       test("Adds a new user to storage", function () {
@@ -202,6 +202,20 @@ describe("FileStorage", function () {
         const mike = storage.getUser(mike23.id);
 
         expect(mike).toBeDefined();
+      });
+    });
+
+    describe("deleteUser method", function () {
+      test("Adds a new user to storage", function () {
+        storage.newUser(mike23);
+        const mike = storage.getUser(mike23.id);
+
+        expect(mike).toBeDefined();
+
+        storage.deleteUser(mike.id)
+
+        const deletedMike = storage.getUser(mike23.id);
+        expect(deletedMike).toBeUndefined();
       });
     });
 
@@ -241,9 +255,9 @@ describe("FileStorage", function () {
 
     describe("getTopTenUsers method", function () {
       test("Returns an Array of users sorted by correct answers", function () {
-        const mike = new User("mike", "");
-        const joe = new User("joe", "");
-        const mack = new User("mack", "");
+        const mike = new User("mike");
+        const joe = new User("joe");
+        const mack = new User("mack");
 
         storage.newUser(mike);
         storage.newUser(joe);
@@ -284,8 +298,10 @@ describe("FileStorage", function () {
   describe("save method", function () {
     test("Serializes objects to file storage", function () {
       const { Question1 } = generateFakeData();
+      const mike = new User("mike")
 
       storage.newQuestion(Question1);
+      storage.newUser(mike)
       storage.save();
 
       const data: Record<string, any> = JSON.parse(
@@ -293,6 +309,9 @@ describe("FileStorage", function () {
       );
       const easyQuestion = data["Question.easy"]["Question.1"];
       expect(easyQuestion).toBeDefined();
+      const mikeUser = data.Users[mike.id];
+      expect(mikeUser).toBeDefined();
+
       writeFileSync("file.json", JSON.stringify({}));
     });
   });
@@ -321,7 +340,7 @@ describe("FileStorage", function () {
 
     test("Should deserialize objects back to their original class", function () {
       const { Question2 } = generateFakeData();
-      const mike = new User("mike", "");
+      const mike = new User("mike");
 
       storage.newUser(mike);
       storage.newQuestion(Question2);

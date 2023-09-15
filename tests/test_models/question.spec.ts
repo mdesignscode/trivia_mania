@@ -23,7 +23,7 @@ describe('Question Class Tests', () => {
   });
 
   // Test the shuffleAnswers method
-  it('should shuffle the answer choices', () => {
+  it('should shuffle the answer choices. Will sometimes fail due to algorithm used.', () => {
     const question = new Question(sampleQuestionData);
     const originalAnswers = [...question.answers];
 

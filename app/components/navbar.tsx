@@ -77,12 +77,14 @@ export default function Navbar() {
                       </Link>
                     ))}
 
-                    <div className={classNames(
-                          /signin/.test(path)
-                            ? "bg-gray-900 text-white flex gap-2 content-center items-center"
-                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                          "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"
-                        )}>
+                    <div
+                      className={classNames(
+                        /[signin|signup]/.test(path)
+                          ? "bg-gray-900 text-white flex gap-2 content-center items-center"
+                          : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                        "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"
+                      )}
+                    >
                       <SignedIn>
                         {/* Mount the UserButton component */}
                         <UserButton />
@@ -118,7 +120,14 @@ export default function Navbar() {
                 </Disclosure.Button>
               ))}
 
-              <div className="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium">
+              <div
+                className={classNames(
+                  /signin/.test(path)
+                    ? "bg-gray-900 text-white flex gap-2 content-center items-center"
+                    : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                  "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"
+                )}
+              >
                 <SignedIn>
                   {/* Mount the UserButton component */}
                   <UserButton />

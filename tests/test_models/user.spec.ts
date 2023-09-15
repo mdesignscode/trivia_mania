@@ -4,7 +4,7 @@ import { stub } from 'sinon'
 
 describe("User class", function () {
   test("It should create a new user with getters and setters for `stats`", function () {
-    const mike = new User("mike23", "test_password")
+    const mike = new User("mike23")
 
     const testStat = {
       easy: {
@@ -84,7 +84,7 @@ describe("User class", function () {
     const UUIDstub = stub(crypto, "randomUUID")
     const mockUUID = "4043063d-fcae-41a4-9855-ea0b0fb95690"
     UUIDstub.callsFake(() => mockUUID)
-    const mike = new User("mike", "")
+    const mike = new User("mike")
     const mikeId = mike.id
 
     expect(mikeId).toStrictEqual(mockUUID)

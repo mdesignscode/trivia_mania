@@ -19,11 +19,13 @@ class User {
 
   /**
    * Creates an instance of User.
-   * @date 15/09/2023 - 10:44:58
+   * @date 15/09/2023 - 16:14:11
    *
    * @constructor
    * @param {string} username
    * @param {string} [id=randomUUID()]
+   * @param {UserStats} [stats={}]
+   * @param {string} [avatar="/avatar.png"]
    */
   constructor(
     username: string,

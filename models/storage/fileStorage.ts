@@ -244,7 +244,8 @@ class FileStorage {
    * @returns {Array<User>}
    */
   getTopTenUsers(): Array<User> {
-    const users = Object.values(this.objects.Users);
+    const usersList = Object.values(this.objects.Users) as Array<User>;
+    const users = usersList.filter((user) => Object.keys(user.stats).length > 0)
     const sortedUsers = users.sort((a, b) => {
       const userA = calculateTotalScore(a as User);
       const userB = calculateTotalScore(b as User);
@@ -252,7 +253,7 @@ class FileStorage {
     });
 
     function calculateTotalScore(user: User): number {
-      return user.stats?.total?.correctAnswered || 0;
+      return user.stats.total.correctAnswered;
     }
 
     return sortedUsers.slice(0, 10) as Array<User>;

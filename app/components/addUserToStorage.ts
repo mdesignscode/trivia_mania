@@ -1,5 +1,4 @@
 "use client";
-import User from "@/models/user";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
 
@@ -7,7 +6,6 @@ export default async function AddUserToStorage() {
   const { user, isLoaded, isSignedIn } = useUser();
 
   if (isLoaded && isSignedIn) {
-    console.log(user)
     // get user from storage
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const url = baseUrl + "users/";
@@ -16,10 +14,11 @@ export default async function AddUserToStorage() {
 
     // create user if not exist
     if (!data) {
-      await axios.post(url + "create", {
+      axios.post(url + "create", {
         username: user.username,
         id: user.id,
-      });
+        avatar: user.imageUrl
+      }).catch(err => console.log(err));
     }
   }
 }

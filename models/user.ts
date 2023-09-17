@@ -23,19 +23,19 @@ class User {
    *
    * @constructor
    * @param {string} username
-   * @param {string} [id=randomUUID()]
+   * @param {string} [id=""]
    * @param {UserStats} [stats={}]
    * @param {string} [avatar="/avatar.png"]
    */
   constructor(
     username: string,
-    id: string = randomUUID(),
+    id: string = "",
     stats: UserStats = {},
     avatar: string = "/avatar.png"
   ) {
     this.username = username;
     this.stats = stats;
-    this.id = id;
+    this.id = id || randomUUID();
     this.avatar = avatar
   }
 

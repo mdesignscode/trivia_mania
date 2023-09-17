@@ -220,7 +220,7 @@ describe("FileStorage", function () {
     });
 
     describe("deleteUser method", function () {
-      test("Adds a new user to storage", function () {
+      test("Deletes a user from storage", function () {
         storage.newUser(mike23);
         const mike = storage.getUser(mike23.id);
 

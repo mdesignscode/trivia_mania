@@ -6,3 +6,10 @@ export interface IQuestion {
   question: string;
   difficulty: string;
 }
+
+export interface IUser {
+  username: string;
+  id: string;
+  stats: Record<string, Record<string, any>>;
+  avatar: string;
+}

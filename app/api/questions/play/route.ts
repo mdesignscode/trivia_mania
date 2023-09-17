@@ -1,13 +1,28 @@
-import storage from '@/models/index'
-import { NextResponse } from 'next/server'
+import storage from "../../../../models/index";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const body = await request.json()
+  try {
+    const body = await request.json();
 
-  const difficulty = body.difficulty || ''
-  const categories = body.categories || []
+    if (
+      body.difficulty &&
+      !["easy", "hard", "medium"].includes(body.difficulty)
+    ) {
+      return NextResponse.json("Invalid difficulty");
+    }
 
-  const data = storage.filterQuestions({ difficulty, categories })
+    if (body.categories && !Array.isArray(body.categories)) {
+      return NextResponse.json("Invalid categories");
+    }
 
-  return NextResponse.json(data)
+    const difficulty = body.difficulty || "";
+    const categories = body.categories || [];
+
+    const data = storage.filterQuestions({ difficulty, categories });
+
+    return NextResponse.json(data);
+  } catch (error) {
+    return NextResponse.json("Invalid body");
+  }
 }

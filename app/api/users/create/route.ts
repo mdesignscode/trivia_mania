@@ -1,22 +1,30 @@
-import storage from "@/models/index";
-import User from "@/models/user";
+import storage from "../../../../models/index";
+import User from "../../../../models/user";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const body = await request.json();
-
-  const username = body.username;
-  const id = body.id;
-  const avatar = body.avatar;
-
-  const newUser = new User(username, id, {}, avatar);
   try {
-    storage.newUser(newUser);
+    const body = await request.json();
 
-    storage.save();
+      if (!body.username) {
+      return NextResponse.json("Username required");
+    }
 
-    NextResponse.json({ message: "User created successfully"})
+    const username = body.username;
+    const id = body.id;
+    const avatar = body.avatar;
+
+    const newUser = new User(username, id, {}, avatar);
+    try {
+      storage.newUser(newUser);
+
+      storage.save();
+
+      return NextResponse.json({ message: "User created successfully" });
+    } catch (error) {
+      return NextResponse.json({ message: "Failed to create User" });
+    }
   } catch (error) {
-    NextResponse.json({ message: "Failed to create User"})
+    return NextResponse.json("Invalid body");
   }
 }

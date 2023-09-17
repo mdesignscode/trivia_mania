@@ -1,10 +1,21 @@
-import storage from '@/models/index'
-import { NextResponse } from 'next/server'
+import storage from "../../../../models/index";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const body = await request.json()
+  try {
+    const body = await request.json();
 
-  const data = storage.questionsStats(body?.difficulty || '')
+    if (
+      body.difficulty &&
+      !["easy", "hard", "medium"].includes(body.difficulty)
+    ) {
+      return NextResponse.json("Invalid difficulty");
+    }
 
-  return NextResponse.json(data)
+    const data = storage.questionsStats(body?.difficulty || "");
+
+    return NextResponse.json(data);
+  } catch (error) {
+    return NextResponse.json("Invalid body");
+  }
 }

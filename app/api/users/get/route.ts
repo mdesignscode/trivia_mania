@@ -1,11 +1,19 @@
-import storage from "@/models/index";
+import storage from "../../../../models/index";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const body = await request.json();
+  try {
+    const body = await request.json();
 
-  const id = body.id;
+    if (!body.id) {
+      return NextResponse.json("User id required");
+    }
 
-  const user = storage.getUser(id) || null
-  return NextResponse.json(user)
+    const id = body.id;
+
+    const user = storage.getUser(id) || null;
+    return NextResponse.json(user);
+  } catch (error) {
+    return NextResponse.json("Invalid body");
+  }
 }

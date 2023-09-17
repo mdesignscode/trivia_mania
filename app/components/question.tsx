@@ -1,4 +1,5 @@
 "use client";
+import { useUser } from "@clerk/nextjs";
 import { ReactNode, Fragment, useState, useEffect } from "react";
 import { Button, QuestionBox } from "./styledComponents";
 import Timer from "./timerCountdown";
@@ -20,6 +21,8 @@ export interface IQuestionProps {
   questionNumber: number;
   setIndex: Function;
   questionsLength: number;
+  updateProgress: Function;
+  submitProgress: Function;
 }
 
 export default function Question({
@@ -28,6 +31,8 @@ export default function Question({
   questionNumber,
   setIndex,
   questionsLength,
+  updateProgress,
+  submitProgress,
 }: IQuestionProps) {
   const [answerFeedback, setAnswerFeedback] = useState<ReactNode[]>([
     <></>,
@@ -38,6 +43,8 @@ export default function Question({
   const [timesUp, setTimesUp] = useState(false);
   const [CTA, setCTA] = useState("Next Question");
   const [timerHasStarted, setTimerHasStarted] = useState(true);
+  const { user, isLoaded, isSignedIn } = useUser();
+  const [error, setError] = useState(null)
 
   function handleUserAnswer(value: string, i: number) {
     setAnswerFeedback((state) =>
@@ -57,7 +64,10 @@ export default function Question({
         );
       })
     );
-
+    updateProgress(
+      { category, answers, correctAnswer, question, difficulty },
+      value
+    );
     handleTimesUp();
   }
 
@@ -66,17 +76,30 @@ export default function Question({
     setTimerHasStarted(false);
   }
 
-  function handleNextQuestion() {
-    if (CTA === "Back to home") window.location.href = "/";
-    else setIndex((index: number) => index + 1);
+  async function handleNextQuestion() {
+    if (CTA === "Submit Results") {
+      if (isLoaded && isSignedIn) {
+        const res = await submitProgress(user.id);
+        if (res.message === "User stats updated successfully")
+          window.location.href = "/users/" + user.id;
+        else setError(res)
+      } else window.location.href = "/sign-in";
+    } else setIndex((index: number) => index + 1);
+  }
+
+  function handleViewProgress() {
+    if (isLoaded && isSignedIn) {
+      submitProgress(user.id);
+      window.location.href = "/users/" + user.id;
+    }
   }
 
   useEffect(() => {
     setCTA(
       !(index % 5)
-        ? "Play More"
+        ? "Continue Playing"
         : index === questionsLength
-        ? "Back to home"
+        ? "Submit Results"
         : "Next Question"
     );
   });
@@ -130,10 +153,19 @@ export default function Question({
         </div>
 
         {timesUp && (
-          <Button onClick={handleNextQuestion} $primary={true}>
-            {CTA}
-          </Button>
+          <>
+            <Button onClick={handleNextQuestion} $primary={true}>
+              {CTA}
+            </Button>
+
+            {CTA === "Continue Playing" && (
+              <Button onClick={handleViewProgress} $primary={true}>
+                View Progress
+              </Button>
+            )}
+          </>
         )}
+        {error && <div>{error}</div>}
       </QuestionBox>
     </Transition>
   );

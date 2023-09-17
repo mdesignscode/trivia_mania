@@ -92,7 +92,7 @@ What's on the Horizon: Now that we've made these exciting enhancements, it's tim
 I'm incredibly excited about these upcoming features and the overall progress of Trivia Mania. If you share my passion for technology, coding, and creating engaging experiences, please feel free to connect, share your insights, or simply be a part of this exciting project. Let's continue to learn, grow, and have a blast together as we navigate the world of Trivia Mania! 🌟👩‍💻
 
 Stay tuned for more updates, and thank you for being a part of this incredible journey! 🌐 #TriviaMania #SoftwareEngineering #UIUX #APIDevelopment
-  
+
 
 
 Post 6 [15-09-2023]:
@@ -118,3 +118,31 @@ What's on the Horizon:
 I'm incredibly excited about these upcoming features and the overall direction of Trivia Mania. If you share my passion for technology, coding, and creating engaging experiences, please feel free to connect, share your insights, or simply be a part of this exciting project. Let's continue to learn, grow, and have a blast together as we navigate the world of Trivia Mania! 🌟👩‍💻
 
 Stay tuned for more updates, and thank you for being a part of this incredible journey! 🌐 #TriviaMania #SoftwareEngineering #UIUX #APIDevelopment
+
+
+
+Post 7 [17-09-2023]:
+
+🚀 Trivia Mania Project Update: Moving Forward with Momentum! 🎉
+
+Hello, LinkedIn community! 👋 It's time for another thrilling update on the Trivia Mania project. The journey continues to be filled with innovation and progress, and I'm delighted to share the latest developments with you all:
+
+🌐 API Advancements:
+
+    I'm excited to announce the expansion of our API functionality! We now have endpoints for key user-related actions, including creating a user, deleting a user, retrieving user data, and updating a user's progress. This marks a significant step forward in enhancing the Trivia Mania user experience. 📡👩‍💻
+    To ensure the reliability and robustness of our API, I've written comprehensive unit tests for all endpoints, including those handling questions. These tests are a crucial part of maintaining the quality and performance of Trivia Mania. 🧪🔍
+
+🎨 UI Enhancements:
+
+    User engagement remains at the forefront of our efforts. I'm proud to unveil a clean and responsive UI for the scoreboard. This new interface not only looks sleek but also provides an immersive experience for users to track their progress and compete with others. It's all about creating a captivating and competitive environment! 🏆🖥️
+    The update user progress functionality has been seamlessly integrated into the UI. Players can now easily submit their progress when they've completed a round of trivia. This feature adds an interactive element to Trivia Mania, allowing users to see their growth and accomplishments in real-time. It's all about celebrating success together! 🎉🔄
+
+What's on the Horizon:
+
+    The journey doesn't stop here; we're pushing forward with more exciting developments:
+    📊 User Stats Page: The creation of a user stats page is next on our list. This page will provide users with detailed insights into their performance and progress, making Trivia Mania not just a game but also a platform for personal growth.
+    🌟 UI Refinements: We're committed to delivering an exceptional user experience. Expect further UI refinements, including smooth page transitions and the integration of LocalStorage to persist user progress across page refreshes. It's all about making Trivia Mania even more user-friendly and engaging! 🚀🖌️
+
+As always, I'm immensely excited about the direction Trivia Mania is heading. If you share my passion for technology, coding, and creating engaging experiences, please feel free to connect, share your insights, or simply be a part of this exciting project. Together, we'll continue to learn, grow, and have a blast as we navigate the world of Trivia Mania! 🌟👩‍💻
+
+Stay tuned for more updates, and thank you for being an integral part of this incredible journey! 🌐 #TriviaMania #SoftwareEngineering #UIUX #APIDevelopment

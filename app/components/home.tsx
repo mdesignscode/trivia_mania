@@ -1,4 +1,5 @@
 "use client";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "./styledComponents";
@@ -88,7 +89,7 @@ function HomePage({ stats }: Record<string, any>) {
         }));
       }
     }
-    
+
 
     // display data
     setFetchingDifficulty(false);
@@ -96,6 +97,10 @@ function HomePage({ stats }: Record<string, any>) {
   }, []);
 
   return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    >
     <div className="homepage flex flex-col">
       <main className="main-content flex-col items-center flex">
         <div className="mb-4 mt-5">
@@ -171,6 +176,7 @@ function HomePage({ stats }: Record<string, any>) {
         <p>&copy; 2023 Trivia Mania. All rights reserved.</p>
       </footer>
     </div>
+    </motion.div>
   );
 }
 

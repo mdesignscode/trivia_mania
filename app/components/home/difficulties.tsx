@@ -42,10 +42,10 @@ function Difficulties({
 
   return (
     <motion.div
-    // initial={{ opacity: 0, scale: 0.5 }}
-    // animate={{ opacity: 1, scale: 1 }}
-    // exit={{ opacity: 0, scale: 0.5 }}
-    // transition={{ duration: 0.5 }}
+      initial={{ x: 100 }}
+      animate={{ x: 0 }}
+      exit={{ x: -100 }}
+      transition={{ duration: 1.5 }}
     >
       <div className="text-center flex flex-col gap-3">
         <h1>Choose difficulty</h1>

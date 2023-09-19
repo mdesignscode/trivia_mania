@@ -2,7 +2,12 @@ import { motion } from "framer-motion";
 
 export default function Header() {
   return (
-    <motion.div>
+    <motion.div
+      initial={{ y: "-100%" }}
+      animate={{ y: 0 }}
+      exit={{ y: "-100%" }}
+      transition={{ duration: 1.5 }}
+    >
       <div className="mb-4 mt-5">
         <h2 className="text-3xl mb-2 font-bold underline">
           Welcome to Trivia Mania!

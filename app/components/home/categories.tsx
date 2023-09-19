@@ -20,7 +20,8 @@ function Categories({
     false,
     false,
   ]);
-
+  const [showMore, setShowMore] = useState(true);
+  const [sliceIndex, setSliceIndex] = useState(15);
   const [isHovered, setIsHovered] = useState(false);
 
   const buttonVariants = {
@@ -45,37 +46,62 @@ function Categories({
 
   return (
     <motion.div
-    // initial={{ opacity: 0, scale: 0.5 }}
-    // animate={{ opacity: 1, scale: 1 }}
-    // exit={{ opacity: 0, scale: 0.5 }}
-    // transition={{ duration: 0.5 }}
+      initial={{ x: -100 }}
+      animate={{ x: 0 }}
+      exit={{ x: 100 }}
+      transition={{ duration: 1.5 }}
     >
       <div className="text-center flex flex-col gap-3">
         <h1>Choose Categories</h1>
 
         {!fetchingCategories ? (
-          <div className="flex gap-2 flex-wrap justify-center">
-            {Object.keys(categoryStats).map((stat, i) => {
-              return (
-                <motion.button
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="hover"
-                  onClick={() => setIsHovered(!isHovered)}
-                >
-                  <Button
-                    key={stat}
-                    onClick={() => {
-                      const value = stat === "all categories" ? "" : stat;
-                      handleCategories(i, value);
-                    }}
-                    $primary={categoryChoice[i]}
-                  >
-                    {stat} ({categoryStats[stat]})
-                  </Button>
-                </motion.button>
-              );
-            })}
+          <div className="flex flex-col gap-3">
+            <div className="flex gap-2 flex-wrap justify-center">
+              {Object.keys(categoryStats)
+                .slice(0, sliceIndex)
+                .map((stat, i) => {
+                  return (
+                    <motion.button
+                      variants={buttonVariants}
+                      whileHover="hover"
+                      whileTap="hover"
+                      onClick={() => setIsHovered(!isHovered)}
+                    >
+                      <Button
+                        key={stat}
+                        onClick={() => {
+                          const value = stat === "all categories" ? "" : stat;
+                          handleCategories(i, value);
+                        }}
+                        $primary={categoryChoice[i]}
+                      >
+                        {stat} ({categoryStats[stat]})
+                      </Button>
+                    </motion.button>
+                  );
+                })}
+            </div>
+
+            <motion.button
+              variants={buttonVariants}
+              whileHover="hover"
+              whileTap="hover"
+              onClick={() => setIsHovered(!isHovered)}
+              className="w-1/3 mx-auto"
+            >
+              <Button
+                onClick={() => {
+                  setShowMore(!showMore);
+                  setSliceIndex(
+                    !showMore ? 15 : Object.keys(categoryStats).length
+                  );
+                }}
+                $primary={true}
+                className="w-full"
+              >
+                {showMore ? "More categories" : "Less categories"}
+              </Button>
+            </motion.button>
           </div>
         ) : (
           <Loading />

@@ -64,19 +64,34 @@ describe("FileStorage", function () {
 
     describe("newQuestion method", function () {
       test("Adds a question to storage by duplicating it across the `Category` and `Difficulty`", () => {
-        const { Question1 } = generateFakeData();
+        const { Question1, Question2, Question3, Question4 } = generateFakeData();
+
+        // save `General Knowledge` `easy` question
         storage.newQuestion(Question1);
 
+        // should create entries for `General Knowledge` and `easy`
         const questionEasy = storage.getQuestion("easy", "1");
-        expect(questionEasy).toBeDefined();
-
-        const { Question4 } = generateFakeData();
-        storage.newQuestion(Question4);
-
         const questionGeneral = storage.getQuestion("General Knowledge", "1");
-        const questionGeneral4 = storage.getQuestion("General Knowledge", "4");
+        expect(questionEasy).toBeDefined();
         expect(questionGeneral).toBeDefined();
-        expect(questionGeneral4).toBeDefined();
+
+        let allQuestions = storage.getAllQuestions(false) as Record<string, Question>
+        expect(Object.keys(allQuestions).length).toStrictEqual(1)
+
+        // add more questions to storage
+        storage.newQuestion([Question4, Question3, Question2]);
+
+        const question4 = storage.getQuestion("General Knowledge", "4");
+        const questionScience = storage.getQuestion("Science", "2");
+        const questionHistory = storage.getQuestion("History", "3");
+
+        expect(question4).toBeDefined();
+        expect(questionScience).toBeDefined();
+        expect(questionHistory).toBeDefined();
+
+        // storage now has 4 questions
+        allQuestions = storage.getAllQuestions(false) as Record<string, Question>
+        expect(Object.keys(allQuestions).length).toStrictEqual(4)
       });
     });
 

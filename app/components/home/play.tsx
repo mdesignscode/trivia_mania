@@ -19,20 +19,20 @@ export default function Play({ difficulty, categories }: IPlayProps) {
       exit={{ y: "100%" }}
       transition={{ duration: 1.5 }}
     >
-    <motion.button
-      variants={buttonVariants}
-      whileHover="hover"
-      whileTap="hover"
-    >
-      <Link
-        className="start-button mt-4"
-        href={encodeURI(
-          `/game?difficulty=${difficulty}&categories=${categories.join(",")}`
-        )}
+      <motion.button
+        variants={buttonVariants}
+        whileHover="hover"
+        whileTap="hover"
       >
-        Start Playing
-      </Link>
-            </motion.button>
+        <Link
+          className="start-button mt-4"
+          href={encodeURI(
+            `/game?difficulty=${difficulty}&categories=${categories.join(",")}`
+          )}
+        >
+          Start Playing
+        </Link>
+      </motion.button>
     </motion.div>
   );
 }

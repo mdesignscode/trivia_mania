@@ -9,6 +9,7 @@ interface IDifficultiesProps {
   getQuestionStats: Function;
   fetchingDifficulty: boolean;
   difficultyStats: Record<string, number>;
+  difficulty: string;
 }
 
 function Difficulties({
@@ -16,11 +17,13 @@ function Difficulties({
   getQuestionStats,
   fetchingDifficulty,
   difficultyStats,
+  difficulty
 }: IDifficultiesProps) {
   const [difficultyChoice, setDifficultyChoice] = useState<Array<boolean>>([
     false,
     false,
     false,
+    false
   ]);
 
   const buttonVariants = {
@@ -31,12 +34,14 @@ function Difficulties({
   function handleDifficulty(index: number, value: string) {
     setDifficultyChoice((state: Array<boolean>) =>
       state.map((_, i) => {
-        return i === index ? true : false;
+        return i === index ? difficulty ? false : true : false;
       })
     );
-    setDifficulty(value);
 
-    getQuestionStats(value);
+    const seek = difficulty ? "" : value
+    setDifficulty(seek);
+
+    getQuestionStats(seek);
   }
 
   return (
@@ -47,13 +52,13 @@ function Difficulties({
       transition={{ duration: 1.5 }}
     >
       <div className="text-center flex flex-col gap-3">
-        <h1>Choose difficulty</h1>
+        <h1 className="text-xl">Choose difficulty</h1>
 
         {!fetchingDifficulty ? (
           <div className="flex gap-2 flex-wrap justify-center">
             {Object.keys(difficultyStats).map((stat, i) => {
               return (
-                <motion.button
+                <motion.span
                   key={stat}
                   variants={buttonVariants}
                   whileHover="hover"
@@ -68,7 +73,7 @@ function Difficulties({
                   >
                     {stat} ({difficultyStats[stat]})
                   </Button>
-                </motion.button>
+                </motion.span>
               );
             })}
           </div>

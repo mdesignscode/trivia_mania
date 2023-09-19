@@ -22,28 +22,50 @@ class FileStorage {
   private objects: Record<string, any> = {};
 
   /**
-   * Adds a question to storage
+   * Adds a question or a list of questions to storage
    * @date 05/09/2023 - 20:36:02
    *
-   * @param {Question} obj - the question to be added
+   * @param {Question} questions - the questions to be added
    */
-  newQuestion(obj: Question): void {
-    this.objects[`Question.${obj.difficulty}`] = {
-      ...this.objects[`Question.${obj.difficulty}`],
-      [`Question.${obj.id}`]: {
-        ...obj,
+  newQuestion(questions: Question | Array<Question>): void {
+    if (Array.isArray(questions)) {
+      questions.forEach((obj) => {
+        this.objects[`Question.${obj.difficulty}`] = {
+          ...this.objects[`Question.${obj.difficulty}`],
+          [`Question.${obj.id}`]: {
+            ...obj,
+            __class__: "Question",
+          },
+          __class__: "Question",
+        };
+        this.objects[`Question.${obj.category}`] = {
+          ...this.objects[`Question.${obj.difficulty}`],
+          [`Question.${obj.id}`]: {
+            ...obj,
+            __class__: "Question",
+          },
+          __class__: "Question",
+        };
+      });
+    } else {
+      const obj = questions;
+      this.objects[`Question.${obj.difficulty}`] = {
+        ...this.objects[`Question.${obj.difficulty}`],
+        [`Question.${obj.id}`]: {
+          ...obj,
+          __class__: "Question",
+        },
         __class__: "Question",
-      },
-      __class__: "Question",
-    };
-    this.objects[`Question.${obj.category}`] = {
-      ...this.objects[`Question.${obj.difficulty}`],
-      [`Question.${obj.id}`]: {
-        ...obj,
+      };
+      this.objects[`Question.${obj.category}`] = {
+        ...this.objects[`Question.${obj.category}`],
+        [`Question.${obj.id}`]: {
+          ...obj,
+          __class__: "Question",
+        },
         __class__: "Question",
-      },
-      __class__: "Question",
-    };
+      };
+    }
   }
 
   /**
@@ -180,12 +202,12 @@ class FileStorage {
     }
 
     if (Array.isArray(user)) {
-      const users = user as Array<User>
+      const users = user as Array<User>;
 
-      users.forEach(user => this.objects.Users[user.id] = user)
+      users.forEach((user) => (this.objects.Users[user.id] = user));
     } else {
-      const NewUser = user as User
-      this.objects.Users[NewUser.id] = user
+      const NewUser = user as User;
+      this.objects.Users[NewUser.id] = user;
     }
   }
 
@@ -196,10 +218,9 @@ class FileStorage {
    * @param {string} id
    */
   deleteUser(id: string) {
-    const users = this.objects.Users
+    const users = this.objects.Users;
 
-    if (users && users[id])
-      delete users[id]
+    if (users && users[id]) delete users[id];
   }
 
   /**
@@ -245,7 +266,9 @@ class FileStorage {
    */
   getTopTenUsers(): Array<User> {
     const usersList = Object.values(this.objects.Users) as Array<User>;
-    const users = usersList.filter((user) => Object.keys(user.stats).length > 0)
+    const users = usersList.filter(
+      (user) => Object.keys(user.stats).length > 0
+    );
     const sortedUsers = users.sort((a, b) => {
       const userA = calculateTotalScore(a as User);
       const userB = calculateTotalScore(b as User);
@@ -267,7 +290,7 @@ class FileStorage {
     try {
       writeFileSync(this.filePath, jsonData, "utf-8");
     } catch (error) {
-      return error
+      return error;
     }
   }
 
@@ -310,7 +333,7 @@ class FileStorage {
         };
         const user = new User(model.username, model.id, model.stats);
 
-        data.Users[key] = user
+        data.Users[key] = user;
       }
     } catch (error) {}
     Object.assign(this.objects, data);

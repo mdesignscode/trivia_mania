@@ -31,7 +31,16 @@ function HomePage({ stats }: Record<string, any>) {
     const url = baseUrl + "questions/stats";
 
     const { data } = await axios.post(url, { difficulty });
-    setCategoryStats(data);
+
+    let difficultyCategories: Record<string, number> = {};
+    if (!difficulty) {
+      for (const key in data) {
+        if (!["easy", "hard", "medium", "all difficulties"].includes(key)) {
+          difficultyCategories[key] = data[key];
+        }
+      }
+    } else difficultyCategories = data;
+    setCategoryStats(difficultyCategories);
 
     // display categories
     setFetchingCategories(false);
@@ -64,7 +73,7 @@ function HomePage({ stats }: Record<string, any>) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0, }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
       <div className="homepage flex flex-col">
@@ -78,6 +87,7 @@ function HomePage({ stats }: Record<string, any>) {
                 getQuestionStats,
                 fetchingDifficulty,
                 difficultyStats,
+                difficulty,
               }}
             />
 

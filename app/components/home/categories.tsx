@@ -51,7 +51,7 @@ function Categories({
       transition={{ duration: 1.5 }}
     >
       <div className="text-center flex flex-col gap-3">
-        <h1>Choose Categories</h1>
+        <h1 className="text-xl">Choose Categories</h1>
 
         {!fetchingCategories ? (
           <div className="flex flex-col gap-3">
@@ -60,13 +60,13 @@ function Categories({
                 .slice(0, sliceIndex)
                 .map((stat, i) => {
                   return (
-                    <motion.button
+                    <motion.span
+                      key={stat}
                       variants={buttonVariants}
                       whileHover="hover"
                       whileTap="hover"
                     >
                       <Button
-                        key={stat}
                         onClick={() => {
                           const value = stat === "all categories" ? "" : stat;
                           handleCategories(i, value);
@@ -75,30 +75,51 @@ function Categories({
                       >
                         {stat} ({categoryStats[stat]})
                       </Button>
-                    </motion.button>
+                    </motion.span>
                   );
                 })}
             </div>
 
-            <motion.button
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="hover"
-              className="w-1/3 mx-auto"
-            >
-              <Button
-                onClick={() => {
-                  setShowMore(!showMore);
-                  setSliceIndex(
-                    !showMore ? 15 : Object.keys(categoryStats).length
-                  );
-                }}
-                $primary={true}
-                className="w-full"
+            <div className="flex justify-center gap-4">
+              <motion.span
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="hover"
+                className="w-1/3"
               >
-                {showMore ? "More categories" : "Less categories"}
-              </Button>
-            </motion.button>
+                <Button
+                  onClick={() => {
+                    setShowMore(!showMore);
+                    setSliceIndex(
+                      !showMore ? 15 : Object.keys(categoryStats).length
+                    );
+                  }}
+                  $primary={true}
+                  className="w-full"
+                >
+                  {showMore ? "More categories" : "Less categories"}
+                </Button>
+              </motion.span>
+
+              <motion.span
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="hover"
+                className="w-1/3"
+              >
+                <Button
+                  onClick={() => {
+                    setCategories([])
+                    setCategoryChoice(state => state.map(() =>
+                    false))
+                  }}
+                  $primary={true}
+                  className="w-full"
+                >
+                  Reset categories
+                </Button>
+              </motion.span>
+            </div>
           </div>
         ) : (
           <Loading />

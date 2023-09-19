@@ -22,7 +22,6 @@ function Categories({
   ]);
   const [showMore, setShowMore] = useState(true);
   const [sliceIndex, setSliceIndex] = useState(15);
-  const [isHovered, setIsHovered] = useState(false);
 
   const buttonVariants = {
     rest: { translateY: 1 },
@@ -65,7 +64,6 @@ function Categories({
                       variants={buttonVariants}
                       whileHover="hover"
                       whileTap="hover"
-                      onClick={() => setIsHovered(!isHovered)}
                     >
                       <Button
                         key={stat}
@@ -86,7 +84,6 @@ function Categories({
               variants={buttonVariants}
               whileHover="hover"
               whileTap="hover"
-              onClick={() => setIsHovered(!isHovered)}
               className="w-1/3 mx-auto"
             >
               <Button

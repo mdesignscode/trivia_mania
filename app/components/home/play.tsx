@@ -1,7 +1,5 @@
-"use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useState } from "react";
 
 interface IPlayProps {
   difficulty: string;
@@ -9,8 +7,6 @@ interface IPlayProps {
 }
 
 export default function Play({ difficulty, categories }: IPlayProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
   const buttonVariants = {
     rest: { translateY: 1 },
     hover: { translateY: -5 },
@@ -27,7 +23,6 @@ export default function Play({ difficulty, categories }: IPlayProps) {
       variants={buttonVariants}
       whileHover="hover"
       whileTap="hover"
-      onClick={() => setIsHovered(!isHovered)}
     >
       <Link
         className="start-button mt-4"

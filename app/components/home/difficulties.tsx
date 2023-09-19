@@ -22,7 +22,6 @@ function Difficulties({
     false,
     false,
   ]);
-  const [isHovered, setIsHovered] = useState(false);
 
   const buttonVariants = {
     rest: { translateY: 1 },
@@ -55,13 +54,12 @@ function Difficulties({
             {Object.keys(difficultyStats).map((stat, i) => {
               return (
                 <motion.button
+                  key={stat}
                   variants={buttonVariants}
                   whileHover="hover"
                   whileTap="hover"
-                  onClick={() => setIsHovered(!isHovered)}
                 >
                   <Button
-                    key={stat}
                     onClick={() => {
                       const value = stat === "all difficulties" ? "" : stat;
                       handleDifficulty(i, value);

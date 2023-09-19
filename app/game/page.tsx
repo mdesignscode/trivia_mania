@@ -1,4 +1,5 @@
 "use client";
+import { motion } from "framer-motion";
 import Loading from "app/loading";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -18,79 +19,49 @@ export default function GamePage() {
   const categories = params.get("categories")?.split(",");
 
   function updateProgress(question: IQuestion, answer: string) {
-    // difficulty record
-    if (progress[question.difficulty]) {
-      // increment difficulty record in state if exists
-      setProgress((state) => {
-        return {
-          ...state,
-          [question.difficulty]: {
-            correctAnswered:
-              question.correctAnswer === answer
-                ? state[question.difficulty].correctAnswered + 1
-                : state[question.difficulty].correctAnswered,
-            answered: state[question.difficulty].answered + 1,
-          },
-        };
-      });
-    } else {
-      // else set difficulty record in state
-      setProgress((state) => {
-        return {
-          ...state,
-          [question.difficulty]: {
-            answered: 1,
-            correctAnswered: question.correctAnswer === answer ? 1 : 0,
-          },
-        };
-      });
-    }
+    // Create an object to store all the progress updates
+    const progressUpdate: Record<string, any> = {};
 
-    // category record
-    if (progress[question.category]) {
-      // increment category record in state if exists
-      setProgress((state) => {
-        return {
-          ...state,
-          [question.category]: {
-            [question.difficulty]: {
-              correctAnswered:
-                question.correctAnswer === answer
-                  ? state[question.category][question.difficulty]
-                      .correctAnswered + 1
-                  : state[question.category][question.difficulty]
-                      .correctAnswered,
-              answered:
-                state[question.category][question.difficulty].answered + 1,
-            },
-          },
-        };
-      });
-    } else {
-      // else set category record in state
-      setProgress((state) => {
-        return {
-          ...state,
-          [question.category]: {
-            [question.difficulty]: {
-              correctAnswered: question.correctAnswer === answer ? 1 : 0,
-              answered: 1,
-            },
-          },
-        };
-      });
-    }
+    // Update difficulty record
+    progressUpdate[question.difficulty] = {
+      correctAnswered: progress[question.difficulty]
+        ? progress[question.difficulty].correctAnswered +
+          (question.correctAnswer === answer ? 1 : 0)
+        : question.correctAnswer === answer
+        ? 1
+        : 0,
+      answered: progress[question.difficulty]
+        ? progress[question.difficulty].answered + 1
+        : 1,
+    };
 
-    // update total record
+    // Update category record
+    progressUpdate[question.category] = {
+      [question.difficulty]: {
+        correctAnswered: progress[question.category]
+          ? progress[question.category][question.difficulty].correctAnswered +
+            (question.correctAnswer === answer ? 1 : 0)
+          : question.correctAnswer === answer
+          ? 1
+          : 0,
+        answered: progress[question.category]
+          ? progress[question.category][question.difficulty].answered + 1
+          : 1,
+      },
+    };
+
+    // Update total record
+    progressUpdate.total = {
+      correctAnswered:
+        progress.total.correctAnswered +
+        (question.correctAnswer === answer ? 1 : 0),
+      answered: progress.total.answered + 1,
+    };
+
+    // Call setProgress once with the entire progress update object
     setProgress((state) => ({
       ...state,
-      total: {
-        correctAnswered:
-          question.correctAnswer === answer
-            ? state.total.correctAnswered + 1
-            : state.total.correctAnswered,
-        answered: state.total.answered + 1,
-      },
+      ...progressUpdate,
     }));
   }
 
@@ -100,7 +71,7 @@ export default function GamePage() {
 
     try {
       const { data } = await axios.post(url, { stats: progress, id });
-      return data
+      return data;
     } catch (error) {
       return error;
     }
@@ -122,6 +93,12 @@ export default function GamePage() {
   });
 
   return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, }}
+      transition={{ duration: 0.5 }}
+    >
     <div className="game-page h-full flex-1 flex justify-center">
       <div className="flex flex-col justify-center items-center gap-4 max-w-3xl mx-8 h-full">
         {data.length ? (
@@ -149,5 +126,6 @@ export default function GamePage() {
         )}
       </div>
     </div>
+    </motion.div>
   );
 }

@@ -135,7 +135,7 @@ class FileStorage {
    */
   filterQuestions(filters: IFilters): Array<Question> {
     const questions = this.getAllQuestions(false) as Record<string, Question>;
-    const filteredCategories: Array<Question> = filters.categories
+    const filteredCategories: Array<Question> = filters.categories?.length
       ? Object.values(questions).filter((question) =>
           filters.categories?.includes(question.category)
         )

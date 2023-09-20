@@ -65,6 +65,27 @@ describe("POST questions/play", function () {
     stubAll.restore();
   });
 
+  test("Should return an array of all questions", async function () {
+    // test body
+    const body = { difficulty: "", categories: [] };
+    const req = new Request(url, {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+
+    // stub storage.getAllQuestions
+    const stubAll = stub(storage, "getAllQuestions");
+    stubAll.callsFake(generateFakeData);
+
+    // get response
+    const res = await POST(req);
+    const data = await res.json();
+
+    expect(data.length).toStrictEqual(4);
+    // Restore the stubbed method after the test
+    stubAll.restore();
+  });
+
   test("Should return `Invalid body` if body cannot be read as json", async function () {
     // test body
     const body = undefined;

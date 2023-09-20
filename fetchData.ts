@@ -57,7 +57,7 @@ async function fetchOpenTriviaDB(url: string) {
 }
 
 async function main() {
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 20; i++) {
     await fetchOpenTriviaDB(
       "https://opentdb.com/api.php?amount=50&type=multiple"
     );

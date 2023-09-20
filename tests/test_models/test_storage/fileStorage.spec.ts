@@ -167,6 +167,19 @@ describe("FileStorage", function () {
 
         stubAll.restore();
       });
+
+      test("Returns a list of all questions", function () {
+        const stubAll = stub(storage, "getAllQuestions");
+        stubAll.callsFake(generateFakeData);
+
+        const filteredQuestions = storage.filterQuestions({
+          categories: [],
+          difficulty: ""
+        });
+        expect(filteredQuestions.length).toStrictEqual(4);
+
+        stubAll.restore();
+      });
     });
 
     describe("questionsStats method", function () {

@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import AddUserToStorage from "./addUserToStorage";
@@ -70,42 +70,44 @@ function HomePage({ stats }: Record<string, any>) {
   }, []);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="homepage flex flex-col">
-        <main className="main-content flex-col items-center flex">
-          <Header />
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="homepage flex flex-col">
+          <main className="main-content flex-col items-center flex">
+            <Header />
 
-          <div className="text-center flex flex-col gap-4 w-4/5">
-            <Difficulties
-              {...{
-                setDifficulty,
-                getQuestionStats,
-                fetchingDifficulty,
-                difficultyStats,
-                difficulty,
-              }}
-            />
+            <div className="text-center flex flex-col gap-4 w-4/5">
+              <Difficulties
+                {...{
+                  setDifficulty,
+                  getQuestionStats,
+                  fetchingDifficulty,
+                  difficultyStats,
+                  difficulty,
+                }}
+              />
 
-            <Categories
-              {...{
-                setCategories,
-                fetchingCategories,
-                categoryStats,
-              }}
-            />
-          </div>
+              <Categories
+                {...{
+                  setCategories,
+                  fetchingCategories,
+                  categoryStats,
+                }}
+              />
+            </div>
 
-          <Play {...{ difficulty, categories }} />
-        </main>
+            <Play {...{ difficulty, categories }} />
+          </main>
 
-        <Footer />
-      </div>
-    </motion.div>
+          <Footer />
+        </div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
 

@@ -15,14 +15,15 @@ export default function GamePage() {
     { total: { answered: 0, correctAnswered: 0 } }
   );
 
-  const difficulty = params.get("difficulty");
-  const categories = params.get("categories")?.split(",");
+  const difficulty = params.get("difficulty") || "";
+  const categoriesString = params.get("categories");
+  const categories = categoriesString ? categoriesString.split(",") : [];
 
   function updateProgress(question: IQuestion, answer: string) {
     setProgress((state) => {
       const newState: Record<string, Record<string, any>> = {
         ...state,
-        total: { ...state.total }
+        total: { ...state.total },
       };
       const isCorrect = answer === question.correctAnswer;
 

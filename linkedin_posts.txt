@@ -146,3 +146,21 @@ What's on the Horizon:
 As always, I'm immensely excited about the direction Trivia Mania is heading. If you share my passion for technology, coding, and creating engaging experiences, please feel free to connect, share your insights, or simply be a part of this exciting project. Together, we'll continue to learn, grow, and have a blast as we navigate the world of Trivia Mania! 🌟👩‍💻
 
 Stay tuned for more updates, and thank you for being an integral part of this incredible journey! 🌐 #TriviaMania #SoftwareEngineering #UIUX #APIDevelopment
+
+
+
+Post 8 [20-09-2023]:
+
+Write a follow up post:
+
+Updates:
+    I have implemented the user stats page
+    I have refactored the home page and applied `Separation of concern`, `Single responsibility` and `code reusablitiy` principles to make it easier to read and more maintainable
+    I have decided to not go with BarbaJS, seeing as a React is a SPA, and BarbaJS is created to make web apps behave like SPAs, and have gone with Framer Motion JS
+    I have improved the UI with Animations and Transitions using said library and Animate.css
+    I have also fixed some bugs revolving the behaviour of saving a user's progress
+
+Up next:
+    I'm now going to unit test the frontend
+    Implement Redux
+    Refactor backend to save user answered questions and present each user with a unique set of questions

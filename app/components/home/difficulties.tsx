@@ -46,9 +46,9 @@ function Difficulties({
 
   return (
     <motion.div
-      initial={{ x: 100 }}
-      animate={{ x: 0 }}
-      exit={{ x: -100 }}
+      initial={{ x: 100, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ x: -100, opacity: 0 }}
       transition={{ duration: 1.5 }}
     >
       <div className="text-center flex flex-col gap-3">

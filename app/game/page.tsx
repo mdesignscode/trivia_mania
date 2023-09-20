@@ -22,8 +22,7 @@ export default function GamePage() {
   function updateProgress(question: IQuestion, answer: string) {
     setProgress((state) => {
       const newState: Record<string, Record<string, any>> = {
-        ...state,
-        total: { ...state.total },
+        ...JSON.parse(JSON.stringify(state))
       };
       const isCorrect = answer === question.correctAnswer;
 
@@ -46,7 +45,6 @@ export default function GamePage() {
       // category
       const categoryKey = question.category;
       if (state[categoryKey]) {
-        newState[categoryKey] = { ...state[categoryKey] };
         if (state[categoryKey][difficultyKey]) {
           // increment old category difficulty
           newState[categoryKey][difficultyKey].answered =

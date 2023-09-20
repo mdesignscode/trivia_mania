@@ -5,7 +5,7 @@ import { Button, QuestionBox } from "./styledComponents";
 import Timer from "./timerCountdown";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { Transition } from "@headlessui/react";
-import 'animate.css';
+import "animate.css";
 
 export interface IQuestion {
   category: string;
@@ -73,19 +73,18 @@ export default function Question({
 
     // give user feedback on answer
 
-    const el = document.getElementById(value)
+    const el = document.getElementById(value);
 
-    el?.style.setProperty('--animate-duration', '1s');
+    el?.style.setProperty("--animate-duration", "1s");
     if (value === correctAnswer) {
-      const audio = document.getElementById("success") as HTMLAudioElement
-      audio.play()
-      el?.classList.add("animate__tada")
+      const audio = document.getElementById("success") as HTMLAudioElement;
+      audio.play();
+      el?.classList.add("animate__tada");
     } else {
-      const audio = document.getElementById("error") as HTMLAudioElement
-      audio.play()
-      el?.classList.add("animate__shakeX")
+      const audio = document.getElementById("error") as HTMLAudioElement;
+      audio.play();
+      el?.classList.add("animate__shakeX");
     }
-
 
     handleTimesUp();
   }
@@ -106,10 +105,12 @@ export default function Question({
     } else setIndex((index: number) => index + 1);
   }
 
-  function handleViewProgress() {
+  async function handleViewProgress() {
     if (isLoaded && isSignedIn) {
-      submitProgress(user.id);
-      window.location.href = "/users/" + user.id;
+      const res = await submitProgress(user.id);
+      if (res.message === "User stats updated successfully")
+        window.location.href = "/users/" + user.id;
+      else setError(res);
     } else {
       window.location.href = "/sign-in";
     }
@@ -201,8 +202,8 @@ export default function Question({
   );
 }
 
-function decodeHTMLEntities(text: string) {
-  const parser = new DOMParser();
-  const decodedHTML = parser.parseFromString(text, "text/html");
-  return decodedHTML.body.textContent;
+function decodeHTMLEntities(text: string): string {
+  const p = document.createElement("p")
+  p.innerHTML = text
+  return p.innerText
 }

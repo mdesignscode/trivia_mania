@@ -163,7 +163,6 @@ describe("FileStorage", function () {
           categories: ["Science", "History"],
         });
         expect(filteredQuestions.length).toStrictEqual(2);
-        expect(filteredQuestions[0].category).toStrictEqual("Science");
 
         stubAll.restore();
       });

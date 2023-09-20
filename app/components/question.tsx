@@ -1,10 +1,11 @@
 "use client";
 import { useUser } from "@clerk/nextjs";
-import { ReactNode, Fragment, useState, useEffect } from "react";
+import { ReactNode, Fragment, useState, useEffect, useRef } from "react";
 import { Button, QuestionBox } from "./styledComponents";
 import Timer from "./timerCountdown";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { Transition } from "@headlessui/react";
+import 'animate.css';
 
 export interface IQuestion {
   category: string;
@@ -44,9 +45,10 @@ export default function Question({
   const [CTA, setCTA] = useState("Next Question");
   const [timerHasStarted, setTimerHasStarted] = useState(true);
   const { user, isLoaded, isSignedIn } = useUser();
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
 
   function handleUserAnswer(value: string, i: number) {
+    // display icon based on correct answer
     setAnswerFeedback((state) =>
       state.map((_, j) => {
         if (i === j) {
@@ -68,6 +70,23 @@ export default function Question({
       { category, answers, correctAnswer, question, difficulty },
       value
     );
+
+    // give user feedback on answer
+
+    const el = document.getElementById(value)
+
+    el?.style.setProperty('--animate-duration', '1s');
+    if (value === correctAnswer) {
+      const audio = document.getElementById("success") as HTMLAudioElement
+      audio.play()
+      el?.classList.add("animate__tada")
+    } else {
+      const audio = document.getElementById("error") as HTMLAudioElement
+      audio.play()
+      el?.classList.add("animate__shakeX")
+    }
+
+
     handleTimesUp();
   }
 
@@ -82,7 +101,7 @@ export default function Question({
         const res = await submitProgress(user.id);
         if (res.message === "User stats updated successfully")
           window.location.href = "/users/" + user.id;
-        else setError(res)
+        else setError(res);
       } else window.location.href = "/sign-in";
     } else setIndex((index: number) => index + 1);
   }
@@ -91,6 +110,8 @@ export default function Question({
     if (isLoaded && isSignedIn) {
       submitProgress(user.id);
       window.location.href = "/users/" + user.id;
+    } else {
+      window.location.href = "/sign-in";
     }
   }
 
@@ -141,12 +162,13 @@ export default function Question({
           {answers.map((answer, i) => {
             return (
               <Button
-                className="flex items-center"
+                className="flex justify-center gap-2 items-center animate__animated"
                 onClick={() => handleUserAnswer(answer, i)}
                 key={answer}
+                id={answer}
               >
                 <span>{answerFeedback[i]}</span>
-                <p className="flex-1">{answer}</p>
+                <p>{answer}</p>
               </Button>
             );
           })}
@@ -166,6 +188,14 @@ export default function Question({
           </>
         )}
         {error && <div>{error}</div>}
+        <audio id="success">
+          <source src="/success.mp3" type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+        <audio id="error">
+          <source src="/error.mp3" type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
       </QuestionBox>
     </Transition>
   );

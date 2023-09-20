@@ -19,50 +19,62 @@ export default function GamePage() {
   const categories = params.get("categories")?.split(",");
 
   function updateProgress(question: IQuestion, answer: string) {
-    // Create an object to store all the progress updates
-    const progressUpdate: Record<string, any> = {};
+    setProgress((state) => {
+      const newState: Record<string, Record<string, any>> = {
+        ...state,
+        total: { ...state.total }
+      };
+      const isCorrect = answer === question.correctAnswer;
 
-    // Update difficulty record
-    progressUpdate[question.difficulty] = {
-      correctAnswered: progress[question.difficulty]
-        ? progress[question.difficulty].correctAnswered +
-          (question.correctAnswer === answer ? 1 : 0)
-        : question.correctAnswer === answer
-        ? 1
-        : 0,
-      answered: progress[question.difficulty]
-        ? progress[question.difficulty].answered + 1
-        : 1,
-    };
+      // difficulty
+      const difficultyKey = question.difficulty;
+      if (state[difficultyKey]) {
+        // increment old state
+        newState[difficultyKey].answered = state[difficultyKey].answered + 1;
+        newState[difficultyKey].correctAnswered = isCorrect
+          ? state[difficultyKey].correctAnswered + 1
+          : state[difficultyKey].correctAnswered;
+      } else {
+        // create new object
+        newState[difficultyKey] = {
+          answered: 1,
+          correctAnswered: isCorrect ? 1 : 0,
+        };
+      }
 
-    // Update category record
-    progressUpdate[question.category] = {
-      [question.difficulty]: {
-        correctAnswered: progress[question.category]
-          ? progress[question.category][question.difficulty].correctAnswered +
-            (question.correctAnswer === answer ? 1 : 0)
-          : question.correctAnswer === answer
-          ? 1
-          : 0,
-        answered: progress[question.category]
-          ? progress[question.category][question.difficulty].answered + 1
-          : 1,
-      },
-    };
+      // category
+      const categoryKey = question.category;
+      if (state[categoryKey]) {
+        newState[categoryKey] = { ...state[categoryKey] };
+        if (state[categoryKey][difficultyKey]) {
+          // increment old category difficulty
+          newState[categoryKey][difficultyKey].answered =
+            state[categoryKey][difficultyKey].answered + 1;
+          newState[categoryKey][difficultyKey].correctAnswered = isCorrect
+            ? state[categoryKey][difficultyKey].correctAnswered + 1
+            : state[categoryKey][difficultyKey].correctAnswered;
+        } else {
+          // set new category difficulty
+          newState[categoryKey][difficultyKey] = {
+            answered: 1,
+            correctAnswered: isCorrect ? 1 : 0,
+          };
+        }
+      } else {
+        newState[categoryKey] = {
+          [difficultyKey]: {
+            answered: 1,
+            correctAnswered: isCorrect ? 1 : 0,
+          },
+        };
+      }
 
-    // Update total record
-    progressUpdate.total = {
-      correctAnswered:
-        progress.total.correctAnswered +
-        (question.correctAnswer === answer ? 1 : 0),
-      answered: progress.total.answered + 1,
-    };
+      // increment total
+      newState.total.answered++;
+      newState.total.correctAnswered += isCorrect ? 1 : 0;
 
-    // Call setProgress once with the entire progress update object
-    setProgress((state) => ({
-      ...state,
-      ...progressUpdate,
-    }));
+      return newState;
+    });
   }
 
   async function submitProgress(id: string) {
@@ -96,10 +108,10 @@ export default function GamePage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0, }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
+      className="game-page h-full flex-1 flex justify-center"
     >
-    <div className="game-page h-full flex-1 flex justify-center">
       <div className="flex flex-col justify-center items-center gap-4 max-w-3xl mx-8 h-full">
         {data.length ? (
           <>
@@ -125,7 +137,6 @@ export default function GamePage() {
           <Loading />
         )}
       </div>
-    </div>
     </motion.div>
   );
 }

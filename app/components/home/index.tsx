@@ -2,12 +2,16 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import AddUserToStorage from "./addUserToStorage";
 import Difficulties from "./difficulties";
 import Categories from "./categories";
 import Header from "./header";
 import Play from "./play";
 import Footer from "./footer";
+import {
+  useSelector,
+} from '@/lib/redux'
+import AddUserToStorage from "./addUserToStorage";
+import { userSelector } from "@/lib/redux/slices/userSlice/selectors";
 
 function HomePage({ stats }: Record<string, any>) {
   const [difficultyStats, setDifficultyStats] = useState<
@@ -21,7 +25,7 @@ function HomePage({ stats }: Record<string, any>) {
   const [fetchingDifficulty, setFetchingDifficulty] = useState(true);
   const [fetchingCategories, setFetchingCategories] = useState(true);
 
-  AddUserToStorage();
+  AddUserToStorage()
 
   async function getQuestionStats(difficulty: string) {
     // load categories

@@ -1,9 +1,11 @@
 "use client";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
+import { setUser, useDispatch } from "@/lib/redux";
 
 export default async function AddUserToStorage() {
   const { user, isLoaded, isSignedIn } = useUser();
+  const dispatch = useDispatch();
 
   if (isLoaded && isSignedIn) {
     // get user from storage
@@ -12,17 +14,27 @@ export default async function AddUserToStorage() {
 
     try {
       const { data } = await axios.post(url + "get", { id: user.id });
+      let triviaUser = data;
 
       // create user if not exist
       if (!data) {
-        axios
-          .post(url + "create", {
+        try {
+          const { data } = await axios.post(url + "create", {
             username: user.username,
             id: user.id,
             avatar: user.imageUrl,
-          })
-          .catch((err) => console.log(err));
+          });
+
+          // api should return the new user
+          triviaUser = data.user
+        } catch (error) {
+          console.log(error);
+          return
+        }
       }
+
+      // dispatch user
+      dispatch(setUser(triviaUser))
     } catch (error) {
       console.log(error);
       return;

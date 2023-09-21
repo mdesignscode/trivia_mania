@@ -24,7 +24,9 @@
       "@/styles/*": ["app/styles/*"],
       "@/models/*": ["models/*"],
       "@/store/*": ["app/components/store/*"],
-      "@/api/*": ["app/api/*"]
+      "@/api/*": ["app/api/*"],
+      "@/store*": ["app/components/store*"],
+      "@/lib/*": ["lib/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/timerCountdown.tsx"],

@@ -20,7 +20,7 @@ export async function POST(request: Request) {
 
       storage.save();
 
-      return NextResponse.json({ message: "User created successfully" });
+      return NextResponse.json({ message: "User created successfully", user: newUser });
     } catch (error) {
       return NextResponse.json({ message: "Failed to create User" });
     }

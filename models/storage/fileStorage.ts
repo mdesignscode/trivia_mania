@@ -268,6 +268,28 @@ class FileStorage {
   }
 
   /**
+   * Retrieves all users in storage
+   * @date 11/09/2023 - 17:51:09
+   *
+   * @returns {Record<string, User>}
+   */
+  getAllUsers(): Record<string, User> {
+    return this.objects.Users
+  }
+
+  /**
+   * Updates local users with Clerk.js user database.
+   *
+   * Only for use with api endpoint `/users/syncUsers`
+   * @date 11/09/2023 - 17:52:44
+   *
+   * @param {string} newUsers - the new set of users
+   */
+  syncUsers(newUsers: Record<string, User>) {
+    this.objects.Users = newUsers
+  }
+
+  /**
    * Retrieves top ten scoring users
    * @date 11/09/2023 - 00:54:37
    *

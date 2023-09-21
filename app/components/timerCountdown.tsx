@@ -8,10 +8,7 @@ export interface ITimerProps {
   timerHasStarted: boolean;
 }
 
-function Timer({ 
-  handleTimesUp,
-  timerHasStarted,
- }: ITimerProps) {
+function Timer({ handleTimesUp, timerHasStarted }: ITimerProps) {
   const [timePassed, setTimePassed] = useState(0);
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT);
   const [remainingPathColor, setRemainingPathColor] = useState("green");

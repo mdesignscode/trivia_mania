@@ -46,8 +46,15 @@ export default function Question({
   const [timerHasStarted, setTimerHasStarted] = useState(true);
   const { user, isLoaded, isSignedIn } = useUser();
   const [error, setError] = useState(null);
+  const [_userAnswer, _setUserAnswer] = useState("");
+  const userAnswer = useRef(_userAnswer);
+  const setUserAnswer = (answer) => {
+    userAnswer.current = answer;
+    _setUserAnswer(answer);
+  };
 
   function handleUserAnswer(value: string, i: number) {
+    setUserAnswer(value);
     // display icon based on correct answer
     setAnswerFeedback((state) =>
       state.map((_, j) => {
@@ -90,6 +97,19 @@ export default function Question({
   }
 
   function handleTimesUp() {
+    // display correct answer if user did not click any button
+    if (!userAnswer.current) {
+      // animate correct answer
+      const el = document.getElementById(correctAnswer);
+      el?.style.setProperty("--animate-duration", "1s");
+      el?.classList.add("animate__rubberBand");
+
+      updateProgress(
+        { category, answers, correctAnswer, question, difficulty },
+        ""
+      );
+    }
+
     setTimesUp(true);
     setTimerHasStarted(false);
   }
@@ -167,6 +187,11 @@ export default function Question({
                 onClick={() => handleUserAnswer(answer, i)}
                 key={answer}
                 id={answer}
+                disabled={timesUp}
+                style={{ cursor: !timesUp ? "pointer" : "not-allowed" }}
+                $primary={
+                  !userAnswer.current && timesUp && answer === correctAnswer
+                }
               >
                 <span>{answerFeedback[i]}</span>
                 <p>{answer}</p>
@@ -203,7 +228,7 @@ export default function Question({
 }
 
 function decodeHTMLEntities(text: string): string {
-  const p = document.createElement("p")
-  p.innerHTML = text
-  return p.innerText
+  const p = document.createElement("p");
+  p.innerHTML = text;
+  return p.innerText;
 }

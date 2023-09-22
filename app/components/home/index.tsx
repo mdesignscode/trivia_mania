@@ -7,11 +7,6 @@ import Categories from "./categories";
 import Header from "./header";
 import Play from "./play";
 import Footer from "./footer";
-import {
-  useSelector,
-} from '@/lib/redux'
-import AddUserToStorage from "./addUserToStorage";
-import { userSelector } from "@/lib/redux/slices/userSlice/selectors";
 
 function HomePage({ stats }: Record<string, any>) {
   const [difficultyStats, setDifficultyStats] = useState<
@@ -25,29 +20,31 @@ function HomePage({ stats }: Record<string, any>) {
   const [fetchingDifficulty, setFetchingDifficulty] = useState(true);
   const [fetchingCategories, setFetchingCategories] = useState(true);
 
-  AddUserToStorage()
-
   async function getQuestionStats(difficulty: string) {
-    // load categories
-    setFetchingCategories(true);
+    try {
+      // load categories
+      setFetchingCategories(true);
 
-    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const url = baseUrl + "questions/stats";
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const url = baseUrl + "questions/stats";
 
-    const { data } = await axios.post(url, { difficulty });
+      const { data } = await axios.post(url, { difficulty });
 
-    let difficultyCategories: Record<string, number> = {};
-    if (!difficulty) {
-      for (const key in data) {
-        if (!["easy", "hard", "medium", "all difficulties"].includes(key)) {
-          difficultyCategories[key] = data[key];
+      let difficultyCategories: Record<string, number> = {};
+      if (!difficulty) {
+        for (const key in data) {
+          if (!["easy", "hard", "medium", "all difficulties"].includes(key)) {
+            difficultyCategories[key] = data[key];
+          }
         }
-      }
-    } else difficultyCategories = data;
-    setCategoryStats(difficultyCategories);
+      } else difficultyCategories = data;
+      setCategoryStats(difficultyCategories);
 
-    // display categories
-    setFetchingCategories(false);
+      // display categories
+      setFetchingCategories(false);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // set initial questions stats
@@ -80,6 +77,7 @@ function HomePage({ stats }: Record<string, any>) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.5 }}
+        id="home-container"
       >
         <div className="homepage flex flex-col">
           <main className="main-content flex-col items-center flex">

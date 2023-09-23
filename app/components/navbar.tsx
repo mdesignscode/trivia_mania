@@ -8,16 +8,23 @@ import {
   PuzzlePieceIcon,
   StarIcon,
   UserCircleIcon,
-  ChartBarIcon
+  ChartBarIcon,
 } from "@heroicons/react/24/outline";
 import { useSelector } from "@/lib/redux";
 import { userSelector } from "@/lib/redux/slices/userSlice/selectors";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddUserToStorage from "./addUserToStorage";
+import { DotPulse } from "@uiball/loaders";
+import { motion } from "framer-motion";
 
-const NAVIGATION = [
+const navigation = [
   { name: "Home", href: "/", icon: <HomeIcon height={25} width={25} /> },
   {
     name: "Play",
@@ -38,22 +45,15 @@ function classNames(...classes: Array<string>) {
 export default function Navbar() {
   const path = usePathname();
   const { user } = useSelector(userSelector);
-  const [navigation, setNavigation] = useState([...NAVIGATION])
+  const [userOnline, setUserOnline] = useState(false);
+  const [fetchingUser, setFetchingUser] = useState(true);
 
-  AddUserToStorage()
-
-  useEffect(() => {
-    if (user) {
-      setNavigation(() => [
-        ...NAVIGATION,
-        {
-        name: "Your Stats",
-        href: `/users/${user.id}`,
-        icon: <ChartBarIcon height={25} width={25} />,
-        }
-      ]);
+  AddUserToStorage().then((data) => {
+    if (data) {
+      setUserOnline(true);
     }
-  }, [user]);
+    setFetchingUser(false);
+  });
 
   return (
     <Disclosure as="nav" className="bg-gray-800 z-10 sticky top-0">
@@ -83,6 +83,8 @@ export default function Navbar() {
                   </Link>
                 </div>
               </div>
+
+              {/* Navigation */}
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
                 <div className="hidden md:ml-6 md:block">
                   <div className="flex space-x-4">
@@ -103,24 +105,60 @@ export default function Navbar() {
                       </Link>
                     ))}
 
-                    <div
-                      className={classNames(
-                        /signin|signup/.test(path)
-                          ? "bg-gray-900 text-white flex gap-2 content-center items-center"
-                          : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                        "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"
-                      )}
+                    {/* User stats and Clerk.js User button */}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 1.5 }}
+                      id="home-container"
+                      className="flex gap-3"
                     >
-                      <SignedIn>
-                        {/* Mount the UserButton component */}
-                        <UserButton />
-                      </SignedIn>
-                      <SignedOut>
-                        <UserCircleIcon height={25} width={25} />
-                        {/* Signed out users get sign in button */}
-                        <SignInButton />
-                      </SignedOut>
-                    </div>
+                      {!fetchingUser ? (
+                        <>
+                          {user && userOnline && (
+                            <Link
+                              href={`/users/${user.id}`}
+                              className={classNames(
+                                `/users/${user.id}` === path
+                                  ? "bg-gray-900 text-white flex gap-2 content-center items-center"
+                                  : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                                "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"
+                              )}
+                              aria-current={
+                                `/users/${user.id}` === path
+                                  ? "page"
+                                  : undefined
+                              }
+                            >
+                              <ChartBarIcon height={25} width={25} />
+                              Your Stats
+                            </Link>
+                          )}
+
+                          <div
+                            className={classNames(
+                              /signin|signup/.test(path)
+                                ? "bg-gray-900 text-white flex gap-2 content-center items-center"
+                                : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                              "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"
+                            )}
+                          >
+                            <SignedIn>
+                              {/* Mount the UserButton component */}
+                              <UserButton />
+                            </SignedIn>
+                            <SignedOut>
+                              <UserCircleIcon height={25} width={25} />
+                              {/* Signed out users get sign in button */}
+                              <SignInButton />
+                            </SignedOut>
+                          </div>
+                        </>
+                      ) : (
+                        <Loading />
+                      )}
+                    </motion.div>
                   </div>
                 </div>
               </div>
@@ -168,5 +206,13 @@ export default function Navbar() {
         </>
       )}
     </Disclosure>
+  );
+}
+
+function Loading() {
+  return (
+    <div className="h-full w-full grid place-items-center">
+      <DotPulse size={50} color="#ffffff" />
+    </div>
   );
 }

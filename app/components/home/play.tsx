@@ -1,12 +1,11 @@
+"use client"
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useContext } from "react";
+import { HomeContext } from "./store";
 
-interface IPlayProps {
-  difficulty: string;
-  categories: Array<string>;
-}
-
-export default function Play({ difficulty, categories }: IPlayProps) {
+export default function Play() {
+  const { difficulty, categories } = useContext(HomeContext)
   const buttonVariants = {
     rest: { translateY: 1 },
     hover: { translateY: -5 },
@@ -25,7 +24,7 @@ export default function Play({ difficulty, categories }: IPlayProps) {
         whileTap="hover"
       >
         <Link
-          className="start-button mt-4"
+          className="start-button"
           href={encodeURI(
             `/game?difficulty=${difficulty}&categories=${categories.join(",")}`
           )}

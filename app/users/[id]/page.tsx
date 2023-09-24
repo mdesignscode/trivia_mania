@@ -21,7 +21,7 @@ export default function UserProgress({
   const sortedKeys = Object.keys(userStats).sort();
 
   return (
-    <div className="text-xl text-gray-800 w-11/12 flex flex-col gap-4 mx-auto py-4">
+    <div className="text-xl text-gray-800 w-11/12 col gap-4 mx-auto py-4">
       {/* Header */}
       <div className="flex items-center gap-5">
         <Image
@@ -52,7 +52,7 @@ export default function UserProgress({
           </div>
 
           {/* Body */}
-          <div className="flex flex-col md:flex-row gap-3">
+          <div className="col md:flex-row gap-3">
             {sortedKeys.map((stat) => {
               if (["easy", "hard", "medium"].includes(stat)) {
                 const capitalized = stat.split("");
@@ -61,7 +61,7 @@ export default function UserProgress({
                 // display cards based on difficulty
                 return (
                   <div
-                    className="flex flex-col md:w-1/3 gap-3 bg-white p-4 rounded-lg shadow-md"
+                    className="col md:w-1/3 gap-3 bg-white p-4 rounded-lg shadow-md"
                     key={stat}
                   >
                     <div className="flex justify-between border-b-2 border-gray-800">
@@ -72,7 +72,7 @@ export default function UserProgress({
                       </p>
                     </div>
 
-                    <div className="flex flex-col gap-3">
+                    <div className="col gap-3">
                       {/* display categories by difficulty */}
                       {sortedKeys.map((categoryStat) => {
                         if (

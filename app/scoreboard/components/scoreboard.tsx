@@ -15,7 +15,7 @@ export default function Board({ topTenUsers }: { topTenUsers: Array<User> }) {
         {topTenUsers.map((user, index) => (
           <div
             key={user.id}
-            className="bg-white p-4 rounded-lg shadow-md flex flex-col gap-3"
+            className="bg-white p-4 rounded-lg shadow-md col gap-3"
           >
             <div className="flex items-center">
               <div className="mr-4">
@@ -40,7 +40,7 @@ export default function Board({ topTenUsers }: { topTenUsers: Array<User> }) {
               {Object.keys(user.stats).map((category, i) => {
                 if (!["easy", "hard", "medium", "total"].includes(category)) {
                   return (
-                    <div key={`${category}_${i}`} className="flex flex-col">
+                    <div key={`${category}_${i}`} className="col">
                       <h3 className="text-gray-700">{category} Correct Answers</h3>
 
                       <div className="flex gap-3">

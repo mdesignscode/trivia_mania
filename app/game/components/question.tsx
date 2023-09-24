@@ -1,11 +1,16 @@
 "use client";
 import { useUser } from "@clerk/nextjs";
 import { ReactNode, Fragment, useState, useEffect, useRef } from "react";
-import { Button, QuestionBox } from "./styledComponents";
+import { Button, QuestionBox } from "@/components/styledComponents";
 import Timer from "./timerCountdown";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { Transition } from "@headlessui/react";
 import "animate.css";
+import {
+  IProgressPayload,
+  setProgress as setGlobalProgress,
+  useDispatch,
+} from "@/lib/redux";
 
 export interface IQuestion {
   category: string;
@@ -48,10 +53,12 @@ export default function Question({
   const [error, setError] = useState(null);
   const [_userAnswer, _setUserAnswer] = useState("");
   const userAnswer = useRef(_userAnswer);
-  const setUserAnswer = (answer) => {
+  const setUserAnswer = (answer: string) => {
     userAnswer.current = answer;
     _setUserAnswer(answer);
   };
+
+  const dispatch = useDispatch();
 
   function handleUserAnswer(value: string, i: number) {
     setUserAnswer(value);
@@ -128,9 +135,9 @@ export default function Question({
   async function handleViewProgress() {
     if (isLoaded && isSignedIn) {
       const res = await submitProgress(user.id);
-      if (res.message === "User stats updated successfully")
+      if (res.message === "User stats updated successfully") {
         window.location.href = "/users/" + user.id;
-      else setError(res);
+      } else setError(res);
     } else {
       window.location.href = "/sign-in";
     }
@@ -163,7 +170,7 @@ export default function Question({
       leaveFrom="opacity-100 rotate-0 scale-100 "
       leaveTo="opacity-0 scale-95 "
     >
-      <QuestionBox className="question flex flex-col gap-7 rounded-lg p-6">
+      <QuestionBox className="question col gap-7 rounded-lg p-6">
         <div className="flex justify-between items-center">
           <h1 className="text-xl">{category}</h1>
 

@@ -28,7 +28,7 @@ export default function RootLayout({
       <ReduxProvider>
         <html lang="en" className="h-full">
           <body
-            className={`${inter.className} h-full bg-slate-200 flex flex-col`}
+            className={`${inter.className} h-full bg-slate-200 col`}
           >
             <Navbar />
 

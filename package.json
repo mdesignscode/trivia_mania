@@ -13,6 +13,7 @@
     "@clerk/nextjs": "^4.23.5",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
+    "@ngrok/ngrok": "^0.6.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@tanstack/react-query": "^4.35.0",
     "@types/node": "20.5.3",
@@ -31,6 +32,7 @@
     "react-dom": "18.2.0",
     "react-redux": "^8.1.2",
     "styled-components": "^6.0.7",
+    "svix": "^1.12.0",
     "tailwindcss": "3.3.3",
     "typescript": "5.1.6"
   },

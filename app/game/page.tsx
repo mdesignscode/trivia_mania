@@ -4,16 +4,23 @@ import Loading from "app/loading";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import QuestionComponent from "@/components/question";
+import QuestionComponent from "./components/question";
 import { useState } from "react";
 import { IQuestion } from "@/models/interfaces";
+import {
+  IProgressPayload,
+  setProgress as setGlobalProgress,
+  useDispatch,
+} from "@/lib/redux";
 
 export default function GamePage() {
   const params = useSearchParams();
   const [questionIndex, setQuestionIndex] = useState(1);
-  const [progress, setProgress] = useState<Record<string, Record<string, any>>>(
-    { total: { answered: 0, correctAnswered: 0 } }
-  );
+  const [progress, setProgress] = useState<IProgressPayload>({
+    total: { answered: 0, correctAnswered: 0 },
+  });
+
+  const dispatch = useDispatch();
 
   const difficulty = params.get("difficulty") || "";
   const categoriesString = params.get("categories");
@@ -21,8 +28,8 @@ export default function GamePage() {
 
   function updateProgress(question: IQuestion, answer: string) {
     setProgress((state) => {
-      const newState: Record<string, Record<string, any>> = {
-        ...JSON.parse(JSON.stringify(state))
+      const newState: IProgressPayload = {
+        ...JSON.parse(JSON.stringify(state)),
       };
       const isCorrect = answer === question.correctAnswer;
 
@@ -80,6 +87,9 @@ export default function GamePage() {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const url = `${baseUrl}/users/updateStats`;
 
+    // update state globally
+    dispatch(setGlobalProgress(progress));
+
     try {
       const { data } = await axios.post(url, { stats: progress, id });
       return data;
@@ -111,7 +121,7 @@ export default function GamePage() {
       transition={{ duration: 0.5 }}
       className="game-page h-full flex-1 flex justify-center"
     >
-      <div className="flex flex-col justify-center items-center gap-4 max-w-3xl mx-8 h-full">
+      <div className="col justify-center items-center gap-4 max-w-3xl mx-8 h-full">
         {data.length ? (
           <>
             <h1 className="text-2xl">

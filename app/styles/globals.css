@@ -2,55 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  height: 100vh;
+@layer components {
+  .col {
+    @apply flex flex-col;
+  }
 }
 
 .start-button {
-  display: inline-block;
-  outline: none;
-  cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
-  border-radius: 500px;
-  transition-property: background-color, border-color, color, box-shadow, filter;
-  transition-duration: .3s;
-  border: 1px solid transparent;
+  border: 2px solid #bf4f74;
+  padding: 0.75rem;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  background-color: transparent;
+  color: #bf4f74;
   letter-spacing: 2px;
   min-width: 160px;
+  height: 48px;
   text-transform: uppercase;
   white-space: normal;
   font-weight: 700;
-  text-align: center;
-  padding: 16px 14px 18px;
-  color: #616467;
-  box-shadow: inset 0 0 0 2px #616467;
-  background-color: transparent;
-  height: 48px;
-}
-
-.start-button:hover {
-  color: #fff;
-  background-color: #616467;
-}
-
-/* .category-button {
+  margin-top: 1.25rem;
   display: inline-block;
-  outline: 0;
-  cursor: pointer;
-  border: 1px solid #1d1c1d4d;
-  font-weight: 700;
-  background: #fff;
-  padding: 0 8px 1px;
-  font-size: 13px;
-  border-radius: 4px;
-  color: rgb(29, 28, 29);
-  height: 28px;
-  min-width: 56px;
-  transition: all 80ms linear;
-}
 
-.category-button:hover {
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 8%);
-  background: rgba(248, 248, 248, 1);
-} */
+  &:hover {
+    background-color: #bf4f74;
+    color: white;
+    border-radius: 500px;
+  }
+}

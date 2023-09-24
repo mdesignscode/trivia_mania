@@ -1,158 +1,42 @@
-"use client";
-import { useUser } from "@clerk/nextjs";
-import { ReactNode, Fragment, useState, useEffect, useRef } from "react";
+/* Renders a question */
+"use client"
 import { Button, QuestionBox } from "@/components/styledComponents";
-import Timer from "./timerCountdown";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { Transition } from "@headlessui/react";
-import "animate.css";
-import {
-  IProgressPayload,
-  setProgress as setGlobalProgress,
-  useDispatch,
-} from "@/lib/redux";
+import { Fragment, MouseEventHandler, MutableRefObject, ReactNode } from "react";
+import Timer from "./timerCountdown";
+import { IQuestion } from ".";
 
-export interface IQuestion {
-  category: string;
-  answers: Array<string>;
-  correctAnswer: string;
-  id: string;
-  question: string;
-  difficulty: string;
-}
-
-export interface IQuestionProps {
+interface IRenderQuestion {
   questionObj: IQuestion;
   index: number;
   questionNumber: number;
-  setIndex: Function;
-  questionsLength: number;
-  updateProgress: Function;
-  submitProgress: Function;
+  handleUserAnswer: Function;
+  handleTimesUp: Function;
+  timerHasStarted: boolean;
+  error: string;
+  CTA: string;
+  timesUp: boolean;
+  handleNextQuestion: MouseEventHandler<HTMLButtonElement>;
+  handleViewProgress: MouseEventHandler<HTMLButtonElement>;
+  userAnswer: MutableRefObject<string>;
+  answerFeedback: ReactNode[]
 }
 
-export default function Question({
+export default function RenderQuestion({
   questionObj: { category, answers, correctAnswer, question, difficulty },
-  index,
   questionNumber,
-  setIndex,
-  questionsLength,
-  updateProgress,
-  submitProgress,
-}: IQuestionProps) {
-  const [answerFeedback, setAnswerFeedback] = useState<ReactNode[]>([
-    <></>,
-    <></>,
-    <></>,
-    <></>,
-  ]);
-  const [timesUp, setTimesUp] = useState(false);
-  const [CTA, setCTA] = useState("Next Question");
-  const [timerHasStarted, setTimerHasStarted] = useState(true);
-  const { user, isLoaded, isSignedIn } = useUser();
-  const [error, setError] = useState(null);
-  const [_userAnswer, _setUserAnswer] = useState("");
-  const userAnswer = useRef(_userAnswer);
-  const setUserAnswer = (answer: string) => {
-    userAnswer.current = answer;
-    _setUserAnswer(answer);
-  };
-
-  const dispatch = useDispatch();
-
-  function handleUserAnswer(value: string, i: number) {
-    setUserAnswer(value);
-    // display icon based on correct answer
-    setAnswerFeedback((state) =>
-      state.map((_, j) => {
-        if (i === j) {
-          return value === correctAnswer ? (
-            <CheckCircleIcon width={30} />
-          ) : (
-            <XCircleIcon width={30} />
-          );
-        }
-
-        return j === answers.indexOf(correctAnswer) ? (
-          <CheckCircleIcon width={30} />
-        ) : (
-          <></>
-        );
-      })
-    );
-    updateProgress(
-      { category, answers, correctAnswer, question, difficulty },
-      value
-    );
-
-    // give user feedback on answer
-
-    const el = document.getElementById(value);
-
-    el?.style.setProperty("--animate-duration", "1s");
-    if (value === correctAnswer) {
-      const audio = document.getElementById("success") as HTMLAudioElement;
-      audio.play();
-      el?.classList.add("animate__tada");
-    } else {
-      const audio = document.getElementById("error") as HTMLAudioElement;
-      audio.play();
-      el?.classList.add("animate__shakeX");
-    }
-
-    handleTimesUp();
-  }
-
-  function handleTimesUp() {
-    // display correct answer if user did not click any button
-    if (!userAnswer.current) {
-      // animate correct answer
-      const el = document.getElementById(correctAnswer);
-      el?.style.setProperty("--animate-duration", "1s");
-      el?.classList.add("animate__rubberBand");
-
-      updateProgress(
-        { category, answers, correctAnswer, question, difficulty },
-        ""
-      );
-    }
-
-    setTimesUp(true);
-    setTimerHasStarted(false);
-  }
-
-  async function handleNextQuestion() {
-    if (CTA === "Submit Results") {
-      if (isLoaded && isSignedIn) {
-        const res = await submitProgress(user.id);
-        if (res.message === "User stats updated successfully")
-          window.location.href = "/users/" + user.id;
-        else setError(res);
-      } else window.location.href = "/sign-in";
-    } else setIndex((index: number) => index + 1);
-  }
-
-  async function handleViewProgress() {
-    if (isLoaded && isSignedIn) {
-      const res = await submitProgress(user.id);
-      if (res.message === "User stats updated successfully") {
-        window.location.href = "/users/" + user.id;
-      } else setError(res);
-    } else {
-      window.location.href = "/sign-in";
-    }
-  }
-
-  useEffect(() => {
-    setCTA(
-      !(index % 5)
-        ? "Continue Playing"
-        : index === questionsLength
-        ? "Submit Results"
-        : "Next Question"
-    );
-  });
-
+  index,
+  handleTimesUp,
+  timerHasStarted,
+  handleUserAnswer,
+  error,
+  CTA,
+  timesUp,
+  handleNextQuestion,
+  handleViewProgress,
+  userAnswer,
+  answerFeedback
+}: IRenderQuestion) {
   const colorMap: { [key: string]: string } = {
     easy: "green",
     medium: "gold",
@@ -174,7 +58,12 @@ export default function Question({
         <div className="flex justify-between items-center">
           <h1 className="text-xl">{category}</h1>
 
-          <p className="text-xl" style={{ color: colorMap[difficulty] }}>
+          <p
+            className="text-xl"
+            style={{
+              color: colorMap[difficulty],
+            }}
+          >
             {difficulty}
           </p>
         </div>
@@ -195,7 +84,9 @@ export default function Question({
                 key={answer}
                 id={answer}
                 disabled={timesUp}
-                style={{ cursor: !timesUp ? "pointer" : "not-allowed" }}
+                style={{
+                  cursor: !timesUp ? "pointer" : "not-allowed",
+                }}
                 $primary={
                   !userAnswer.current && timesUp && answer === correctAnswer
                 }

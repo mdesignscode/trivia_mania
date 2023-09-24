@@ -4,7 +4,7 @@ import Loading from "app/loading";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import QuestionComponent from "./components/question";
+import QuestionComponent from "./components";
 import { useState } from "react";
 import { IQuestion } from "@/models/interfaces";
 import {

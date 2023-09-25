@@ -1,10 +1,10 @@
+import { ReduxProvider } from "@/lib/providers";
+import "@/styles/globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Navbar from "./components/navigation";
-import "@/styles/globals.css";
+import Navigation from "./components/navigation";
 import Providers from "./providers";
-import { ClerkProvider } from "@clerk/nextjs";
-import { ReduxProvider } from "@/lib/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,7 +30,7 @@ export default function RootLayout({
           <body
             className={`${inter.className} h-full bg-slate-200 col`}
           >
-            <Navbar />
+            <Navigation />
 
             <Providers>{children}</Providers>
           </body>

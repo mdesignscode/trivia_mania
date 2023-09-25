@@ -5,7 +5,9 @@ import { ChartBarIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { DotPulse } from "@uiball/loaders";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { NavProps } from ".";
+import { NavProps } from "./navigation";
+import { userSelector } from "@/lib/redux/slices/userSlice";
+import { useSelector } from "react-redux";
 
 function classNames(...classes: Array<string>) {
   return classes.filter(Boolean).join(" ");
@@ -14,13 +16,14 @@ function classNames(...classes: Array<string>) {
 export default function DesktopNav({
   navigation,
   path,
-  user,
-  userOnline,
-  fetchingUser,
 }: NavProps) {
+  const { user, isOnline, isLoaded } = useSelector(userSelector)
   const styles = {
     active: "bg-gray-900 text-white flex gap-2 content-center items-center",
-    inActive: ["text-gray-300 hover:bg-gray-700 hover:text-white", "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"]
+    inActive: [
+      "text-gray-300 hover:bg-gray-700 hover:text-white",
+      "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center",
+    ],
   };
 
   return (
@@ -32,9 +35,8 @@ export default function DesktopNav({
               key={item.name}
               href={item.href}
               className={classNames(
-                item.href === path
-                  ? styles.active
-                  : styles.inActive[0], styles.inActive[1]
+                item.href === path ? styles.active : styles.inActive[0],
+                styles.inActive[1]
               )}
               aria-current={item.href === path ? "page" : undefined}
             >
@@ -51,15 +53,16 @@ export default function DesktopNav({
             transition={{ duration: 1.5 }}
             className="flex gap-3"
           >
-            {!fetchingUser ? (
+            {isLoaded ? (
               <>
-                {user && userOnline && (
+                {user && isOnline && (
                   <Link
                     href={`/users/${user.id}`}
                     className={classNames(
                       `/users/${user.id}` === path
                         ? styles.active
-                        : styles.inActive[0], styles.inActive[1]
+                        : styles.inActive[0],
+                      styles.inActive[1]
                     )}
                     aria-current={
                       `/users/${user.id}` === path ? "page" : undefined
@@ -74,7 +77,8 @@ export default function DesktopNav({
                   className={classNames(
                     /signin|signup/.test(path)
                       ? styles.active
-                      : styles.inActive[0], styles.inActive[1]
+                      : styles.inActive[0],
+                    styles.inActive[1]
                   )}
                 >
                   <SignedIn>

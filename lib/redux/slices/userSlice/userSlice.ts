@@ -2,13 +2,21 @@
 import { IUser } from "@/models/interfaces";
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface UserStatus {
+  isOnline: boolean;
+  isLoaded: boolean;
+  user: IUser | null;
+}
+
 // Create a slice with an initial state
 const userSlice = createSlice({
   name: 'user',
-  initialState: { user: null as IUser | null }, // Initialize user as null or IUser
+  initialState: { user: null, isOnline: false, isLoaded: false } as UserStatus, // Initialize user as null or IUser
   reducers: {
-    setUser: (state, action: PayloadAction<IUser | null>) => {
-      state.user = action.payload;
+    setUser: (state, action: PayloadAction<UserStatus>) => {
+      state.user = action.payload.user;
+      state.isLoaded = action.payload.isLoaded
+      state.isOnline = action.payload.isOnline
     },
   },
 });

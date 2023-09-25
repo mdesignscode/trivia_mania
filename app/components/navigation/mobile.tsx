@@ -4,7 +4,9 @@ import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Disclosure } from "@headlessui/react";
 import { ChartBarIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { NavProps } from ".";
+import { NavProps } from "./navigation";
+import { useSelector } from "react-redux";
+import { userSelector } from "@/lib/redux/slices/userSlice";
 
 function classNames(...classes: Array<string>) {
   return classes.filter(Boolean).join(" ");
@@ -13,12 +15,14 @@ function classNames(...classes: Array<string>) {
 export default function MobileNav({
   navigation,
   path,
-  user,
-  userOnline,
 }: NavProps) {
+  const { user, isOnline } = useSelector(userSelector)
   const styles = {
     active: "bg-gray-900 text-white",
-    inActive: ["text-gray-300 hover:bg-gray-700 hover:text-white", "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"]
+    inActive: [
+      "text-gray-300 hover:bg-gray-700 hover:text-white",
+      "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center",
+    ],
   };
 
   return (
@@ -30,9 +34,7 @@ export default function MobileNav({
             as="a"
             href={item.href}
             className={classNames(
-              item.href === path
-                ? styles.active
-                : styles.inActive[0],
+              item.href === path ? styles.active : styles.inActive[0],
               styles.inActive[1]
             )}
             aria-current={item.href === path ? "page" : undefined}
@@ -44,13 +46,14 @@ export default function MobileNav({
 
         {/* User stats and Clerk.js User button */}
         <div className="col gap-2">
-          {user && userOnline && (
+          {user && isOnline && (
             <Link
               href={`/users/${user.id}`}
               className={classNames(
                 `/users/${user.id}` === path
                   ? styles.active
-                  : styles.inActive[0], styles.inActive[1]
+                  : styles.inActive[0],
+                styles.inActive[1]
               )}
               aria-current={`/users/${user.id}` === path ? "page" : undefined}
             >
@@ -61,9 +64,8 @@ export default function MobileNav({
 
           <div
             className={classNames(
-              /signin|signup/.test(path)
-                ? styles.active
-                : styles.inActive[0], styles.inActive[1]
+              /signin|signup/.test(path) ? styles.active : styles.inActive[0],
+              styles.inActive[1]
             )}
           >
             <SignedIn>

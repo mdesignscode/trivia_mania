@@ -6,8 +6,6 @@ import { DotPulse } from "@uiball/loaders";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { NavProps } from "./navigation";
-import { userSelector } from "@/lib/redux/slices/userSlice";
-import { useSelector } from "react-redux";
 
 function classNames(...classes: Array<string>) {
   return classes.filter(Boolean).join(" ");
@@ -16,8 +14,8 @@ function classNames(...classes: Array<string>) {
 export default function DesktopNav({
   navigation,
   path,
+  userStatus: { user, isOnline, isLoaded },
 }: NavProps) {
-  const { user, isOnline, isLoaded } = useSelector(userSelector)
   const styles = {
     active: "bg-gray-900 text-white flex gap-2 content-center items-center",
     inActive: [

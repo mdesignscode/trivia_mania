@@ -1,10 +1,10 @@
 /* Handle question logic */
 "use client";
 import RenderQuestion from "./question";
-import { useUser } from "@clerk/nextjs";
 import { ReactNode, useState, useEffect, useRef } from "react";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import "animate.css";
+import { useUser } from "@clerk/nextjs";
 
 export interface IQuestion {
   category: string;
@@ -23,6 +23,7 @@ export interface IQuestionProps {
   questionsLength: number;
   updateProgress: Function;
   submitProgress: Function;
+  progress: Record<string, any>;
 }
 
 export default function Question({
@@ -33,6 +34,7 @@ export default function Question({
   questionsLength,
   updateProgress,
   submitProgress,
+  progress,
 }: IQuestionProps) {
   const [answerFeedback, setAnswerFeedback] = useState<ReactNode[]>([
     <></>,
@@ -43,7 +45,7 @@ export default function Question({
   const [timesUp, setTimesUp] = useState(false);
   const [CTA, setCTA] = useState("Next Question");
   const [timerHasStarted, setTimerHasStarted] = useState(true);
-  const { user, isLoaded, isSignedIn } = useUser();
+  const { user, isSignedIn } = useUser()
   const [error, setError] = useState("");
   const [_userAnswer, _setUserAnswer] = useState("");
   const userAnswer = useRef(_userAnswer);
@@ -115,17 +117,32 @@ export default function Question({
 
   async function handleNextQuestion() {
     if (CTA === "Submit Results") {
-      if (isLoaded && isSignedIn) {
+      if (user && isSignedIn) {
         const res = await submitProgress(user.id);
-        if (res.message === "User stats updated successfully")
+        if (res.message === "User stats updated successfully") {
+          localStorage.setItem("progress", JSON.stringify(progress));
           window.location.href = "/users/" + user.id;
-        else setError(res);
-      } else window.location.href = "/sign-in";
+        } else setError(res);
+      } else {
+        // check for unsaved data
+        const unsavedData = localStorage.getItem("unsavedData");
+        if (unsavedData) {
+          const parsedData = JSON.parse(unsavedData);
+          // merge previous unsaved data
+          localStorage.setItem(
+            "unsavedData",
+            JSON.stringify({ ...progress, ...parsedData })
+          );
+        }
+
+        // redirect to sign in
+        window.location.href = "/sign-in";
+      }
     } else setIndex((index: number) => index + 1);
   }
 
   async function handleViewProgress() {
-    if (isLoaded && isSignedIn) {
+    if (user && isSignedIn) {
       const res = await submitProgress(user.id);
       if (res.message === "User stats updated successfully") {
         window.location.href = "/users/" + user.id;

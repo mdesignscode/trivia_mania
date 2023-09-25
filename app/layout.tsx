@@ -1,4 +1,3 @@
-import { ReduxProvider } from "@/lib/providers";
 import "@/styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
@@ -18,24 +17,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // casually sync storage in background
-  // const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  // const url = baseUrl + "users/syncUsers";
-  // axios.post(url);
-
   return (
     <ClerkProvider>
-      <ReduxProvider>
-        <html lang="en" className="h-full">
-          <body
-            className={`${inter.className} h-full bg-slate-200 col`}
-          >
-            <Navigation />
+      <html lang="en" className="h-full">
+        <body className={`${inter.className} h-full bg-slate-200 col`}>
+          <Navigation />
 
-            <Providers>{children}</Providers>
-          </body>
-        </html>
-      </ReduxProvider>
+          <Providers>{children}</Providers>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }

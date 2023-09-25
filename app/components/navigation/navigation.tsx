@@ -1,5 +1,4 @@
 "use client";
-import { IUser } from "@/models/interfaces";
 import { Disclosure } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -10,12 +9,11 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { useDispatch } from "react-redux";
 import DesktopNav from "./desktop";
 import MobileNav from "./mobile";
-import { setUser } from "@/lib/redux";
+import User from "@/models/user";
 
 const navigation = [
   { name: "Home", href: "/", icon: <HomeIcon height={25} width={25} /> },
@@ -34,6 +32,11 @@ const navigation = [
 export interface NavProps {
   navigation: typeof navigation;
   path: string;
+  userStatus: {
+    user: User | null;
+    isLoaded: boolean;
+    isOnline: boolean;
+  };
 }
 
 export default function Navbar({
@@ -41,18 +44,22 @@ export default function Navbar({
 }: {
   serializedUsers: string;
 }) {
-  const users = JSON.parse(serializedUsers);
+  const users: Record<string, User> = JSON.parse(serializedUsers);
   const path = usePathname();
   const { user, isLoaded, isSignedIn } = useUser();
-  const dispatch = useDispatch();
+  const [userStatus, setUserStatus] = useState({
+    user: null as User | null,
+    isOnline: false,
+    isLoaded: false,
+  });
 
   useEffect(() => {
     if (isLoaded) {
       if (isSignedIn) {
         const triviaUser = users[user.id];
-        dispatch(setUser({ user: triviaUser, isLoaded: true, isOnline: true }));
+        setUserStatus({ user: triviaUser, isLoaded: true, isOnline: true });
       } else {
-        dispatch(setUser({ user: null, isLoaded: true, isOnline: false }));
+        setUserStatus({ user: null, isLoaded: false, isOnline: false });
       }
     }
   }, [isLoaded && isSignedIn]);
@@ -91,13 +98,14 @@ export default function Navbar({
                 {...{
                   path,
                   navigation,
+                  userStatus,
                 }}
               />
             </div>
           </div>
 
           {/* Mobile Navigation */}
-          <MobileNav {...{ path, navigation }} />
+          <MobileNav {...{ path, navigation, userStatus }} />
         </>
       )}
     </Disclosure>

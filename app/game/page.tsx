@@ -1,34 +1,27 @@
 "use client";
-import { motion } from "framer-motion";
-import Loading from "app/loading";
-import { useSearchParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import QuestionComponent from "./components";
-import { useState } from "react";
 import { IQuestion } from "@/models/interfaces";
-import {
-  IProgressPayload,
-  setProgress as setGlobalProgress,
-  useDispatch,
-} from "@/lib/redux";
+import { useQuery } from "@tanstack/react-query";
+import Loading from "app/loading";
+import axios from "axios";
+import { motion } from "framer-motion";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import QuestionComponent from "./components";
 
 export default function GamePage() {
   const params = useSearchParams();
   const [questionIndex, setQuestionIndex] = useState(1);
-  const [progress, setProgress] = useState<IProgressPayload>({
+  const [playerStats, setPlayerStats] = useState<Record<string, any>>({
     total: { answered: 0, correctAnswered: 0 },
-  });
-
-  const dispatch = useDispatch();
+  })
 
   const difficulty = params.get("difficulty") || "";
   const categoriesString = params.get("categories");
   const categories = categoriesString ? categoriesString.split(",") : [];
 
   function updateProgress(question: IQuestion, answer: string) {
-    setProgress((state) => {
-      const newState: IProgressPayload = {
+    setPlayerStats((state) => {
+      const newState = {
         ...JSON.parse(JSON.stringify(state)),
       };
       const isCorrect = answer === question.correctAnswer;
@@ -87,11 +80,8 @@ export default function GamePage() {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const url = `${baseUrl}/users/updateStats`;
 
-    // update state globally
-    dispatch(setGlobalProgress(progress));
-
     try {
-      const { data } = await axios.post(url, { stats: progress, id });
+      const { data } = await axios.post(url, { stats: playerStats, id });
       return data;
     } catch (error) {
       return error;
@@ -138,6 +128,7 @@ export default function GamePage() {
                   questionsLength={data.length}
                   updateProgress={updateProgress}
                   submitProgress={submitProgress}
+                  progress={playerStats}
                 />
               );
             })}

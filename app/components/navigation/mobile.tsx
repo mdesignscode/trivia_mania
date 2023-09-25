@@ -5,8 +5,6 @@ import { Disclosure } from "@headlessui/react";
 import { ChartBarIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { NavProps } from "./navigation";
-import { useSelector } from "react-redux";
-import { userSelector } from "@/lib/redux/slices/userSlice";
 
 function classNames(...classes: Array<string>) {
   return classes.filter(Boolean).join(" ");
@@ -15,8 +13,8 @@ function classNames(...classes: Array<string>) {
 export default function MobileNav({
   navigation,
   path,
+  userStatus: { user, isOnline },
 }: NavProps) {
-  const { user, isOnline } = useSelector(userSelector)
   const styles = {
     active: "bg-gray-900 text-white",
     inActive: [

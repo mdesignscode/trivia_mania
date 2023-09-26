@@ -151,16 +151,70 @@ Stay tuned for more updates, and thank you for being an integral part of this in
 
 Post 8 [20-09-2023]:
 
-Write a follow up post:
+🚀 Trivia Mania Project Update: Evolving and Advancing Further! 🎉
+Hello again, LinkedIn community! 👋 It's time for another exciting update on the Trivia Mania project. The journey continues to be filled with innovation and progress, and I'm thrilled to share the latest developments with you all:
 
-Updates:
-    I have implemented the user stats page
-    I have refactored the home page and applied `Separation of concern`, `Single responsibility` and `code reusablitiy` principles to make it easier to read and more maintainable
-    I have decided to not go with BarbaJS, seeing as a React is a SPA, and BarbaJS is created to make web apps behave like SPAs, and have gone with Framer Motion JS
-    I have improved the UI with Animations and Transitions using said library and Animate.css
-    I have also fixed some bugs revolving the behaviour of saving a user's progress
+📊 User Stats Page Implemented:
+I'm excited to announce the successful implementation of the user stats page! This page provides users with detailed insights into their performance and progress within Trivia Mania. It's not just about playing a game; it's about personal growth and improvement. 🏆📈
 
-Up next:
-    I'm now going to unit test the frontend
-    Implement Redux
-    Refactor backend to save user answered questions and present each user with a unique set of questions
+🛠️ Homepage Refactoring and Principles Applied:
+To make Trivia Mania's codebase even more robust, I've embarked on a journey of refactoring the homepage. I've applied key principles such as "Separation of Concerns," "Single Responsibility," and "Code Reusability." This effort makes the code easier to read, understand, and maintain, ensuring a solid foundation for the project's continued growth. 🧰📝
+
+🚀 Transition to Framer Motion JS:
+In the pursuit of enhancing user experience and interface animations, I've made the decision to switch from BarbaJS to Framer Motion JS. Given that React is inherently a Single Page Application (SPA), Framer Motion aligns better with our goals to create smooth transitions and delightful animations. The project is now poised to offer a more engaging and interactive user interface! ✨🎉
+
+🎨 UI Improvements with Animations and Transitions:
+I've taken UI enhancements to the next level by incorporating Animations and Transitions using Framer Motion JS and Animate.css. These additions not only make the UI more visually appealing but also contribute to a more immersive and enjoyable user experience. It's all about adding that extra layer of excitement to Trivia Mania! 🎆🖌️
+
+🐛 Bug Fixes and User Progress Behavior:
+In my commitment to delivering a seamless and enjoyable experience, I've addressed and fixed some bugs related to the behavior of saving a user's progress. These improvements ensure that each user's journey through Trivia Mania remains smooth and problem-free. 💡🐞
+
+What's on the Horizon:
+
+The journey continues with more exciting developments on the horizon:
+
+🧪 Unit Testing for the Frontend: To maintain the project's quality and reliability, I'll be rigorously unit testing the frontend. This step is essential for ensuring that Trivia Mania operates smoothly and securely.
+
+🔄 Implementing Redux: To further enhance data management and state control, I'll be implementing Redux. This powerful tool will enable a seamless and dynamic user experience, bringing Trivia Mania to a new level of interactivity.
+
+🌐 Backend Refactoring and Unique Question Sets: On the backend side, I'll be refactoring the code to save user-answered questions and present each user with a unique set of questions. This personalization will make Trivia Mania even more engaging and tailored to each player.
+
+
+
+Post 9 [26-09-2023]:
+
+🚀 Trivia Mania Project Update: Continuing the Journey of Innovation! 🎉
+
+Hello once again, LinkedIn community! 👋 It's time for another exciting update on the Trivia Mania project. The journey continues to be a thrilling exploration of technology and creativity, and I'm delighted to share the latest developments with you all:
+
+✅ Redux and the Shift to Clerk.js Webhooks:
+In the pursuit of enhancing data management and state control, I initially implemented Redux. However, after careful consideration and experimentation, I made the decision to switch to Clerk.js webhooks. Clerk provides all the state management capabilities I need, simplifying the codebase and ensuring a smoother development process. It's all about finding the best tools for the job and optimizing our workflow! 🔄🛠️
+
+🧩 Component Modularity and React Context:
+To further enhance the maintainability and scalability of Trivia Mania, I've refactored several components to be more modular. Additionally, I've implemented React Context for page-level state management. These changes make it easier to manage and share state across components, promoting code reusability and improving overall code organization. It's all about creating a clean and efficient codebase! 🧰📦
+
+🎨 UI Enhancements with Entrance Animations:
+User experience remains a top priority, and I've taken UI improvements to the next level by incorporating more entrance animations. These animations not only add a touch of elegance to Trivia Mania but also create a sense of excitement and engagement as users interact with the platform. It's all about making the user journey memorable and delightful! 🌟✨
+
+📝 TypeScript Object Typing:
+To enhance code clarity and maintainability, I've added TypeScript typings for user stats. This step allows TypeScript to understand the structure of the objects used in the project, reducing the chances of runtime errors and providing better code documentation. It's all about making the codebase more robust and developer-friendly! 🧐📚
+
+♻️ Tailwind CSS Styles Reusage:
+In the spirit of optimizing our styles, I've set up Tailwind CSS styles reusage. This approach streamlines the styling process and promotes consistency throughout the project. It's all about efficiency and ensuring a cohesive visual identity for Trivia Mania! 🎨🔧
+
+📊 User Progress in Local Storage:
+To enhance the user experience on the stats page, I've added functionality to save user progress in local storage. Now, users can easily access their last played results, providing them with a sense of continuity and motivation to keep improving. It's all about celebrating achievements and fostering personal growth! 🏆📈
+
+What's on the Horizon:
+
+The journey of Trivia Mania continues with more exciting developments to come:
+
+🧮 Implementing a Question Pool:
+To improve performance and user experience, I'll be implementing a question pool system. This system will ensure that only a limited number of questions are rendered at a time, reducing loading times and optimizing gameplay. It's all about making Trivia Mania faster and more responsive!
+
+🛠️ Further Refactoring and Performance Enhancements:
+I'll continue to explore opportunities for refactoring and performance improvements. This ongoing effort will help us maintain a lean and efficient codebase, ensuring Trivia Mania remains a top-notch trivia platform.
+
+The journey of Trivia Mania is an ever-evolving adventure, and I'm excited to have you all along for the ride. If you share my passion for technology, coding, and creating engaging experiences, please feel free to connect, share your insights, or simply be a part of this exciting project. Together, we'll continue to learn, grow, and have a blast as we navigate the world of Trivia Mania! 🌟👩‍💻
+
+Stay tuned for more updates, and thank you for being an integral part of this incredible journey! 🌐 #TriviaMania #SoftwareEngineering #UIUX #APIDevelopment

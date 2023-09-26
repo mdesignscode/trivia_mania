@@ -1,8 +1,12 @@
 #!/usr/bin/node
 
 import { randomUUID } from "crypto";
-
-type UserStats = Record<string, Record<string, any>>;
+import {
+  CategoryStat,
+  DifficultyStat,
+  IUserStats,
+  initialStat,
+} from "./interfaces";
 
 /**
  * A class for a trivia mania player
@@ -30,13 +34,13 @@ class User {
   constructor(
     username: string,
     id: string = "",
-    stats: UserStats = {},
+    stats: IUserStats = initialStat,
     avatar: string = "/avatar.png"
   ) {
     this.username = username;
     this.stats = stats;
     this.id = id || randomUUID();
-    this.avatar = avatar
+    this.avatar = avatar;
   }
 
   /**
@@ -45,33 +49,43 @@ class User {
    *
    * @param {UserStats} stats - The user's results from one round
    */
-  submitRound(stats: UserStats) {
+  submitRound(stats: IUserStats) {
     const userStats = this.stats;
 
-    interface IStat {
-      answered: number;
-      correctAnswered: number;
-    }
-
     for (const key in stats) {
+      // difficulty stats
       if (["easy", "medium", "hard", "total"].includes(key)) {
+        // increment values if exists
         if (userStats[key]) {
-          const stat = stats[key] as IStat;
-          const userStat = userStats[key] as IStat;
+          const stat = stats[key] as DifficultyStat;
+          const userStat = userStats[key] as DifficultyStat;
           userStat.answered += stat.answered;
           userStat.correctAnswered += stat.correctAnswered;
-        } else userStats[key] = stats[key];
+        } else {
+          // set new difficulty stat
+          userStats[key] = stats[key];
+        }
       } else {
+        // category stats
         if (userStats[key]) {
-          for (const subKey in stats[key] as Record<string, IStat>) {
-            if (userStats[key][subKey]) {
-              const stat = stats[key][subKey] as IStat;
-              const userStat = userStats[key][subKey] as IStat;
+          // increment values if exists
+          for (const subKey in stats[key] as CategoryStat) {
+            if ((userStats[key] as CategoryStat)[subKey]) {
+              const stat = (stats[key] as CategoryStat)[subKey];
+              const userStat = (userStats[key] as CategoryStat)[subKey];
               userStat.answered += stat.answered;
               userStat.correctAnswered += stat.correctAnswered;
-            } else userStats[key][subKey] = stats[key][subKey];
+            } else {
+              // set new category diffculty stat
+              (userStats[key] as CategoryStat)[subKey] = (
+                stats[key] as CategoryStat
+              )[subKey];
+            }
           }
-        } else userStats[key] = stats[key];
+        } else {
+          // set new category stat
+          userStats[key] = stats[key];
+        }
       }
     }
   }

@@ -2,8 +2,7 @@
 import { readFileSync, writeFileSync } from "fs";
 import Question from "../question";
 import User from "../user";
-
-type UserStats = Record<string, Record<string, any>>;
+import { IUser, IUserStats } from "../interfaces";
 
 interface IFilters {
   difficulty?: string;
@@ -250,7 +249,7 @@ class FileStorage {
    * @param {string} id - the user's id
    * @param {UserStats} stats
    */
-  updateUserProgress(id: string, stats: UserStats) {
+  updateUserProgress(id: string, stats: IUserStats) {
     const user = this.getUser(id);
     user.submitRound(stats);
     this.save();
@@ -263,8 +262,8 @@ class FileStorage {
    * @param {string} id - the user's id
    * @returns {UserStats}
    */
-  getUserStats(id: string): UserStats {
-    return this.getUser(id).stats;
+  getUserStats(id: string): IUserStats {
+    return this.getUser(id).stats as IUserStats;
   }
 
   /**
@@ -274,7 +273,7 @@ class FileStorage {
    * @returns {Record<string, User>}
    */
   getAllUsers(): Record<string, User> {
-    return this.objects.Users
+    return this.objects.Users;
   }
 
   /**
@@ -286,7 +285,7 @@ class FileStorage {
    * @param {string} newUsers - the new set of users
    */
   syncUsers(newUsers: Record<string, User>) {
-    this.objects.Users = newUsers
+    this.objects.Users = newUsers;
   }
 
   /**
@@ -353,16 +352,14 @@ class FileStorage {
 
       // recreate User models
       data.Users = {};
-      for (const key in parsedData.Users as Record<
-        string,
-        Record<string, any>
-      >) {
-        const model = parsedData.Users[key] as {
-          username: string;
-          id: string;
-          stats: {};
-        };
-        const user = new User(model.username, model.id, model.stats);
+      for (const key in parsedData.Users as Record<string, IUser>) {
+        const model = parsedData.Users[key] as IUser;
+        const user = new User(
+          model.username,
+          model.id,
+          model.stats,
+          model.avatar
+        );
 
         data.Users[key] = user;
       }

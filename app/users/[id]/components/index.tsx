@@ -1,19 +1,16 @@
 "use client";
-import { progressSelector } from "@/lib/redux/slices/progressSlice";
-import Image from "next/image";
-import Link from "next/link";
-import { useSelector } from "react-redux";
-import HandleUnsavedProgress from "./handleUnsavedProgress";
-import DisplayStats from "./displayStats";
 import User from "@/models/user";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { transpileModule } from "typescript";
+import DisplayStats from "./displayStats";
+import HandleUnsavedProgress from "./handleUnsavedProgress";
 import Header from "./header";
 import Hero from "./hero";
+import { IUserStats } from "@/models/interfaces";
 
 interface DisplayUserProgressProps {
   serializedTopTen: string;
-  userStats: Record<string, Record<string, any>>;
+  userStats: IUserStats;
   serializedUser: string;
 }
 
@@ -22,9 +19,9 @@ export default function DisplayUserProgress({
   serializedTopTen,
   userStats,
 }: DisplayUserProgressProps) {
-  const [progress, setProgress] = useState({});
-  const [showProgress, setShowProgress] = useState(false);
-  const [showStats, setShowStats] = useState(false);
+  const [progress, setProgress] = useState<IUserStats>({
+    total: { answered: 0, correctAnswered: 0 },
+  });
   const topTen: Array<User> = JSON.parse(serializedTopTen);
   const user: User = JSON.parse(serializedUser);
 
@@ -39,12 +36,9 @@ export default function DisplayUserProgress({
   useEffect(() => {
     const progressString = localStorage.getItem("progress") || "{}";
     const parsedProgress = JSON.parse(progressString);
-
     if (parsedProgress) {
       setProgress(parsedProgress);
-      setShowProgress(true);
     }
-    setShowStats(true);
   }, []);
 
   return (
@@ -54,16 +48,18 @@ export default function DisplayUserProgress({
 
       <HandleUnsavedProgress />
 
-      {Object.keys(userStats).length > 0 ? (
+      {Object.keys(userStats).length > 1 ? (
         <>
           {/* Hero */}
           <Hero userStats={userStats} topTenPosition={topTenPosition} />
 
           {/* user last played results */}
-          <DisplayStats message="Your last played results" stats={progress} isShowing={showProgress} />
+          {Object.keys(progress).length > 1 && (
+            <DisplayStats message="Your last played results" stats={progress} />
+          )}
 
           {/* user overall stats */}
-          <DisplayStats message="Your overall stats" stats={userStats} isShowing={showStats} />
+          <DisplayStats message="Your overall stats" stats={userStats} />
         </>
       ) : (
         <h2>

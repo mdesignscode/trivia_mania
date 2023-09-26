@@ -2,17 +2,22 @@ import storage from "../../../../../models/index";
 import { POST } from "../../../../../app/api/users/updateStats/route";
 import { spy, stub } from "sinon";
 import User from "../../../../../models/user";
+import { IUserStats } from "@/models/interfaces";
 
 describe("POST users/updateStats", function () {
   const url = "http://localhost:3000/api/users/create";
 
   test("Should update a user's progress", async function () {
     // test body
-    const testStat = {
+    const testStat: IUserStats = {
       easy: {
         answered: 15,
         correctAnswered: 10,
       },
+      total: {
+        answered: 0,
+        correctAnswered: 0
+      }
     };
     const body = { id: "test_id", stats: testStat };
 

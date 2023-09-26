@@ -10,6 +10,24 @@ export interface IQuestion {
 export interface IUser {
   username: string;
   id: string;
-  stats: Record<string, Record<string, any>>;
+  stats: IUserStats;
   avatar: string;
 }
+
+export type DifficultyStat = {
+  answered: number;
+  correctAnswered: number;
+};
+
+export type CategoryStat = {
+  [key: string]: DifficultyStat;
+};
+
+export interface IUserStats {
+  [key: string]: DifficultyStat | CategoryStat;
+  total: DifficultyStat;
+}
+
+export const initialStat: IUserStats = {
+  total: { answered: 0, correctAnswered: 0 },
+};

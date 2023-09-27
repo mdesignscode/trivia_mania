@@ -1,9 +1,12 @@
 "use client";
-import { motion } from "framer-motion";
-import { useContext, useState } from "react";
 import { Button } from "@/components/styledComponents";
 import Loading from "app/loading";
+import { motion } from "framer-motion";
+import { useContext, useState } from "react";
+import { buttonVariants } from "../store";
 import { HomeContext } from "./store";
+
+type TDifficultyChoice = { [key: string]: boolean };
 
 function Difficulties() {
   const {
@@ -14,26 +17,27 @@ function Difficulties() {
     difficultyStats,
   } = useContext(HomeContext);
 
-  const [difficultyChoice, setDifficultyChoice] = useState<Array<boolean>>([
-    false,
-    false,
-    false,
-    false,
-  ]);
+  const [difficultyChoice, setDifficultyChoice] = useState<TDifficultyChoice>({
+    easy: false,
+    hard: false,
+    medium: false,
+    "all difficulties": false,
+  });
 
-  const buttonVariants = {
-    rest: { translateY: 1 },
-    hover: { translateY: -5 },
-  };
+  function handleDifficulty(value: string) {
+    setDifficultyChoice((state) => {
+      const newState: TDifficultyChoice = {};
+      Object.keys(state).forEach((difficulty) => {
+        if (difficulty === value) {
+          newState[difficulty] = !state[difficulty];
+        } else {
+          newState[difficulty] = false;
+        }
+      });
+      return newState
+    });
 
-  function handleDifficulty(index: number, value: string) {
-    setDifficultyChoice((state: Array<boolean>) =>
-      state.map((_, i) => {
-        return i === index ? (difficulty ? false : true) : false;
-      })
-    );
-
-    const seek = difficulty ? "" : value;
+    const seek = difficulty ? (difficulty === value ? "" : value) : value;
     setDifficulty(seek);
 
     getQuestionStats(seek);
@@ -51,7 +55,7 @@ function Difficulties() {
 
         {!fetchingDifficulty ? (
           <div className="flex gap-2 flex-wrap justify-center">
-            {Object.keys(difficultyStats).map((stat, i) => {
+            {Object.keys(difficultyStats).map((stat) => {
               return (
                 <motion.span
                   key={stat}
@@ -62,9 +66,9 @@ function Difficulties() {
                   <Button
                     onClick={() => {
                       const value = stat === "all difficulties" ? "" : stat;
-                      handleDifficulty(i, value);
+                      handleDifficulty(value);
                     }}
-                    $primary={difficultyChoice[i]}
+                    $primary={difficultyChoice[stat]}
                   >
                     {stat} ({difficultyStats[stat]})
                   </Button>

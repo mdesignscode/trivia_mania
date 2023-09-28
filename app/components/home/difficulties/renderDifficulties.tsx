@@ -1,47 +1,22 @@
 "use client";
+import { buttonVariants } from "@/components/store";
 import { Button } from "@/components/styledComponents";
 import Loading from "app/loading";
 import { motion } from "framer-motion";
-import { useContext, useState } from "react";
-import { buttonVariants } from "../store";
-import { HomeContext } from "./store";
+import { HomeContext } from "../store";
+import { useContext } from "react";
+import { TDifficultyChoice } from ".";
 
-type TDifficultyChoice = { [key: string]: boolean };
+interface RenderDifficultiesProps {
+  difficultyChoice: TDifficultyChoice;
+  handleDifficulty: (value: string) => void;
+}
 
-function Difficulties() {
-  const {
-    difficulty,
-    setDifficulty,
-    getQuestionStats,
-    fetchingDifficulty,
-    difficultyStats,
-  } = useContext(HomeContext);
-
-  const [difficultyChoice, setDifficultyChoice] = useState<TDifficultyChoice>({
-    easy: false,
-    hard: false,
-    medium: false,
-    "all difficulties": false,
-  });
-
-  function handleDifficulty(value: string) {
-    setDifficultyChoice((state) => {
-      const newState: TDifficultyChoice = {};
-      Object.keys(state).forEach((difficulty) => {
-        if (difficulty === value) {
-          newState[difficulty] = !state[difficulty];
-        } else {
-          newState[difficulty] = false;
-        }
-      });
-      return newState
-    });
-
-    const seek = difficulty ? (difficulty === value ? "" : value) : value;
-    setDifficulty(seek);
-
-    getQuestionStats(seek);
-  }
+export default function RenderDifficulties({
+  difficultyChoice,
+  handleDifficulty,
+}: RenderDifficultiesProps) {
+  const { fetchingDifficulty, difficultyStats } = useContext(HomeContext);
 
   return (
     <motion.div
@@ -55,7 +30,7 @@ function Difficulties() {
 
         {!fetchingDifficulty ? (
           <div className="flex gap-2 flex-wrap justify-center">
-            {Object.keys(difficultyStats).map((stat) => {
+            {Object.keys(difficultyChoice).map((stat) => {
               return (
                 <motion.span
                   key={stat}
@@ -83,5 +58,3 @@ function Difficulties() {
     </motion.div>
   );
 }
-
-export default Difficulties;

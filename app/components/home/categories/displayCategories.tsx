@@ -5,44 +5,27 @@ import { motion } from "framer-motion";
 import { Fragment } from "react";
 import { Dispatch, SetStateAction, useContext } from "react";
 import { HomeContext } from "../store";
+import { buttonVariants } from "@/components/store";
 
-interface IDisplayCategories {
+interface DisplayCategoriesProps {
   showMore: boolean;
-  setCategoryChoice: Dispatch<SetStateAction<boolean[]>>;
   categoryChoice: Array<boolean>;
+  handleCategories: (index: number, value: string) => void
 }
 
 export default function DisplayCategories({
-  setCategoryChoice,
   categoryChoice,
   showMore,
-}: IDisplayCategories) {
-  const { categoryStats, setCategories } = useContext(HomeContext);
+  handleCategories
+}: DisplayCategoriesProps) {
+  const { categoryStats } = useContext(HomeContext);
 
-  const buttonVariants = {
-    rest: { translateY: 1 },
-    hover: { translateY: -4 },
-  };
-
-  function handleCategories(index: number, value: string) {
-    setCategoryChoice((state) => {
-      const newState = [...state];
-      newState[index] = !state[index];
-      return newState;
-    });
-
-    setCategories((state) => {
-      const valueIndex = state.indexOf(value);
-      return valueIndex === -1
-        ? [...state, value]
-        : state.filter((category) => category !== value);
-    });
-  }
+  const styles = "flex gap-2 flex-wrap justify-center"
 
   return (
     <div className="col gap-2">
       {/* display first 15 categories */}
-      <div className="flex gap-2 flex-wrap justify-center">
+      <div className={styles}>
         {Object.keys(categoryStats)
           .slice(0, 15)
           .map((stat, i) => {
@@ -78,7 +61,7 @@ export default function DisplayCategories({
         leaveFrom="opacity-100 scale-100"
         leaveTo="opacity-0 scale-95"
       >
-        <div className="flex gap-2 flex-wrap justify-center">
+        <div className={styles}>
           {Object.keys(categoryStats)
             .slice(15)
             .map((stat, i) => {

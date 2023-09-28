@@ -1,11 +1,12 @@
 /* `Show more categories` and `Reset categories` buttons */
 "use client";
+import { buttonVariants } from "@/components/store";
 import { Button } from "@/components/styledComponents";
 import { motion } from "framer-motion";
 import { Dispatch, SetStateAction, useContext } from "react";
 import { HomeContext } from "../store";
 
-interface IDisplayControls {
+interface DisplayControlsProps {
   setShowMore: Dispatch<SetStateAction<boolean>>;
   showMore: boolean;
   setCategoryChoice: Dispatch<SetStateAction<boolean[]>>;
@@ -15,12 +16,8 @@ export default function DisplayControls({
   setShowMore,
   showMore,
   setCategoryChoice,
-}: IDisplayControls) {
+}: DisplayControlsProps) {
   const { setCategories } = useContext(HomeContext);
-  const buttonVariants = {
-    rest: { translateY: 1 },
-    hover: { translateY: -4 },
-  };
 
   return (
     <div className="flex justify-center gap-4">

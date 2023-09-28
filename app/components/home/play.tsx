@@ -1,15 +1,19 @@
-"use client"
-import Link from "next/link";
+"use client";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useContext } from "react";
+import storageAvailable from "../localStorageDetection";
+import { buttonVariants } from "../store";
 import { HomeContext } from "./store";
 
 export default function Play() {
-  const { difficulty, categories } = useContext(HomeContext)
-  const buttonVariants = {
-    rest: { translateY: 1 },
-    hover: { translateY: -5 },
-  };
+  const { difficulty, categories } = useContext(HomeContext);
+  function handlePlay() {
+    if (storageAvailable()) {
+      localStorage.setItem("difficulty", difficulty);
+      localStorage.setItem("categories", JSON.stringify(categories));
+    }
+  }
 
   return (
     <motion.div
@@ -18,20 +22,21 @@ export default function Play() {
       exit={{ y: "100%", opacity: 0 }}
       transition={{ duration: 1.5 }}
     >
-      <motion.button
+      <motion.span
         variants={buttonVariants}
         whileHover="hover"
         whileTap="hover"
       >
         <Link
-          className="start-button"
           href={encodeURI(
             `/game?difficulty=${difficulty}&categories=${categories.join(",")}`
           )}
         >
-          Start Playing
+          <button className="w-full h-full start-button" onClick={handlePlay}>
+            Start Playing
+          </button>
         </Link>
-      </motion.button>
+      </motion.span>
     </motion.div>
   );
 }

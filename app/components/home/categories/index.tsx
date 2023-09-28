@@ -1,18 +1,58 @@
 /* Renders categories components */
 "use client";
-import { motion } from "framer-motion";
-import { useContext, useState } from "react";
 import Loading from "app/loading";
+import { motion } from "framer-motion";
+import { useContext, useEffect, useState } from "react";
 import { HomeContext } from "../store";
 import DisplayCategories from "./displayCategories";
 import DisplayControls from "./displayControls";
+import storageAvailable from "@/components/localStorageDetection";
 
 function Categories() {
-  const { categoryStats, fetchingCategories } = useContext(HomeContext);
+  const { categoryStats, fetchingCategories, setCategories, categories } =
+    useContext(HomeContext);
   const [showMore, setShowMore] = useState(false);
-  const [categoryChoice, setCategoryChoice] = useState<Array<boolean>>(
+  const [categoryChoice, setCategoryChoice] = useState<boolean[]>(
     Object.keys(categoryStats).map(() => false)
   );
+
+  // set previous categories if available
+  useEffect(() => {
+    if (storageAvailable()) {
+      const prevCategories = localStorage.getItem("categories");
+
+      if (prevCategories) {
+        const preferences = JSON.parse(prevCategories) as string[];
+
+        if (preferences.length > 0) {
+          const newState: Record<string, boolean> = {};
+          Object.keys(categoryStats).forEach((category) => {
+            newState[category] = preferences.includes(category) ? true : false;
+          });
+
+          setCategories(preferences);
+          setCategoryChoice(Object.values(newState));
+
+        }
+      }
+    }
+  }, [categoryStats]);
+
+  function handleCategories(index: number, value: string) {
+    setCategoryChoice((state) => {
+      const newState = [...state];
+      newState[index] = !state[index];
+      return newState;
+    });
+
+    setCategories((state) => {
+      const valueIndex = state.indexOf(value);
+      return valueIndex === -1
+        ? [...state, value]
+        : state.filter((category) => category !== value);
+    });
+  }
+
   return (
     <motion.div
       initial={{ x: -100, opacity: 0 }}
@@ -28,9 +68,9 @@ function Categories() {
             {/* display categories */}
             <DisplayCategories
               {...{
-                setCategoryChoice,
                 categoryChoice,
                 showMore,
+                handleCategories,
               }}
             />
 

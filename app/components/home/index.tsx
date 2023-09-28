@@ -16,8 +16,8 @@ function HomePage() {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="homepage col">
-          <main className="main-content flex-col items-center flex">
+        <div className="col">
+          <main className="col items-center">
             <Header />
 
             <div className="text-center col gap-4 w-4/5">

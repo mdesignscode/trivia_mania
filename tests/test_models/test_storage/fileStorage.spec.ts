@@ -1,9 +1,9 @@
 // Unit tests for FileStorage class
 
-import FileStorage from "../../../models/storage/fileStorage";
 import { readFileSync, unlinkSync, writeFileSync } from "fs";
 import { stub } from "sinon";
 import Question from "../../../models/question";
+import FileStorage, { IStorageObjects, QuestionsRecord } from "../../../models/storage/fileStorage";
 import User from "../../../models/user";
 
 beforeAll(function () {
@@ -75,8 +75,9 @@ describe("FileStorage", function () {
         expect(questionEasy).toBeDefined();
         expect(questionGeneral).toBeDefined();
 
-        let allQuestions = storage.getAllQuestions(false) as Record<string, Question>
-        expect(Object.keys(allQuestions).length).toStrictEqual(1)
+        let allQuestions = storage.getAllQuestions() as QuestionsRecord
+
+        expect(Object.keys(allQuestions).length).toStrictEqual(2)
 
         // add more questions to storage
         storage.newQuestion([Question4, Question3, Question2]);
@@ -90,8 +91,11 @@ describe("FileStorage", function () {
         expect(questionHistory).toBeDefined();
 
         // storage now has 4 questions
-        allQuestions = storage.getAllQuestions(false) as Record<string, Question>
-        expect(Object.keys(allQuestions).length).toStrictEqual(4)
+        allQuestions = storage.getAllQuestions() as QuestionsRecord
+        expect(Object.keys(allQuestions).length).toStrictEqual(6)
+
+        const uniqueQuestions = storage.getAllQuestions(true) as Record<string, Question>
+        expect(Object.keys(uniqueQuestions).length).toStrictEqual(4)
       });
     });
 
@@ -104,7 +108,7 @@ describe("FileStorage", function () {
         storage.newQuestion(Question3);
 
         const stock = storage.getQuestionsByFilter("easy");
-        const questionObj = stock["Question.1"];
+        const questionObj = stock["1"];
 
         expect(questionObj).toBeDefined();
         expect(Object.keys(stock).length).toStrictEqual(1);
@@ -124,11 +128,9 @@ describe("FileStorage", function () {
     describe("getAllQuestions method", function () {
       test("Returns an object with all questions in storage in a single record", function () {
         const { Question2, Question3, Question4 } = generateFakeData();
-        storage.newQuestion(Question2);
-        storage.newQuestion(Question3);
-        storage.newQuestion(Question4);
+        storage.newQuestion([Question4, Question3, Question2]);
 
-        const stock = storage.getAllQuestions(false);
+        const stock = storage.getAllQuestions(true);
         expect(Object.keys(stock).length).toStrictEqual(3);
       });
 
@@ -186,10 +188,7 @@ describe("FileStorage", function () {
         const { Question1, Question2, Question3, Question4 } =
           generateFakeData();
 
-        storage.newQuestion(Question1);
-        storage.newQuestion(Question2);
-        storage.newQuestion(Question3);
-        storage.newQuestion(Question4);
+        storage.newQuestion([Question4, Question3, Question2, Question1]);
       });
 
       test("Return an object with stats count for all filters", function () {
@@ -249,14 +248,14 @@ describe("FileStorage", function () {
     describe("deleteUser method", function () {
       test("Deletes a user from storage", function () {
         storage.newUser(mike23);
-        const mike = storage.getUser(mike23.id);
+        const mike = storage.getUser(mike23.id) as User;
 
         expect(mike).toBeDefined();
 
         storage.deleteUser(mike.id);
 
         const deletedMike = storage.getUser(mike23.id);
-        expect(deletedMike).toBeUndefined();
+        expect(deletedMike).toBeNull();
       });
     });
 
@@ -345,10 +344,10 @@ describe("FileStorage", function () {
       storage.newUser(mike);
       storage.save();
 
-      const data: Record<string, any> = JSON.parse(
+      const data: IStorageObjects = JSON.parse(
         readFileSync("file.json", "utf-8")
       );
-      const easyQuestion = data["Question.easy"]["Question.1"];
+      const easyQuestion = data.Questions.easy["1"];
       expect(easyQuestion).toBeDefined();
       const mikeUser = data.Users[mike.id];
       expect(mikeUser).toBeDefined();

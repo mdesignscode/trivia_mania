@@ -2,11 +2,19 @@
 import { readFileSync, writeFileSync } from "fs";
 import Question from "../question";
 import User from "../user";
-import { IUser, IUserStats } from "../interfaces";
+import { IQuestion, IUser, IUserStats } from "../interfaces";
 
 interface IFilters {
   difficulty?: string;
   categories?: Array<string>;
+}
+
+export type QuestionsRecord = Record<string, Record<string, Question>>;
+type SerializedQuestionsRecord = Record<string, Record<string, IQuestion>>;
+
+export interface IStorageObjects {
+  Questions: QuestionsRecord;
+  Users: Record<string, User>;
 }
 
 /**
@@ -18,7 +26,10 @@ interface IFilters {
  */
 class FileStorage {
   private filePath: string = "file.json";
-  private objects: Record<string, any> = {};
+  private objects: IStorageObjects = {
+    Questions: {},
+    Users: {},
+  };
 
   /**
    * Adds a question or a list of questions to storage
@@ -29,57 +40,64 @@ class FileStorage {
   newQuestion(questions: Question | Array<Question>): void {
     if (Array.isArray(questions)) {
       questions.forEach((obj) => {
-        this.objects[`Question.${obj.difficulty}`] = {
-          ...this.objects[`Question.${obj.difficulty}`],
-          [`Question.${obj.id}`]: {
-            ...obj,
-            __class__: "Question",
-          },
-          __class__: "Question",
-        };
-        this.objects[`Question.${obj.category}`] = {
-          ...this.objects[`Question.${obj.difficulty}`],
-          [`Question.${obj.id}`]: {
-            ...obj,
-            __class__: "Question",
-          },
-          __class__: "Question",
-        };
+        // category entry
+        if (!this.objects.Questions[obj.category])
+          this.objects.Questions[obj.category] = {
+            [obj.id]: obj,
+          };
+        else this.objects.Questions[obj.category][obj.id] = obj;
+
+        // difficulty entry
+        if (!this.objects.Questions[obj.difficulty])
+          this.objects.Questions[obj.difficulty] = {
+            [obj.id]: obj,
+          };
+        else this.objects.Questions[obj.difficulty][obj.id] = obj;
       });
     } else {
       const obj = questions;
-      this.objects[`Question.${obj.difficulty}`] = {
-        ...this.objects[`Question.${obj.difficulty}`],
-        [`Question.${obj.id}`]: {
-          ...obj,
-          __class__: "Question",
-        },
-        __class__: "Question",
-      };
-      this.objects[`Question.${obj.category}`] = {
-        ...this.objects[`Question.${obj.category}`],
-        [`Question.${obj.id}`]: {
-          ...obj,
-          __class__: "Question",
-        },
-        __class__: "Question",
-      };
+      // category entry
+      if (!this.objects.Questions[obj.category])
+        this.objects.Questions[obj.category] = {
+          [obj.id]: obj,
+        };
+      else this.objects.Questions[obj.category][obj.id] = obj;
+
+      // difficulty entry
+      if (!this.objects.Questions[obj.difficulty])
+        this.objects.Questions[obj.difficulty] = {
+          [obj.id]: obj,
+        };
+      else this.objects.Questions[obj.difficulty][obj.id] = obj;
     }
   }
 
   /**
    * Retrieves all questions by filter
-   * @date 05/09/2023 - 21:01:14
+   * @date 29/09/2023 - 15:12:44
    *
-   * @param {string} filter - Either `difficulty name` or `category name`
+   * @param {string} filter
+   * @param {string} [userId=""] - filters out questions a user hasn't answered yet
    * @returns {Record<string, Question>}
    */
-  getQuestionsByFilter(filter: string): Record<string, Question> {
-    const filteredQuestions = this.objects[`Question.${filter}`];
-    try {
-      delete filteredQuestions.__class__;
-    } catch (error) {}
-    return filteredQuestions;
+  getQuestionsByFilter(
+    filter: string,
+    userId: string = ""
+  ): Record<string, Question> {
+    const filteredQuestions = this.objects.Questions[filter];
+    let uniqueQuestions: Record<string, Question> = {};
+    const user = this.getUser(userId);
+
+    if (user) {
+      const userAnswered = user.answeredQuestions;
+      for (const key in filteredQuestions) {
+        if (!userAnswered.includes(key)) {
+          uniqueQuestions[key] = filteredQuestions[key];
+        }
+      }
+    }
+
+    return userId ? uniqueQuestions : filteredQuestions;
   }
 
   /**
@@ -91,38 +109,41 @@ class FileStorage {
    * @returns {Question}
    */
   getQuestion(filter: string, id: string): Question {
-    return this.objects[`Question.${filter}`][`Question.${id}`];
+    return this.objects.Questions[filter][id];
   }
 
   /**
    * Retrieves all questions in storage
-   * @date 06/09/2023 - 12:28:50
+   * @date 29/09/2023 - 12:38:53
    *
-   * @param {boolean} [byFilter=true] - Set to false to get all questions in a single record
-   * @returns {Record<string, Question>}
+   * @param {boolean} [singleRecord=false] - if true, retrieves a unique set of questions
+   * @param {string} [userId=""] - retrieves only questions a user hasn't answered yet
+   * @returns {(Record<string, Question> | QuestionsRecord)}
    */
   getAllQuestions(
-    byFilter: boolean = true
-  ): Record<string, Question> | Record<string, Record<string, Question>> {
-    const allQuestions: Record<string, Record<string, Question>> = {};
+    singleRecord: boolean = false,
+    userId: string = ""
+  ): Record<string, Question> | QuestionsRecord {
+    const allQuestions: QuestionsRecord = {};
     const uniqueQuestions: Record<string, Question> = {};
+    const user = this.getUser(userId);
 
-    for (const key in this.objects) {
-      if (this.objects[key].__class__ === "Question") {
-        for (const subKey in this.objects[key]) {
-          if (subKey !== "__class__") {
-            const questionObj = this.objects[key][subKey];
-            uniqueQuestions[subKey] = questionObj;
-            allQuestions[key] = {
-              ...allQuestions[key],
-              [subKey]: questionObj,
-            };
-          }
+    const storageQuestions = this.objects.Questions;
+    for (const filter in storageQuestions) {
+      allQuestions[filter] = {};
+      for (const question in storageQuestions[filter]) {
+        const questionObj = storageQuestions[filter][question];
+        if (user && !user.answeredQuestions.includes(questionObj.id)) {
+          uniqueQuestions[question] = questionObj;
+          allQuestions[filter][questionObj.id] = questionObj;
+        } else if (!userId) {
+          uniqueQuestions[question] = questionObj;
+          allQuestions[filter][questionObj.id] = questionObj;
         }
       }
     }
 
-    return byFilter ? allQuestions : uniqueQuestions;
+    return singleRecord ? uniqueQuestions : allQuestions;
   }
 
   /**
@@ -133,7 +154,7 @@ class FileStorage {
    * @returns {Array<Question>}
    */
   filterQuestions(filters: IFilters): Array<Question> {
-    const questions = this.getAllQuestions(false) as Record<string, Question>;
+    const questions = this.getAllQuestions(true);
     const filteredCategories: Array<Question> = filters.categories?.length
       ? Object.values(questions).filter((question) =>
           filters.categories?.includes(question.category)
@@ -158,19 +179,23 @@ class FileStorage {
   }
 
   /**
-   * If no difficulty is specified, counts all all filters in storage, else count categories by difficulty
-   * @date 08/09/2023 - 11:18:18
+   * counts all question filters, or counts all categories by difficulty
+   * @date 29/09/2023 - 15:05:49
    *
-   * @param {IFilters} filters
+   * @param {string} [difficulty=""]
+   * @param {string} [userId=""] - optionally counts filters user has not answered
    * @returns {Record<string, number>}
    */
-  questionsStats(difficulty: string = ""): Record<string, number> {
+  questionsStats(
+    difficulty: string = "",
+    userId: string = ""
+  ): Record<string, number> {
     const stats: Record<string, number> = {};
     let uniqueQuestions: Record<string, Question>;
 
     uniqueQuestions = difficulty
-      ? this.getQuestionsByFilter(difficulty)
-      : (this.getAllQuestions(false) as Record<string, Question>);
+      ? this.getQuestionsByFilter(difficulty, userId)
+      : (this.getAllQuestions(true, userId) as Record<string, Question>);
 
     const uniqueValues = Object.values(uniqueQuestions);
     if (difficulty) {
@@ -187,8 +212,7 @@ class FileStorage {
     } else {
       const allQuestions = this.getAllQuestions();
       for (const key in allQuestions) {
-        const stat = key.split(".")[1];
-        stats[stat] = Object.keys(allQuestions[key]).length;
+        stats[key] = Object.keys(allQuestions[key]).length;
       }
 
       stats["all difficulties"] = Object.keys(uniqueQuestions).length;
@@ -205,10 +229,6 @@ class FileStorage {
    * @param {(User | Array<User>)} user
    */
   newUser(user: User | Array<User>) {
-    if (!this.objects.Users) {
-      this.objects.Users = {};
-    }
-
     if (Array.isArray(user)) {
       const users = user as Array<User>;
 
@@ -236,10 +256,10 @@ class FileStorage {
    * @date 11/09/2023 - 00:45:12
    *
    * @param {string} id - the user's id
-   * @returns {User}
+   * @returns {User | null}
    */
-  getUser(id: string): User {
-    return this.objects.Users[id];
+  getUser(id: string): User | null {
+    return this.objects.Users[id] || null;
   }
 
   /**
@@ -251,8 +271,10 @@ class FileStorage {
    */
   updateUserProgress(id: string, stats: IUserStats) {
     const user = this.getUser(id);
-    user.submitRound(stats);
-    this.save();
+    if (user) {
+      user.submitRound(stats);
+      this.save();
+    }
   }
 
   /**
@@ -260,10 +282,13 @@ class FileStorage {
    * @date 11/09/2023 - 00:51:09
    *
    * @param {string} id - the user's id
-   * @returns {UserStats}
+   * @returns {UserStats | undefined}
    */
-  getUserStats(id: string): IUserStats {
-    return this.getUser(id).stats as IUserStats;
+  getUserStats(id: string): IUserStats | undefined {
+    const user = this.getUser(id);
+    if (user) {
+      return user.stats;
+    }
   }
 
   /**
@@ -274,18 +299,6 @@ class FileStorage {
    */
   getAllUsers(): Record<string, User> {
     return this.objects.Users;
-  }
-
-  /**
-   * Updates local users with Clerk.js user database.
-   *
-   * Only for use with api endpoint `/users/syncUsers`
-   * @date 11/09/2023 - 17:52:44
-   *
-   * @param {string} newUsers - the new set of users
-   */
-  syncUsers(newUsers: Record<string, User>) {
-    this.objects.Users = newUsers;
   }
 
   /**
@@ -328,25 +341,22 @@ class FileStorage {
    * Deserializes objects in file storage
    */
   reload(): void {
-    const data: Record<string, any> = {};
+    const data: IStorageObjects = {
+      Users: {},
+      Questions:{}
+    };
     try {
       const parsedData: Record<string, Record<string, any>> = JSON.parse(
         readFileSync(this.filePath, "utf-8")
       );
 
       // recreate Question models
-      for (const parsedKey in parsedData) {
-        const parsedObj = parsedData[parsedKey];
-        if (parsedObj.__class__ === "Question") {
-          data[parsedKey] = {};
-          for (const key in parsedObj) {
-            if (key !== "__class__") {
-              const question = new Question(parsedObj[key]);
-              data[parsedKey][key] = question;
-            } else {
-              data[parsedKey][key] = parsedObj[key];
-            }
-          }
+      for (const parsedKey in parsedData.Questions as SerializedQuestionsRecord) {
+        const parsedObj = parsedData.Questions[parsedKey] as Record<string, IQuestion>
+        data.Questions[parsedKey] = {}
+        for (const key in parsedObj) {
+          const model = new Question(parsedObj[key]);
+          data.Questions[parsedKey][key] = model
         }
       }
 
@@ -358,7 +368,8 @@ class FileStorage {
           model.username,
           model.id,
           model.stats,
-          model.avatar
+          model.avatar,
+          model.answeredQuestions
         );
 
         data.Users[key] = user;
@@ -372,7 +383,10 @@ class FileStorage {
    * @date 06/09/2023 - 13:28:43
    */
   clearMemory(): void {
-    this.objects = {};
+    this.objects = {
+      Questions: {},
+      Users: {},
+    };
   }
 }
 

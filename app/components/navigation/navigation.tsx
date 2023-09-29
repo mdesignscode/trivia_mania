@@ -1,4 +1,6 @@
 "use client";
+import User from "@/models/user";
+import { useUser } from "@clerk/nextjs";
 import { Disclosure } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -9,11 +11,10 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useContext, useEffect } from "react";
 import DesktopNav from "./desktop";
 import MobileNav from "./mobile";
-import User from "@/models/user";
+import { GlobalContext } from "app/store";
 
 const navigation = [
   { name: "Home", href: "/", icon: <HomeIcon height={25} width={25} /> },
@@ -47,22 +48,41 @@ export default function Navbar({
   const users: Record<string, User> = JSON.parse(serializedUsers);
   const path = usePathname();
   const { user, isLoaded, isSignedIn } = useUser();
-  const [userStatus, setUserStatus] = useState({
-    user: null as User | null,
-    isOnline: false,
-    isLoaded: false,
-  });
+  const { setUserStatus, userStatus, storageIsAvailable, setIsPrevUser } =
+    useContext(GlobalContext);
 
   useEffect(() => {
     if (isLoaded) {
-      if (isSignedIn) {
+      if (isSignedIn && storageIsAvailable) {
+        // set online user
+        const triviaUser = users[user.id];
+        setUserStatus({ user: triviaUser, isLoaded: true, isOnline: true });
+
+        // check if current user is previous user
+        const prevUserName = localStorage.getItem("username");
+
+        if (prevUserName) {
+          if (prevUserName !== triviaUser.username) {
+            // if not previous user, clear localStorage
+            setIsPrevUser(false);
+            localStorage.setItem("username", triviaUser.username);
+            localStorage.removeItem("unsavedData");
+            localStorage.removeItem("progress");
+            localStorage.removeItem("difficulties");
+            localStorage.removeItem("categories");
+          }
+        } else {
+          localStorage.setItem("username", triviaUser.username);
+        }
+      } else if (!storageIsAvailable && isSignedIn) {
+        // set online user
         const triviaUser = users[user.id];
         setUserStatus({ user: triviaUser, isLoaded: true, isOnline: true });
       } else {
-        setUserStatus({ user: null, isLoaded: false, isOnline: false });
+        setUserStatus({ user: null, isLoaded: true, isOnline: false });
       }
     }
-  }, [isLoaded && isSignedIn]);
+  }, [isLoaded, isSignedIn, storageIsAvailable]);
 
   return (
     <Disclosure as="nav" className="bg-gray-800 z-10 sticky top-0">

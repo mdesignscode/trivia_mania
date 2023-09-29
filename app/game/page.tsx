@@ -1,19 +1,23 @@
 "use client";
-import { IQuestion } from "@/models/interfaces";
+import {
+  CategoryStat,
+  DifficultyStat,
+  IQuestion,
+  IUserStats,
+  initialStat,
+} from "@/models/interfaces";
 import { useQuery } from "@tanstack/react-query";
-import Loading from "app/loading";
+import { GlobalContext } from "app/store";
 import axios from "axios";
-import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-import QuestionComponent from "./components";
+import { useContext, useState } from "react";
+import RenderQuestions from "./components/renderQuestions";
 
 export default function GamePage() {
   const params = useSearchParams();
   const [questionIndex, setQuestionIndex] = useState(1);
-  const [playerStats, setPlayerStats] = useState<Record<string, any>>({
-    total: { answered: 0, correctAnswered: 0 },
-  })
+  const [playerStats, setPlayerStats] = useState<IUserStats>(initialStat);
+  const { storageIsAvailable } = useContext(GlobalContext);
 
   const difficulty = params.get("difficulty") || "";
   const categoriesString = params.get("categories");
@@ -28,11 +32,12 @@ export default function GamePage() {
 
       // difficulty
       const difficultyKey = question.difficulty;
+      const difficultyStat = state[difficultyKey] as DifficultyStat;
       if (state[difficultyKey]) {
         // increment old state
-        newState[difficultyKey].answered = state[difficultyKey].answered + 1;
+        newState[difficultyKey].answered = difficultyStat.answered + 1;
         newState[difficultyKey].correctAnswered = isCorrect
-          ? state[difficultyKey].correctAnswered + 1
+          ? difficultyStat.correctAnswered + 1
           : state[difficultyKey].correctAnswered;
       } else {
         // create new object
@@ -44,14 +49,16 @@ export default function GamePage() {
 
       // category
       const categoryKey = question.category;
+      const categoryStat = state[categoryKey] as CategoryStat;
+      const categoryDifficulty = categoryStat[difficultyKey] as DifficultyStat;
       if (state[categoryKey]) {
-        if (state[categoryKey][difficultyKey]) {
+        if (categoryDifficulty) {
           // increment old category difficulty
           newState[categoryKey][difficultyKey].answered =
-            state[categoryKey][difficultyKey].answered + 1;
+            categoryDifficulty.answered + 1;
           newState[categoryKey][difficultyKey].correctAnswered = isCorrect
-            ? state[categoryKey][difficultyKey].correctAnswered + 1
-            : state[categoryKey][difficultyKey].correctAnswered;
+            ? categoryDifficulty.correctAnswered + 1
+            : categoryDifficulty.correctAnswered;
         } else {
           // set new category difficulty
           newState[categoryKey][difficultyKey] = {
@@ -80,6 +87,10 @@ export default function GamePage() {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const url = `${baseUrl}/users/updateStats`;
 
+    if (storageIsAvailable) {
+      localStorage.setItem("progress", JSON.stringify(playerStats));
+    }
+
     try {
       const { data } = await axios.post(url, { stats: playerStats, id });
       return data;
@@ -104,39 +115,15 @@ export default function GamePage() {
   });
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="game-page h-full flex-1 flex justify-center"
-    >
-      <div className="col justify-center items-center gap-4 max-w-3xl mx-8 h-full">
-        {data.length ? (
-          <>
-            <h1 className="text-2xl">
-              Question {questionIndex} of {data.length}
-            </h1>
-            {data.map((question: IQuestion, i: number) => {
-              return (
-                <QuestionComponent
-                  setIndex={setQuestionIndex}
-                  questionNumber={questionIndex}
-                  index={i + 1}
-                  questionObj={question}
-                  key={question.id}
-                  questionsLength={data.length}
-                  updateProgress={updateProgress}
-                  submitProgress={submitProgress}
-                  progress={playerStats}
-                />
-              );
-            })}
-          </>
-        ) : (
-          <Loading />
-        )}
-      </div>
-    </motion.div>
+    <RenderQuestions
+      {...{
+        data,
+        questionIndex,
+        setQuestionIndex,
+        updateProgress,
+        submitProgress,
+        playerStats,
+      }}
+    />
   );
 }

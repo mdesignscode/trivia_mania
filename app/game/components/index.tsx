@@ -120,7 +120,6 @@ export default function Question({
       if (user && isSignedIn) {
         const res = await submitProgress(user.id);
         if (res.message === "User stats updated successfully") {
-          localStorage.setItem("progress", JSON.stringify(progress));
           window.location.href = "/users/" + user.id;
         } else setError(res);
       } else {

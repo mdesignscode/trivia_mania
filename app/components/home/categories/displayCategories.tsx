@@ -27,6 +27,7 @@ export default function DisplayCategories({
       {/* display first 15 categories */}
       <div className={styles}>
         {Object.keys(categoryStats)
+          .sort()
           .slice(0, 15)
           .map((stat, i) => {
             return (

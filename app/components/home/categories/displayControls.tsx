@@ -5,6 +5,7 @@ import { Button } from "@/components/styledComponents";
 import { motion } from "framer-motion";
 import { Dispatch, SetStateAction, useContext } from "react";
 import { HomeContext } from "../store";
+import { GlobalContext } from "app/store";
 
 interface DisplayControlsProps {
   setShowMore: Dispatch<SetStateAction<boolean>>;
@@ -18,6 +19,13 @@ export default function DisplayControls({
   setCategoryChoice,
 }: DisplayControlsProps) {
   const { setCategories } = useContext(HomeContext);
+  const { storageIsAvailable } = useContext(GlobalContext);
+
+  function handleReset() {
+    setCategories([]);
+    setCategoryChoice((state) => state.map(() => false));
+    if (storageIsAvailable) localStorage.removeItem("categories");
+  }
 
   return (
     <div className="flex justify-center gap-4">
@@ -44,14 +52,7 @@ export default function DisplayControls({
         whileTap="hover"
         className="w-1/3"
       >
-        <Button
-          onClick={() => {
-            setCategories([]);
-            setCategoryChoice((state) => state.map(() => false));
-          }}
-          $primary={true}
-          className="w-full"
-        >
+        <Button onClick={handleReset} $primary={true} className="w-full">
           Reset categories
         </Button>
       </motion.span>

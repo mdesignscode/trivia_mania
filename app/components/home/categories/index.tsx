@@ -1,24 +1,21 @@
-/* Renders categories components */
+/* Handles logic for categories components */
 "use client";
-import Loading from "app/loading";
-import { motion } from "framer-motion";
+import { GlobalContext } from "app/store";
 import { useContext, useEffect, useState } from "react";
 import { HomeContext } from "../store";
-import DisplayCategories from "./displayCategories";
-import DisplayControls from "./displayControls";
-import storageAvailable from "@/components/localStorageDetection";
+import RenderCategories from "./renderCategories";
 
 function Categories() {
-  const { categoryStats, fetchingCategories, setCategories, categories } =
+  const { categoryStats, fetchingCategories, setCategories } =
     useContext(HomeContext);
-  const [showMore, setShowMore] = useState(false);
+  const { storageIsAvailable } = useContext(GlobalContext);
   const [categoryChoice, setCategoryChoice] = useState<boolean[]>(
     Object.keys(categoryStats).map(() => false)
   );
 
   // set previous categories if available
   useEffect(() => {
-    if (storageAvailable()) {
+    if (storageIsAvailable) {
       const prevCategories = localStorage.getItem("categories");
 
       if (prevCategories) {
@@ -32,11 +29,10 @@ function Categories() {
 
           setCategories(preferences);
           setCategoryChoice(Object.values(newState));
-
         }
       }
     }
-  }, [categoryStats]);
+  }, [categoryStats, storageIsAvailable]);
 
   function handleCategories(index: number, value: string) {
     setCategoryChoice((state) => {
@@ -54,40 +50,14 @@ function Categories() {
   }
 
   return (
-    <motion.div
-      initial={{ x: -100, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      exit={{ x: 100, opacity: 0 }}
-      transition={{ duration: 1.5 }}
-    >
-      <div className="text-center col gap-3">
-        <h1 className="text-xl">Choose Categories</h1>
-
-        {!fetchingCategories ? (
-          <div className="col gap-3">
-            {/* display categories */}
-            <DisplayCategories
-              {...{
-                categoryChoice,
-                showMore,
-                handleCategories,
-              }}
-            />
-
-            {/* categories display controls */}
-            <DisplayControls
-              {...{
-                showMore,
-                setShowMore,
-                setCategoryChoice,
-              }}
-            />
-          </div>
-        ) : (
-          <Loading />
-        )}
-      </div>
-    </motion.div>
+    <RenderCategories
+      {...{
+        fetchingCategories,
+        categoryChoice,
+        handleCategories,
+        setCategoryChoice,
+      }}
+    />
   );
 }
 

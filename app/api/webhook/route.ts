@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import storage from "@/models/index";
 import User from "@/models/user";
+import { initialStat } from "@/models/interfaces";
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
@@ -59,7 +60,8 @@ export async function POST(req: Request) {
     // handle signup
     case "user.created":
       // create new user
-      const newUser = new User(username, id, {}, imageUrl);
+      const newUser = new User(username, id, initialStat, imageUrl);
+
       storage.newUser(newUser);
       response = `${id} created`;
       break;
@@ -76,6 +78,9 @@ export async function POST(req: Request) {
       const updatedUser = new User(username, id, userStats, imageUrl);
       storage.newUser(updatedUser);
       response = `${id} updated`;
+      break;
+
+    default:
       break;
   }
 

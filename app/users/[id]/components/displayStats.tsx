@@ -1,5 +1,4 @@
 "use client";
-
 import { CategoryStat, DifficultyStat, IUserStats } from "@/models/interfaces";
 import { motion } from "framer-motion";
 

@@ -1,12 +1,13 @@
 "use client";
+import { IUserStats } from "@/models/interfaces";
 import User from "@/models/user";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import DisplayStats from "./displayStats";
 import HandleUnsavedProgress from "./handleUnsavedProgress";
 import Header from "./header";
 import Hero from "./hero";
-import { IUserStats } from "@/models/interfaces";
+import { GlobalContext } from "app/store";
 
 interface DisplayUserProgressProps {
   serializedTopTen: string;
@@ -24,6 +25,7 @@ export default function DisplayUserProgress({
   });
   const topTen: Array<User> = JSON.parse(serializedTopTen);
   const user: User = JSON.parse(serializedUser);
+  const { storageIsAvailable } = useContext(GlobalContext);
 
   let topTenPosition = 0;
   for (let i = 0; i < topTen.length; i++) {
@@ -34,12 +36,14 @@ export default function DisplayUserProgress({
   }
 
   useEffect(() => {
-    const progressString = localStorage.getItem("progress") || "{}";
-    const parsedProgress = JSON.parse(progressString);
-    if (parsedProgress) {
-      setProgress(parsedProgress);
+    if (storageIsAvailable) {
+      const progressString = localStorage.getItem("progress") || "{}";
+      const parsedProgress = JSON.parse(progressString);
+      if (parsedProgress) {
+        setProgress(parsedProgress);
+      }
     }
-  }, []);
+  }, [storageIsAvailable]);
 
   return (
     <div className="text-xl text-gray-800 w-11/12 col gap-4 mx-auto py-4">

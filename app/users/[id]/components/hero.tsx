@@ -1,11 +1,12 @@
 "use client";
+import { IUserStats } from "@/models/interfaces";
 import { motion } from "framer-motion";
 
 export default function Hero({
   userStats,
   topTenPosition,
 }: {
-  userStats: Record<string, Record<string, any>>;
+  userStats: IUserStats;
   topTenPosition: number;
 }) {
   return (

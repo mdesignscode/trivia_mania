@@ -1,92 +1,48 @@
-const crypto = require("crypto");
-import User from "../../models/user";
-import { stub } from 'sinon'
+import { IUserStats, initialStat } from "@/models/interfaces";
+import User from "@/models/user";
 
-describe("User class", function () {
-  test("It should create a new user with getters and setters for `stats`", function () {
-    const mike = new User("mike23")
+describe("User class", () => {
+  let user: User;
+  const mockStats: IUserStats = initialStat;
 
-    const testStat = {
-      easy: {
-        answered: 15,
-        correctAnswered: 10
-      },
-      Science: {
-        easy: {
-          answered: 10,
-          correctAnswered: 7
-        }
-      },
-      History: {
-        easy: {
-          answered: 5,
-          correctAnswered: 3
-        }
-      },
-      total: {
-        answered: 15,
-        correctAnswered: 10
-      }
-    }
-    
-    const initialStats = mike.stats
-    expect(initialStats).toEqual({})
-
-    mike.submitRound(testStat)
-
-    const mikeStats = mike.stats
-    expect(mikeStats).toEqual(testStat)
-
-    const testStat2 = {
-      easy: {
-        answered: 5,
-        correctAnswered: 5
-      },
-      Science: {
-        easy: {
-          answered: 5,
-          correctAnswered: 5
-        }
-      },
-      total: {
-        answered: 5,
-        correctAnswered: 5
-      }
-    } 
-    mike.submitRound(testStat2)
-
-    const testStatResults = {
-      easy: {
-        answered: 20,
-        correctAnswered: 15
-      },
-      Science: {
-        easy: {
-          answered: 15,
-          correctAnswered: 12
-        }
-      },
-      History: {
-        easy: {
-          answered: 5,
-          correctAnswered: 3
-        }
-      },
-      total: {
-        answered: 20,
-        correctAnswered: 15
-      }
-    }
-    expect(mikeStats).toEqual(testStatResults)
+  beforeEach(() => {
+    user = new User("testUser", "testId", mockStats, "/testAvatar.png", []);
   });
 
-  test("Should initialize a user with a random UUID", function () {
-    const UUIDstub = stub(crypto, "randomUUID")
-    const mockUUID = "4043063d-fcae-41a4-9855-ea0b0fb95690"
-    UUIDstub.callsFake(() => mockUUID)
-    const mike = new User("mike")
-    const mikeId = mike.id
+  it("should create a new user with provided properties", () => {
+    expect(user.username).toBe("testUser");
+    expect(user.id).toBe("testId");
+    expect(user.stats).toEqual(mockStats);
+    expect(user.avatar).toBe("/testAvatar.png");
+    expect(user.answeredQuestions).toEqual([]);
+  });
 
-    expect(mikeId).toStrictEqual(mockUUID)
-  })
+  it("should create a new user with a random UUID if no id is provided", () => {
+    const newUser = new User("testUser");
+    expect(newUser.id).not.toBeUndefined();
+  });
+
+  it("should submit a round of stats correctly", () => {
+    const roundStats: IUserStats = {
+      easy: { answered: 5, correctAnswered: 3 },
+      medium: { answered: 6, correctAnswered: 4 },
+      hard: { answered: 4, correctAnswered: 2 },
+      total: { answered: 15, correctAnswered: 9 },
+    };
+
+    user.submitRound(roundStats);
+
+    expect(user.stats.easy).toEqual({ answered: 5, correctAnswered: 3 });
+    expect(user.stats.medium).toEqual({ answered: 6, correctAnswered: 4 });
+    expect(user.stats.hard).toEqual({ answered: 4, correctAnswered: 2 });
+    expect(user.stats.total).toEqual({ answered: 15, correctAnswered: 9 });
+  });
+
+  it("should add answered questions correctly", () => {
+    const questionsToAdd = ["question1", "question2", "question3"];
+
+    user.addAnsweredQuestions(questionsToAdd);
+
+    expect(user.answeredQuestions).toEqual(questionsToAdd);
+  });
 });

@@ -1,3 +1,4 @@
+import { CategoryStat } from "@/models/interfaces";
 import User from "@/models/user";
 import Image from "next/image";
 
@@ -39,29 +40,27 @@ export default function Board({ topTenUsers }: { topTenUsers: Array<User> }) {
             <div className="flex gap-2 flex-col">
               {Object.keys(user.stats).map((category, i) => {
                 if (!["easy", "hard", "medium", "total"].includes(category)) {
+                  const categoryStat = user.stats[category] as CategoryStat;
                   return (
                     <div key={`${category}_${i}`} className="col">
-                      <h3 className="text-gray-700">{category} Correct Answers</h3>
+                      <h3 className="text-gray-700">
+                        {category} Correct Answers
+                      </h3>
 
                       <div className="flex gap-3">
-                        {Object.keys(user.stats[category]).map((difficulty) => {
+                        {Object.keys(categoryStat).map((difficulty) => {
                           const capitalized = difficulty.split("");
                           capitalized[0] = capitalized[0].toUpperCase();
                           const capitalizedDifficulty = capitalized.join("");
 
                           return (
                             <div
-                             key={`${difficulty}_${i}`}
+                              key={`${difficulty}_${i}`}
                               className="flex gap-1"
                               style={{ color: colorMap[difficulty] }}
                             >
                               <h4>{capitalizedDifficulty}:</h4>
-                              <p>
-                                {
-                                  user.stats[category][difficulty]
-                                    .correctAnswered
-                                }
-                              </p>
+                              <p>{categoryStat[difficulty].correctAnswered}</p>
                             </div>
                           );
                         })}

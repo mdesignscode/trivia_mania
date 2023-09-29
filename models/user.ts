@@ -4,6 +4,7 @@ import { randomUUID } from "crypto";
 import {
   CategoryStat,
   DifficultyStat,
+  IUser,
   IUserStats,
   initialStat,
 } from "./interfaces";
@@ -15,32 +16,36 @@ import {
  * @class User
  * @typedef {User}
  */
-class User {
+class User implements IUser {
   username;
   stats;
   id: string;
   avatar;
+  answeredQuestions: string[];
 
   /**
    * Creates an instance of User.
-   * @date 15/09/2023 - 16:14:11
+   * @date 29/09/2023 - 12:47:06
    *
    * @constructor
    * @param {string} username
    * @param {string} [id=""]
-   * @param {UserStats} [stats={}]
+   * @param {IUserStats} [stats=initialStat]
    * @param {string} [avatar="/avatar.png"]
+   * @param {string[]} [answeredQuestions=[]] - question id's a user answered
    */
   constructor(
     username: string,
     id: string = "",
     stats: IUserStats = initialStat,
-    avatar: string = "/avatar.png"
+    avatar: string = "/avatar.png",
+    answeredQuestions: string[] = []
   ) {
     this.username = username;
     this.stats = stats;
     this.id = id || randomUUID();
     this.avatar = avatar;
+    this.answeredQuestions = answeredQuestions
   }
 
   /**
@@ -76,7 +81,7 @@ class User {
               userStat.answered += stat.answered;
               userStat.correctAnswered += stat.correctAnswered;
             } else {
-              // set new category diffculty stat
+              // set new category difficulty stat
               (userStats[key] as CategoryStat)[subKey] = (
                 stats[key] as CategoryStat
               )[subKey];
@@ -88,6 +93,16 @@ class User {
         }
       }
     }
+  }
+
+  /**
+   * adds a list of question id's to user answered questions
+   * @date 29/09/2023 - 12:51:45
+   *
+   * @param {string[]} questions - question id's the user answered
+   */
+  addAnsweredQuestions(questions: string[]) {
+    this.answeredQuestions = [...this.answeredQuestions, ...questions]
   }
 }
 

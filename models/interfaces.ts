@@ -1,3 +1,5 @@
+import Question from "./question";
+
 export interface IQuestion {
   category: string;
   answers: Array<string>;
@@ -12,6 +14,7 @@ export interface IUser {
   id: string;
   stats: IUserStats;
   avatar: string;
+  answeredQuestions: string[];
 }
 
 export type DifficultyStat = {

@@ -1,6 +1,5 @@
 import storage from "../../../../models/index";
 import { NextResponse } from "next/server";
-import { stub } from "sinon";
 
 export async function POST(request: Request) {
   try {
@@ -14,14 +13,19 @@ export async function POST(request: Request) {
       return NextResponse.json("New stats required");
     }
 
+    if (!body.answeredQuestions) {
+      return NextResponse.json("Questions answered required");
+    }
+
     const stats = body.stats;
     const id = body.id;
+    const answeredQuestions = body.answeredQuestions;
 
     try {
-      storage.updateUserProgress(id, stats);
-      return NextResponse.json({ message: "User stats updated successfully" });
+      storage.updateUserProgress(id, stats, answeredQuestions);
+      return NextResponse.json("User stats updated successfully");
     } catch (error) {
-      return NextResponse.json({ message: "Failed to update user stats" });
+      return NextResponse.json("Failed to update user stats");
     }
   } catch (error) {
     return NextResponse.json("Invalid body");

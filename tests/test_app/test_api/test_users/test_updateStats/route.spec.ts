@@ -19,7 +19,7 @@ describe("POST users/updateStats", function () {
         correctAnswered: 0
       }
     };
-    const body = { id: "test_id", stats: testStat };
+    const body = { id: "test_id", stats: testStat, answeredQuestions: ["1", "2"] };
 
     // create test user
     const testUser = new User("test_user", "test_id")
@@ -38,14 +38,15 @@ describe("POST users/updateStats", function () {
     const spyUpdateUserProgress = spy(storage, "updateUserProgress");
     // get response
     const res = await POST(req);
-    const { message } = await res.json();
+    const message = await res.json();
 
     expect(message).toStrictEqual("User stats updated successfully");
 
     // spy on method
     const progressUpdated = spyUpdateUserProgress.calledWithExactly(
       "test_id",
-      testStat
+      testStat,
+      ["1", "2"]
     );
 
     expect(progressUpdated).toBeTruthy();

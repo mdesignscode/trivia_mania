@@ -3,8 +3,12 @@
 import { readFileSync, unlinkSync, writeFileSync } from "fs";
 import { stub } from "sinon";
 import Question from "../../../models/question";
-import FileStorage, { IStorageObjects, QuestionsRecord } from "../../../models/storage/fileStorage";
+import FileStorage, {
+  IStorageObjects,
+  QuestionsRecord,
+} from "../../../models/storage/fileStorage";
 import User from "../../../models/user";
+import { initialStat } from "@/models/interfaces";
 
 beforeAll(function () {
   writeFileSync("file.json", JSON.stringify({}));
@@ -64,7 +68,8 @@ describe("FileStorage", function () {
 
     describe("newQuestion method", function () {
       test("Adds a question to storage by duplicating it across the `Category` and `Difficulty`", () => {
-        const { Question1, Question2, Question3, Question4 } = generateFakeData();
+        const { Question1, Question2, Question3, Question4 } =
+          generateFakeData();
 
         // save `General Knowledge` `easy` question
         storage.newQuestion(Question1);
@@ -75,9 +80,9 @@ describe("FileStorage", function () {
         expect(questionEasy).toBeDefined();
         expect(questionGeneral).toBeDefined();
 
-        let allQuestions = storage.getAllQuestions() as QuestionsRecord
+        let allQuestions = storage.getAllQuestions() as QuestionsRecord;
 
-        expect(Object.keys(allQuestions).length).toStrictEqual(2)
+        expect(Object.keys(allQuestions).length).toStrictEqual(2);
 
         // add more questions to storage
         storage.newQuestion([Question4, Question3, Question2]);
@@ -91,11 +96,14 @@ describe("FileStorage", function () {
         expect(questionHistory).toBeDefined();
 
         // storage now has 4 questions
-        allQuestions = storage.getAllQuestions() as QuestionsRecord
-        expect(Object.keys(allQuestions).length).toStrictEqual(6)
+        allQuestions = storage.getAllQuestions() as QuestionsRecord;
+        expect(Object.keys(allQuestions).length).toStrictEqual(6);
 
-        const uniqueQuestions = storage.getAllQuestions(true) as Record<string, Question>
-        expect(Object.keys(uniqueQuestions).length).toStrictEqual(4)
+        const uniqueQuestions = storage.getAllQuestions(true) as Record<
+          string,
+          Question
+        >;
+        expect(Object.keys(uniqueQuestions).length).toStrictEqual(4);
       });
     });
 
@@ -103,12 +111,25 @@ describe("FileStorage", function () {
       test("Returns all questions in storage based on a filter", function () {
         const { Question1, Question2, Question3 } = generateFakeData();
 
-        storage.newQuestion(Question1);
-        storage.newQuestion(Question2);
-        storage.newQuestion(Question3);
+        storage.newQuestion([Question3, Question2, Question1]);
 
         const stock = storage.getQuestionsByFilter("easy");
         const questionObj = stock["1"];
+
+        expect(questionObj).toBeDefined();
+        expect(Object.keys(stock).length).toStrictEqual(1);
+      });
+
+      test("Returns all questions in storage a user hasn't answered yet based on a filter", function () {
+        const { Question1, Question2, Question3, Question4 } =
+          generateFakeData();
+        const joe = new User("joe", "", initialStat, "", ["1"]);
+
+        storage.newUser(joe);
+        storage.newQuestion([Question3, Question2, Question1, Question4]);
+
+        const stock = storage.getQuestionsByFilter("easy", joe.id);
+        const questionObj = stock["4"];
 
         expect(questionObj).toBeDefined();
         expect(Object.keys(stock).length).toStrictEqual(1);
@@ -134,11 +155,32 @@ describe("FileStorage", function () {
         expect(Object.keys(stock).length).toStrictEqual(3);
       });
 
+      test("Returns an object with all questions in storage in a single record, that a user hasn't answered yet", function () {
+        const { Question2, Question3, Question4 } = generateFakeData();
+        const joe = new User("joe", "", initialStat, "", ["2", "3"]);
+
+        storage.newUser(joe);
+
+        storage.newQuestion([Question4, Question3, Question2]);
+
+        const stock = storage.getAllQuestions(true, joe.id);
+        expect(Object.keys(stock).length).toStrictEqual(1);
+      });
+
+      test("Returns an object with all questions in storage by filter record, excluding questions a given user has already answered", function () {
+        const { Question2, Question3, Question4 } = generateFakeData();
+        const joe = new User("joe", "", initialStat, "", ["2", "3"]);
+
+        storage.newUser(joe);
+        storage.newQuestion([Question2, Question3, Question4]);
+
+        const stock = storage.getAllQuestions();
+        expect(Object.keys(stock).length).toStrictEqual(6);
+      });
+
       test("Returns an object with all questions in storage by filter record", function () {
         const { Question2, Question3, Question4 } = generateFakeData();
-        storage.newQuestion(Question2);
-        storage.newQuestion(Question3);
-        storage.newQuestion(Question4);
+        storage.newQuestion([Question2, Question3, Question4]);
 
         const stock = storage.getAllQuestions();
         expect(Object.keys(stock).length).toStrictEqual(6);
@@ -175,7 +217,7 @@ describe("FileStorage", function () {
 
         const filteredQuestions = storage.filterQuestions({
           categories: [],
-          difficulty: ""
+          difficulty: "",
         });
         expect(filteredQuestions.length).toStrictEqual(4);
 
@@ -188,6 +230,9 @@ describe("FileStorage", function () {
         const { Question1, Question2, Question3, Question4 } =
           generateFakeData();
 
+        const joe = new User("joe", "1", initialStat, "", ["1", "2"]);
+
+        storage.newUser(joe);
         storage.newQuestion([Question4, Question3, Question2, Question1]);
       });
 
@@ -205,7 +250,33 @@ describe("FileStorage", function () {
         expect(scienceCount).toStrictEqual(1);
       });
 
+      test("Return an object with stats count for all filters, excluding a given user's answered questions", function () {
+        const stats = storage.questionsStats("", "1");
+
+        const easyCount = stats.easy;
+        const mediumCount = stats.medium;
+        const hardCount = stats.hard;
+        const scienceCount = stats.Science;
+
+        expect(easyCount).toStrictEqual(1);
+        expect(mediumCount).toStrictEqual(0);
+        expect(hardCount).toStrictEqual(1);
+        expect(scienceCount).toStrictEqual(0);
+      });
+
       test("Return an object with stats count based on filters", function () {
+        const easyStats = storage.questionsStats("easy");
+
+        const easyCount = Object.keys(easyStats).length;
+        const generalCount = easyStats["General Knowledge"];
+        const allEasy = easyStats["all categories"];
+
+        expect(easyCount).toStrictEqual(2);
+        expect(generalCount).toStrictEqual(2);
+        expect(allEasy).toStrictEqual(2);
+      });
+
+      test("Return an object with stats count based on filters, excluding questions a user has already answered", function () {
         const easyStats = storage.questionsStats("easy");
 
         const easyCount = Object.keys(easyStats).length;
@@ -231,9 +302,9 @@ describe("FileStorage", function () {
       });
 
       test("Adds a list of new users to storage", function () {
-        const joe = new User("joe")
-        const sam = new User("sam")
-        storage.newUser([mike23, sam,joe]);
+        const joe = new User("joe");
+        const sam = new User("sam");
+        storage.newUser([mike23, sam, joe]);
 
         const mikeUser = storage.getUser(mike23.id);
         const joeUser = storage.getUser(joe.id);
@@ -285,7 +356,7 @@ describe("FileStorage", function () {
           },
         };
 
-        storage.updateUserProgress(mike23.id, testStat);
+        storage.updateUserProgress(mike23.id, testStat, []);
 
         const mikeStats = storage.getUserStats(mike23.id);
 

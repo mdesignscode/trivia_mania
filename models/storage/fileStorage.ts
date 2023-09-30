@@ -210,7 +210,7 @@ class FileStorage {
       }
       stats["all categories"] = Object.keys(uniqueQuestions).length;
     } else {
-      const allQuestions = this.getAllQuestions();
+      const allQuestions = this.getAllQuestions(false, userId);
       for (const key in allQuestions) {
         stats[key] = Object.keys(allQuestions[key]).length;
       }
@@ -269,10 +269,19 @@ class FileStorage {
    * @param {string} id - the user's id
    * @param {UserStats} stats
    */
-  updateUserProgress(id: string, stats: IUserStats) {
+
+  /**
+   * Saves a user's progress on a round
+   * @date 11/09/2023 - 16:12:07
+   *
+   * @param {string} id - the user's id
+   * @param {IUserStats} stats - new stats to be added
+   * @param {string[]} questionsAnswered - list of answered questions
+   */
+  updateUserProgress(id: string, stats: IUserStats, questionsAnswered: string[]) {
     const user = this.getUser(id);
     if (user) {
-      user.submitRound(stats);
+      user.submitRound(stats, questionsAnswered);
       this.save();
     }
   }

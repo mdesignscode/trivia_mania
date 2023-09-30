@@ -27,7 +27,7 @@ export interface IQuestionProps {
 }
 
 export default function Question({
-  questionObj: { category, answers, correctAnswer, question, difficulty },
+  questionObj: { id, category, answers, correctAnswer, question, difficulty },
   index,
   questionNumber,
   setIndex,
@@ -45,7 +45,7 @@ export default function Question({
   const [timesUp, setTimesUp] = useState(false);
   const [CTA, setCTA] = useState("Next Question");
   const [timerHasStarted, setTimerHasStarted] = useState(true);
-  const { user, isSignedIn } = useUser()
+  const { user, isSignedIn } = useUser();
   const [error, setError] = useState("");
   const [_userAnswer, _setUserAnswer] = useState("");
   const userAnswer = useRef(_userAnswer);
@@ -75,7 +75,7 @@ export default function Question({
       })
     );
     updateProgress(
-      { category, answers, correctAnswer, question, difficulty },
+      { id, category, answers, correctAnswer, question, difficulty },
       value
     );
 
@@ -118,10 +118,12 @@ export default function Question({
   async function handleNextQuestion() {
     if (CTA === "Submit Results") {
       if (user && isSignedIn) {
-        const res = await submitProgress(user.id);
-        if (res.message === "User stats updated successfully") {
+        try {
+          await submitProgress(user.id);
           window.location.href = "/users/" + user.id;
-        } else setError(res);
+        } catch (err: any) {
+          setError(err as string);
+        }
       } else {
         // check for unsaved data
         const unsavedData = localStorage.getItem("unsavedData");

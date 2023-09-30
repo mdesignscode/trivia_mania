@@ -30,7 +30,7 @@ describe("User class", () => {
       total: { answered: 15, correctAnswered: 9 },
     };
 
-    user.submitRound(roundStats);
+    user.submitRound(roundStats, []);
 
     expect(user.stats.easy).toEqual({ answered: 5, correctAnswered: 3 });
     expect(user.stats.medium).toEqual({ answered: 6, correctAnswered: 4 });

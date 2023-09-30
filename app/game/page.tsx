@@ -18,12 +18,15 @@ export default function GamePage() {
   const [questionIndex, setQuestionIndex] = useState(1);
   const [playerStats, setPlayerStats] = useState<IUserStats>(initialStat);
   const { storageIsAvailable } = useContext(GlobalContext);
+  const [answeredQuestions, setAnsweredQuestions] = useState<string[]>([])
 
   const difficulty = params.get("difficulty") || "";
   const categoriesString = params.get("categories");
   const categories = categoriesString ? categoriesString.split(",") : [];
 
   function updateProgress(question: IQuestion, answer: string) {
+    setAnsweredQuestions([...answeredQuestions, question.id])
+
     setPlayerStats((state) => {
       const newState = {
         ...JSON.parse(JSON.stringify(state)),
@@ -38,7 +41,7 @@ export default function GamePage() {
         newState[difficultyKey].answered = difficultyStat.answered + 1;
         newState[difficultyKey].correctAnswered = isCorrect
           ? difficultyStat.correctAnswered + 1
-          : state[difficultyKey].correctAnswered;
+          : difficultyStat.correctAnswered;
       } else {
         // create new object
         newState[difficultyKey] = {
@@ -50,8 +53,9 @@ export default function GamePage() {
       // category
       const categoryKey = question.category;
       const categoryStat = state[categoryKey] as CategoryStat;
-      const categoryDifficulty = categoryStat[difficultyKey] as DifficultyStat;
-      if (state[categoryKey]) {
+
+      if (categoryStat) {
+        const categoryDifficulty = categoryStat[difficultyKey] as DifficultyStat;
         if (categoryDifficulty) {
           // increment old category difficulty
           newState[categoryKey][difficultyKey].answered =
@@ -89,10 +93,12 @@ export default function GamePage() {
 
     if (storageIsAvailable) {
       localStorage.setItem("progress", JSON.stringify(playerStats));
+      localStorage.setItem("answeredQuestions", JSON.stringify(answeredQuestions));
     }
 
     try {
-      const { data } = await axios.post(url, { stats: playerStats, id });
+      const { data } = await axios.post(url, { stats: playerStats, id, answeredQuestions, });
+
       return data;
     } catch (error) {
       return error;

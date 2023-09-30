@@ -54,8 +54,18 @@ class User implements IUser {
    *
    * @param {UserStats} stats - The user's results from one round
    */
-  submitRound(stats: IUserStats) {
+
+  /**
+   * Uploads a user's stats on a round
+   * @date 30/09/2023 - 00:22:31
+   *
+   * @param {IUserStats} stats
+   * @param {string[]} questionsAnswered - an array of questions answered's `id's`
+   */
+  submitRound(stats: IUserStats, questionsAnswered: string[]) {
     const userStats = this.stats;
+
+    this.addAnsweredQuestions(questionsAnswered)
 
     for (const key in stats) {
       // difficulty stats

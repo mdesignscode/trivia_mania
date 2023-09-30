@@ -1,7 +1,16 @@
 /* Handles all logic for home page */
-"use client"
+"use client";
+import { QuestionsRecord } from "@/models/storage/fileStorage";
+import { GlobalContext } from "app/store";
 import axios from "axios";
-import { Dispatch, SetStateAction, createContext, useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface IHomeContext {
   difficultyStats: Record<string, number>;
@@ -29,14 +38,9 @@ const defaultHomeContext: IHomeContext = {
 
 export const HomeContext = createContext<IHomeContext>(defaultHomeContext);
 
-export function HomeProvider({
-  children,
-  stats
-}: {
-  children: React.ReactNode;
-  stats: Record<string, any>
-})  {
+export function HomeProvider({ children }: { children: React.ReactNode }) {
   // home state
+  const [stats, setStats] = useState<Record<string, number>>({})
   const [difficultyStats, setDifficultyStats] = useState<
     Record<string, number>
   >({});
@@ -47,6 +51,9 @@ export function HomeProvider({
   const [categories, setCategories] = useState<Array<string>>([]);
   const [fetchingDifficulty, setFetchingDifficulty] = useState(true);
   const [fetchingCategories, setFetchingCategories] = useState(true);
+  const {
+    userStatus: { user },
+  } = useContext(GlobalContext);
 
   // fetch questions based on difficulty
   async function getQuestionStats(difficulty: string) {
@@ -57,7 +64,7 @@ export function HomeProvider({
       const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       const url = baseUrl + "questions/stats";
 
-      const { data } = await axios.post(url, { difficulty });
+      const { data } = await axios.post(url, { difficulty, userId: user?.id || "" });
 
       let difficultyCategories: Record<string, number> = {};
       if (!difficulty) {
@@ -75,6 +82,32 @@ export function HomeProvider({
       console.log(error);
     }
   }
+
+  async function getInitialQuestionStats() {
+    try {
+      // load stats
+      setFetchingCategories(true);
+      setFetchingDifficulty(true);
+
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const url = baseUrl + "questions/stats";
+
+      const { data } = await axios.post(url, { difficulty: "", userId: user?.id || "" });
+
+      setStats(data)
+
+      // display stats
+      setFetchingCategories(false);
+      setFetchingDifficulty(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // set initial questions stats
+  useEffect(() => {
+    getInitialQuestionStats()
+  }, []);
 
   // set initial questions stats
   useEffect(() => {
@@ -97,7 +130,7 @@ export function HomeProvider({
     // display data
     setFetchingDifficulty(false);
     setFetchingCategories(false);
-  }, []);
+  }, [stats]);
 
   // store object
   const store: IHomeContext = {
@@ -109,12 +142,8 @@ export function HomeProvider({
     getQuestionStats,
     categories,
     setDifficulty,
-    setCategories
-  }
+    setCategories,
+  };
 
-  return (
-    <HomeContext.Provider value={store}>
-      {children}
-    </HomeContext.Provider>
-  )
+  return <HomeContext.Provider value={store}>{children}</HomeContext.Provider>;
 }

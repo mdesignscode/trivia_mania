@@ -111,7 +111,7 @@ export default function RenderQuestion({
             )}
           </>
         )}
-        {error && <div>{error}</div>}
+        {error && <div>{error as string}</div>}
         <audio id="success">
           <source src="/success.mp3" type="audio/mpeg" />
           Your browser does not support the audio element.

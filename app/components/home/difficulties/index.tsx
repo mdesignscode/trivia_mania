@@ -1,16 +1,18 @@
 "use client";
-import { GlobalContext } from "app/store";
 import { useContext, useEffect, useState } from "react";
 import { HomeContext } from "../store";
 import RenderDifficulties from "./renderDifficulties";
+import useInitialStats from "../inititialStats";
 
 export type TDifficultyChoice = { [key: string]: boolean };
 
 function Difficulties() {
+  // get context
   const { difficulty, setDifficulty, getQuestionStats } =
     useContext(HomeContext);
-  const { storageIsAvailable } = useContext(GlobalContext);
+  const { previousDifficulty } = useInitialStats();
 
+  // set local state
   const [difficultyChoice, setDifficultyChoice] = useState<TDifficultyChoice>({
     easy: false,
     medium: false,
@@ -38,18 +40,14 @@ function Difficulties() {
   }
 
   useEffect(() => {
-    if (storageIsAvailable) {
-      const prevDiff = localStorage.getItem("difficulty");
-      if (!!prevDiff) {
-        setDifficultyChoice((state) => ({
-          ...state,
-          [prevDiff]: true,
-        }));
-        setDifficulty(prevDiff);
-        getQuestionStats(prevDiff);
-      }
+    if (previousDifficulty) {
+      setDifficultyChoice((state) => ({
+        ...state,
+        [previousDifficulty]: true,
+      }));
+      setDifficulty(previousDifficulty)
     }
-  }, [storageIsAvailable]);
+  }, [previousDifficulty]);
 
   return <RenderDifficulties {...{ difficultyChoice, handleDifficulty }} />;
 }

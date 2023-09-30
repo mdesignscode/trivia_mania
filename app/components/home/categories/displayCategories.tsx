@@ -64,6 +64,7 @@ export default function DisplayCategories({
       >
         <div className={styles}>
           {Object.keys(categoryStats)
+            .sort()
             .slice(15)
             .map((stat, i) => {
               const j = i + 15

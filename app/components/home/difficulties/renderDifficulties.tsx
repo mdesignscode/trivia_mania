@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { HomeContext } from "../store";
 import { useContext } from "react";
 import { TDifficultyChoice } from ".";
+import useInitialStats from "../inititialStats";
 
 interface RenderDifficultiesProps {
   difficultyChoice: TDifficultyChoice;
@@ -16,7 +17,8 @@ export default function RenderDifficulties({
   difficultyChoice,
   handleDifficulty,
 }: RenderDifficultiesProps) {
-  const { fetchingDifficulty, difficultyStats } = useContext(HomeContext);
+  const { difficultiesLoading, difficultyStats } = useInitialStats()
+  
 
   return (
     <motion.div
@@ -28,7 +30,7 @@ export default function RenderDifficulties({
       <div className="text-center col gap-3">
         <h1 className="text-xl">Choose difficulty</h1>
 
-        {!fetchingDifficulty ? (
+        {!difficultiesLoading ? (
           <div className="flex gap-2 flex-wrap justify-center">
             {Object.keys(difficultyChoice).map((stat) => {
               return (

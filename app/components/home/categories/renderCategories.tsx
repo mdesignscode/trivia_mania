@@ -2,9 +2,9 @@
 "use client";
 import Loading from "app/loading";
 import { motion } from "framer-motion";
+import { Dispatch, SetStateAction, useState } from "react";
 import DisplayCategories from "./displayCategories";
 import DisplayControls from "./displayControls";
-import { Dispatch, SetStateAction, useState } from "react";
 
 interface RenderCategoriesProps {
   fetchingCategories: boolean;

@@ -1,15 +1,21 @@
 /* Renders a question */
-"use client"
+"use client";
 import { Button, QuestionBox } from "@/components/styledComponents";
 import { Transition } from "@headlessui/react";
-import { Fragment, MouseEventHandler, MutableRefObject, ReactNode } from "react";
+import {
+  Fragment,
+  MouseEventHandler,
+  MutableRefObject,
+  ReactNode,
+  useContext,
+} from "react";
 import Timer from "./timerCountdown";
-import { IQuestion } from ".";
+import { GameContext } from "./store";
+import { IQuestion } from "@/models/interfaces";
 
 interface IRenderQuestion {
   questionObj: IQuestion;
   index: number;
-  questionNumber: number;
   handleUserAnswer: Function;
   handleTimesUp: Function;
   timerHasStarted: boolean;
@@ -19,12 +25,11 @@ interface IRenderQuestion {
   handleNextQuestion: MouseEventHandler<HTMLButtonElement>;
   handleViewProgress: MouseEventHandler<HTMLButtonElement>;
   userAnswer: MutableRefObject<string>;
-  answerFeedback: ReactNode[]
+  answerFeedback: ReactNode[];
 }
 
 export default function RenderQuestion({
   questionObj: { category, answers, correctAnswer, question, difficulty },
-  questionNumber,
   index,
   handleTimesUp,
   timerHasStarted,
@@ -35,8 +40,9 @@ export default function RenderQuestion({
   handleNextQuestion,
   handleViewProgress,
   userAnswer,
-  answerFeedback
+  answerFeedback,
 }: IRenderQuestion) {
+  const { questionIndex } = useContext(GameContext);
   const colorMap: { [key: string]: string } = {
     easy: "green",
     medium: "gold",
@@ -46,7 +52,7 @@ export default function RenderQuestion({
   return (
     <Transition
       as={Fragment}
-      show={questionNumber === index}
+      show={questionIndex === index}
       enter="transform transition duration-[400ms]"
       enterFrom="opacity-0 rotate-[-120deg] scale-50"
       enterTo="opacity-100 rotate-0 scale-100"

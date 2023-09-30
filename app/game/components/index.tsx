@@ -1,40 +1,21 @@
 /* Handle question logic */
 "use client";
 import RenderQuestion from "./question";
-import { ReactNode, useState, useEffect, useRef } from "react";
+import { ReactNode, useState, useEffect, useRef, useContext } from "react";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import "animate.css";
 import { useUser } from "@clerk/nextjs";
-
-export interface IQuestion {
-  category: string;
-  answers: Array<string>;
-  correctAnswer: string;
-  id?: string;
-  question: string;
-  difficulty: string;
-}
+import { IQuestion } from "@/models/interfaces";
+import { GameContext } from "./store";
 
 export interface IQuestionProps {
   questionObj: IQuestion;
   index: number;
-  questionNumber: number;
-  setIndex: Function;
-  questionsLength: number;
-  updateProgress: Function;
-  submitProgress: Function;
-  progress: Record<string, any>;
 }
 
 export default function Question({
   questionObj: { id, category, answers, correctAnswer, question, difficulty },
   index,
-  questionNumber,
-  setIndex,
-  questionsLength,
-  updateProgress,
-  submitProgress,
-  progress,
 }: IQuestionProps) {
   const [answerFeedback, setAnswerFeedback] = useState<ReactNode[]>([
     <></>,
@@ -53,6 +34,14 @@ export default function Question({
     userAnswer.current = answer;
     _setUserAnswer(answer);
   };
+
+  const {
+    updateProgress,
+    submitProgress,
+    questions,
+    playerStats,
+    setQuestionIndex,
+  } = useContext(GameContext);
 
   function handleUserAnswer(value: string, i: number) {
     setUserAnswer(value);
@@ -106,7 +95,7 @@ export default function Question({
       el?.classList.add("animate__rubberBand");
 
       updateProgress(
-        { category, answers, correctAnswer, question, difficulty },
+        { id, category, answers, correctAnswer, question, difficulty },
         ""
       );
     }
@@ -132,14 +121,14 @@ export default function Question({
           // merge previous unsaved data
           localStorage.setItem(
             "unsavedData",
-            JSON.stringify({ ...progress, ...parsedData })
+            JSON.stringify({ ...playerStats, ...parsedData })
           );
         }
 
         // redirect to sign in
         window.location.href = "/sign-in";
       }
-    } else setIndex((index: number) => index + 1);
+    } else setQuestionIndex((index: number) => index + 1);
   }
 
   async function handleViewProgress() {
@@ -157,7 +146,7 @@ export default function Question({
     setCTA(
       !(index % 5)
         ? "Continue Playing"
-        : index === questionsLength
+        : index === questions.length
         ? "Submit Results"
         : "Next Question"
     );
@@ -166,8 +155,14 @@ export default function Question({
   return (
     <RenderQuestion
       {...{
-        questionObj: { category, answers, correctAnswer, question, difficulty },
-        questionNumber,
+        questionObj: {
+          id,
+          category,
+          answers,
+          correctAnswer,
+          question,
+          difficulty,
+        },
         index,
         handleTimesUp,
         timerHasStarted,

@@ -1,11 +1,12 @@
 /* Handle question logic */
 "use client";
-import RenderQuestion from "./question";
-import { ReactNode, useState, useEffect, useRef, useContext } from "react";
+import { IQuestion } from "@/models/interfaces";
+import { useUser } from "@clerk/nextjs";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import "animate.css";
-import { useUser } from "@clerk/nextjs";
-import { IQuestion } from "@/models/interfaces";
+import { GlobalContext } from "app/store";
+import { ReactNode, useContext, useEffect, useRef, useState } from "react";
+import RenderQuestion from "./question";
 import { GameContext } from "./store";
 
 export interface IQuestionProps {
@@ -38,10 +39,14 @@ export default function Question({
   const {
     updateProgress,
     submitProgress,
-    questions,
+    nextQuestionsSet,
     playerStats,
-    setQuestionIndex,
+    questionsLength,
+    incrementIndex,
+    questionIndex,
   } = useContext(GameContext);
+
+  const { storageIsAvailable } = useContext(GlobalContext);
 
   function handleUserAnswer(value: string, i: number) {
     setUserAnswer(value);
@@ -107,12 +112,10 @@ export default function Question({
   async function handleNextQuestion() {
     if (CTA === "Submit Results") {
       if (user && isSignedIn) {
-        try {
-          await submitProgress(user.id);
+        const res = await submitProgress(user.id);
+        if (res === "User stats updated successfully") {
           window.location.href = "/users/" + user.id;
-        } catch (err: any) {
-          setError(err as string);
-        }
+        } else setError(res);
       } else {
         // check for unsaved data
         const unsavedData = localStorage.getItem("unsavedData");
@@ -128,15 +131,23 @@ export default function Question({
         // redirect to sign in
         window.location.href = "/sign-in";
       }
-    } else setQuestionIndex((index: number) => index + 1);
+    } else if (CTA === "Continue Playing") {
+      nextQuestionsSet();
+    } else {
+      if (questionIndex === questionsLength && storageIsAvailable) {
+        localStorage.setItem("unsavedData", JSON.stringify(playerStats));
+        localStorage.setItem("hasUnsavedData", "true");
+      }
+      incrementIndex();
+    }
   }
 
   async function handleViewProgress() {
     if (user && isSignedIn) {
       const res = await submitProgress(user.id);
-      if (res.message === "User stats updated successfully") {
+      if (res === "User stats updated successfully") {
         window.location.href = "/users/" + user.id;
-      } else setError("Couldn't save progress. Try again.");
+      } else setError(res);
     } else {
       window.location.href = "/sign-in";
     }
@@ -146,7 +157,7 @@ export default function Question({
     setCTA(
       !(index % 5)
         ? "Continue Playing"
-        : index === questions.length
+        : index === questionsLength
         ? "Submit Results"
         : "Next Question"
     );

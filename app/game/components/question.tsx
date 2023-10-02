@@ -1,6 +1,7 @@
 /* Renders a question */
 "use client";
 import { Button, QuestionBox } from "@/components/styledComponents";
+import { IQuestion } from "@/models/interfaces";
 import { Transition } from "@headlessui/react";
 import {
   Fragment,
@@ -9,9 +10,8 @@ import {
   ReactNode,
   useContext,
 } from "react";
-import Timer from "./timerCountdown";
 import { GameContext } from "./store";
-import { IQuestion } from "@/models/interfaces";
+import Timer from "./timerCountdown";
 
 interface IRenderQuestion {
   questionObj: IQuestion;

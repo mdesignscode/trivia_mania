@@ -10,42 +10,72 @@ import {
 } from "@/models/interfaces";
 import { GlobalContext } from "app/store";
 import axios from "axios";
-import {
-  Dispatch,
-  SetStateAction,
-  createContext,
-  useContext,
-  useState,
-} from "react";
+import { createContext, useContext, useRef, useState } from "react";
 
 interface IGameContext {
   playerStats: IUserStats;
   submitProgress: (id: string) => Promise<any>;
   updateProgress: (question: IQuestion, answer: string) => void;
-  questionIndex: number;
-  setQuestionIndex: Dispatch<SetStateAction<number>>;
   questions: IQuestion[];
+  nextQuestionsSet: () => void;
+  questionsLength: number;
+  questionIndex: number;
+  incrementIndex: () => void;
+  poolIndex: number;
 }
 
 const initialContext: IGameContext = {
   playerStats: initialStat,
   submitProgress: async () => {},
   updateProgress: () => {},
+  questions: [],
+  nextQuestionsSet: () => {},
+  questionsLength: 0,
   questionIndex: 1,
-  setQuestionIndex: () => {},
-  questions: []
+  incrementIndex: () => {},
+  poolIndex: 0,
 };
 
 export const GameContext = createContext<IGameContext>(initialContext);
 
-export function GameProvider({ children, questions }: { children: React.ReactNode, questions: IQuestion[] }) {
-  const [playerStats, setPlayerStats] = useState<IUserStats>(initialStat);
+interface GameProviderProps {
+  children: React.ReactNode;
+  questions: IQuestion[];
+  nextQuestionsSet: () => void;
+  questionsLength: number;
+  questionIndex: number;
+  incrementIndex: () => void;
+  poolIndex: number;
+}
+
+export function GameProvider({
+  children,
+  questions,
+  nextQuestionsSet,
+  questionsLength,
+  questionIndex,
+  incrementIndex,
+  poolIndex,
+}: GameProviderProps) {
+  const [_playerStats, _setPlayerStats] = useState<IUserStats>(initialStat);
+  const playerStats = useRef(_playerStats);
+  function setPlayerStats(setState: (state: IUserStats) => IUserStats) {
+    const newState = setState(playerStats.current);
+    playerStats.current = newState;
+    _setPlayerStats(newState);
+  }
+  const [_answeredQuestions, _setAnsweredQuestions] = useState<string[]>([]);
+  const answeredQuestions = useRef(_answeredQuestions);
+  function setAnsweredQuestions(setState: (state: string[]) => string[]) {
+    const newState = setState(answeredQuestions.current);
+    answeredQuestions.current = newState;
+    _setAnsweredQuestions(newState);
+  }
+
   const { storageIsAvailable } = useContext(GlobalContext);
-  const [answeredQuestions, setAnsweredQuestions] = useState<string[]>([]);
-  const [questionIndex, setQuestionIndex] = useState(1);
 
   function updateProgress(question: IQuestion, answer: string) {
-    setAnsweredQuestions([...answeredQuestions, question.id]);
+    setAnsweredQuestions((state) => [...state, question.id]);
 
     setPlayerStats((state) => {
       const newState = {
@@ -107,40 +137,47 @@ export function GameProvider({ children, questions }: { children: React.ReactNod
 
       return newState;
     });
+
+    localStorage.setItem("progress", JSON.stringify(playerStats.current));
+    localStorage.setItem(
+      "answeredQuestions",
+      answeredQuestions.current.join(",")
+    );
   }
 
   async function submitProgress(id: string) {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const url = `${baseUrl}/users/updateStats`;
 
+    const { data } = await axios.post(url, {
+      stats: playerStats.current,
+      id,
+      answeredQuestions: answeredQuestions.current,
+    });
+
     if (storageIsAvailable) {
-      localStorage.setItem("progress", JSON.stringify(playerStats));
-      localStorage.setItem(
-        "answeredQuestions",
-        JSON.stringify(answeredQuestions)
-      );
+      localStorage.removeItem("unsavedData");
+      localStorage.setItem("hasUnsavedData", "false");
+      localStorage.removeItem("questionsList")
+      localStorage.removeItem("questionsPool")
+      localStorage.removeItem("poolIndex")
+      localStorage.removeItem("currentIndex")
+      localStorage.removeItem("answeredQuestions")
     }
 
-    try {
-      const { data } = await axios.post(url, {
-        stats: playerStats,
-        id,
-        answeredQuestions,
-      });
-
-      return data;
-    } catch (error) {
-      return error;
-    }
+    return data;
   }
 
   const store: IGameContext = {
     submitProgress,
     updateProgress,
     questionIndex,
-    setQuestionIndex,
-    playerStats,
-    questions
+    incrementIndex,
+    playerStats: playerStats.current,
+    questions,
+    questionsLength,
+    nextQuestionsSet,
+    poolIndex,
   };
 
   return <GameContext.Provider value={store}>{children}</GameContext.Provider>;

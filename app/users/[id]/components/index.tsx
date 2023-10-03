@@ -1,13 +1,13 @@
 "use client";
+import HandleUnsavedProgress from "@/components/handleUnsavedProgress";
 import { IUserStats } from "@/models/interfaces";
 import User from "@/models/user";
+import { GlobalContext } from "app/store";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import DisplayStats from "./displayStats";
-import HandleUnsavedProgress from "./handleUnsavedProgress";
 import Header from "./header";
 import Hero from "./hero";
-import { GlobalContext } from "app/store";
 
 interface DisplayUserProgressProps {
   serializedTopTen: string;
@@ -37,9 +37,11 @@ export default function DisplayUserProgress({
 
   useEffect(() => {
     if (storageIsAvailable) {
-      const progressString = localStorage.getItem("progress") || "{}";
-      const parsedProgress = JSON.parse(progressString);
-      if (parsedProgress) {
+      const progressString = localStorage.getItem("progress");
+
+      if (progressString) {
+        const parsedProgress = JSON.parse(progressString);
+        console.log(parsedProgress);
         setProgress(parsedProgress);
       }
     }

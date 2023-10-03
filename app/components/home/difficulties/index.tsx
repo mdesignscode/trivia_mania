@@ -1,8 +1,8 @@
 "use client";
+import useInitialStats from "@/hooks/inititialStats";
 import { useContext, useEffect, useState } from "react";
 import { HomeContext } from "../store";
 import RenderDifficulties from "./renderDifficulties";
-import useInitialStats from "../inititialStats";
 
 export type TDifficultyChoice = { [key: string]: boolean };
 

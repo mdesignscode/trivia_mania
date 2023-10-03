@@ -10,7 +10,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import useInitialStats from "./inititialStats";
+import useInitialStats from "../../hooks/inititialStats";
 
 interface IHomeContext {
   categoryStats: Record<string, number>;
@@ -20,16 +20,18 @@ interface IHomeContext {
   categories: Array<string>;
   setDifficulty: Dispatch<SetStateAction<string>>;
   setCategories: Dispatch<SetStateAction<string[]>>;
+  setFetchingCategories: Dispatch<SetStateAction<boolean>>;
 }
 
 const defaultHomeContext: IHomeContext = {
   categoryStats: {},
   difficulty: "",
   fetchingCategories: true,
-  getQuestionStats: () => {}, // Provide a default function or implement it later.
+  getQuestionStats: () => {},
   categories: [],
-  setDifficulty: () => {}, // Provide a default function or implement it later.
-  setCategories: () => {}, // Provide a default function or implement it later.
+  setDifficulty: () => {},
+  setCategories: () => {},
+  setFetchingCategories: () => {},
 };
 
 export const HomeContext = createContext<IHomeContext>(defaultHomeContext);
@@ -94,6 +96,7 @@ export function HomeProvider({ children }: { children: React.ReactNode }) {
     categories,
     setDifficulty,
     setCategories,
+    setFetchingCategories,
   };
 
   return <HomeContext.Provider value={store}>{children}</HomeContext.Provider>;

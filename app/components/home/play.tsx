@@ -11,7 +11,7 @@ export default function Play() {
   function handlePlay() {
     if (storageAvailable()) {
       localStorage.setItem("difficulty", difficulty);
-      localStorage.setItem("categories", JSON.stringify(categories));
+      localStorage.setItem("categories", categories.join(","));
     }
   }
 

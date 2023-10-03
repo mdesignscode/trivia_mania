@@ -1,12 +1,10 @@
 "use client";
 import { buttonVariants } from "@/components/store";
 import { Button } from "@/components/styledComponents";
+import useInitialStats from "@/hooks/inititialStats";
 import Loading from "app/loading";
 import { motion } from "framer-motion";
-import { HomeContext } from "../store";
-import { useContext } from "react";
 import { TDifficultyChoice } from ".";
-import useInitialStats from "../inititialStats";
 
 interface RenderDifficultiesProps {
   difficultyChoice: TDifficultyChoice;
@@ -17,8 +15,7 @@ export default function RenderDifficulties({
   difficultyChoice,
   handleDifficulty,
 }: RenderDifficultiesProps) {
-  const { difficultiesLoading, difficultyStats } = useInitialStats()
-  
+  const { difficultiesLoading, difficultyStats } = useInitialStats();
 
   return (
     <motion.div

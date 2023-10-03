@@ -9,12 +9,12 @@ import {
   StarIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { GlobalContext } from "app/store";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useContext, useEffect } from "react";
 import DesktopNav from "./desktop";
 import MobileNav from "./mobile";
-import { GlobalContext } from "app/store";
 
 const navigation = [
   { name: "Home", href: "/", icon: <HomeIcon height={25} width={25} /> },
@@ -66,10 +66,16 @@ export default function Navbar({
             // if not previous user, clear localStorage
             setIsPrevUser(false);
             localStorage.setItem("username", triviaUser.username);
-            localStorage.removeItem("unsavedData");
             localStorage.removeItem("progress");
             localStorage.removeItem("difficulties");
             localStorage.removeItem("categories");
+            localStorage.removeItem("unsavedData");
+            localStorage.removeItem("hasUnsavedData");
+            localStorage.removeItem("questionsList");
+            localStorage.removeItem("questionsPool");
+            localStorage.removeItem("poolIndex");
+            localStorage.removeItem("currentIndex");
+            localStorage.removeItem("answeredQuestions");
           }
         } else {
           localStorage.setItem("username", triviaUser.username);

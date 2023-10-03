@@ -6,8 +6,12 @@ import { HomeContext } from "../store";
 import RenderCategories from "./renderCategories";
 
 function Categories() {
-  const { categoryStats, fetchingCategories, setCategories } =
-    useContext(HomeContext);
+  const {
+    categoryStats,
+    fetchingCategories,
+    setCategories,
+    setFetchingCategories,
+  } = useContext(HomeContext);
   const { storageIsAvailable } = useContext(GlobalContext);
   const [categoryChoice, setCategoryChoice] = useState<boolean[]>(
     Object.keys(categoryStats).map(() => false)
@@ -15,20 +19,34 @@ function Categories() {
 
   // set previous categories if available
   useEffect(() => {
-    if (storageIsAvailable) {
+    if (
+      storageIsAvailable &&
+      Object.keys(categoryStats).length &&
+      !categoryStats["all difficulties"]
+    ) {
+      setFetchingCategories(true);
       const prevCategories = localStorage.getItem("categories");
 
       if (prevCategories) {
-        const preferences = JSON.parse(prevCategories) as string[];
+        const preferences = prevCategories.split(",");
 
         if (preferences.length > 0) {
           const newState: Record<string, boolean> = {};
-          Object.keys(categoryStats).forEach((category) => {
-            newState[category] = preferences.includes(category) ? true : false;
-          });
+          Object.keys(categoryStats)
+            .sort()
+            .forEach((category) => {
+              newState[category] = preferences.includes(category)
+                ? true
+                : false;
+            });
 
-          setCategories(preferences);
+          const newPreferences = Object.keys(newState).filter(
+            (key) => !!newState[key]
+          );
+
+          setCategories(newPreferences);
           setCategoryChoice(Object.values(newState));
+          setFetchingCategories(false);
         }
       }
     }

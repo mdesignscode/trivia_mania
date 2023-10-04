@@ -11,19 +11,20 @@ function classNames(...classes: Array<string>) {
   return classes.filter(Boolean).join(" ");
 }
 
+export const navStyles = {
+  active:
+    "bg-accent text-dark flex gap-2 content-center items-center hover:border-light border-2 border-accent hover:text-light hover:bg-accent-200",
+  inActive: [
+    "hover:bg-accent-100 hover:text-secondary",
+    "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center",
+  ],
+};
+
 export default function DesktopNav({
   navigation,
   path,
   userStatus: { user, isOnline, isLoaded },
 }: NavProps) {
-  const styles = {
-    active: "bg-gray-900 text-white flex gap-2 content-center items-center",
-    inActive: [
-      "text-gray-300 hover:bg-gray-700 hover:text-white",
-      "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center",
-    ],
-  };
-
   return (
     <div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
       <div className="hidden md:ml-6 md:block">
@@ -33,8 +34,8 @@ export default function DesktopNav({
               key={item.name}
               href={item.href}
               className={classNames(
-                item.href === path ? styles.active : styles.inActive[0],
-                styles.inActive[1]
+                item.href === path ? navStyles.active : navStyles.inActive[0],
+                navStyles.inActive[1]
               )}
               aria-current={item.href === path ? "page" : undefined}
             >
@@ -58,9 +59,9 @@ export default function DesktopNav({
                     href={`/users/${user.id}`}
                     className={classNames(
                       `/users/${user.id}` === path
-                        ? styles.active
-                        : styles.inActive[0],
-                      styles.inActive[1]
+                        ? navStyles.active
+                        : navStyles.inActive[0],
+                      navStyles.inActive[1]
                     )}
                     aria-current={
                       `/users/${user.id}` === path ? "page" : undefined
@@ -74,9 +75,9 @@ export default function DesktopNav({
                 <div
                   className={classNames(
                     /signin|signup/.test(path)
-                      ? styles.active
-                      : styles.inActive[0],
-                    styles.inActive[1]
+                      ? navStyles.active
+                      : navStyles.inActive[0],
+                    navStyles.inActive[1]
                   )}
                 >
                   <SignedIn>

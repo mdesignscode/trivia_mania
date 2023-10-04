@@ -91,7 +91,7 @@ export default function Navbar({
   }, [isLoaded, isSignedIn, storageIsAvailable]);
 
   return (
-    <Disclosure as="nav" className="bg-gray-800 z-10 sticky top-0">
+    <Disclosure as="nav" className="bg-secondary text-light z-10 sticky top-0">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 md:px-6 lg:px-8">

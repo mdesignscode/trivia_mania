@@ -5,6 +5,7 @@ import { useContext } from "react";
 import storageAvailable from "../localStorageDetection";
 import { buttonVariants } from "../store";
 import { HomeContext } from "./store";
+import { Button } from "../styledComponents";
 
 export default function Play() {
   const { difficulty, categories } = useContext(HomeContext);
@@ -32,9 +33,9 @@ export default function Play() {
             `/game?difficulty=${difficulty}&categories=${categories.join(",")}`
           )}
         >
-          <button className="w-full h-full start-button" onClick={handlePlay}>
+          <Button $cta={true} onClick={handlePlay}>
             Start Playing
-          </button>
+          </Button>
         </Link>
       </motion.span>
     </motion.div>

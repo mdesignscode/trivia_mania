@@ -8,26 +8,3 @@
   }
 }
 
-.start-button {
-  border: 2px solid #bf4f74;
-  padding: 0.75rem;
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-  background-color: transparent;
-  color: #bf4f74;
-  letter-spacing: 2px;
-  min-width: 160px;
-  height: 48px;
-  text-transform: uppercase;
-  white-space: normal;
-  font-weight: 700;
-  margin-top: 1.25rem;
-  display: inline-block;
-
-  &:hover {
-    background-color: #bf4f74;
-    color: white;
-    border-radius: 500px;
-  }
-}

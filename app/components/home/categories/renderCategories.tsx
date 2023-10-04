@@ -33,14 +33,21 @@ export default function RenderCategories({
 
         {!fetchingCategories ? (
           <div className="col gap-3">
-            {/* display categories */}
-            <DisplayCategories
-              {...{
-                categoryChoice,
-                showMore,
-                handleCategories,
-              }}
-            />
+            <motion.div
+              initial={{ x: -100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 100, opacity: 0 }}
+              transition={{ duration: 1.5 }}
+            >
+              {/* display categories */}
+              <DisplayCategories
+                {...{
+                  categoryChoice,
+                  showMore,
+                  handleCategories,
+                }}
+              />
+            </motion.div>
 
             {/* categories display controls */}
             <DisplayControls

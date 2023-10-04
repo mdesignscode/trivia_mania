@@ -22,7 +22,7 @@ export default function RootLayout({
     <ClerkProvider>
       <GlobalProvider>
         <html lang="en" className="h-full">
-          <body className={`${inter.className} h-full bg-slate-200 col`}>
+          <body className={`${inter.className} h-full bg-light dark:bg-secondary text-dark dark:text-light col`}>
             <Navigation />
 
             <Providers>{children}</Providers>

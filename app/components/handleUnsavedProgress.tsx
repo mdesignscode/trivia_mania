@@ -55,7 +55,7 @@ export default function HandleUnsavedProgress() {
         <h1>You have unsaved progress.</h1>
 
         <div className="flex gap-4">
-          <Button type="submit" onClick={saveProgress} $primary={true}>
+          <Button type="submit" data-testid="save-progress-button" onClick={saveProgress} $primary={true}>
             Save progress
           </Button>
 

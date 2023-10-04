@@ -30,7 +30,7 @@ export default function DisplayStats({ stats, message }: DisplayStatsProps) {
             // display cards based on difficulty
             return (
               <div
-                className="col md:w-1/3 gap-3 bg-white p-4 rounded-lg shadow-md"
+                className="col md:w-1/3 gap-3 bg-light dark:bg-transparent dark:border-2 dark:border-light p-4 rounded-lg shadow-md"
                 key={stat}
               >
                 <div className="flex justify-between border-b-2 border-gray-800">

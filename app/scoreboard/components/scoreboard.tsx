@@ -10,13 +10,13 @@ export default function Board({ topTenUsers }: { topTenUsers: Array<User> }) {
   };
 
   return (
-    <div className="bg-gray-200 p-4">
+    <div className="p-4">
       <h1 className="text-2xl font-semibold mb-4">Top 10 Scoreboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {topTenUsers.map((user, index) => (
           <div
             key={user.id}
-            className="bg-white p-4 rounded-lg shadow-md col gap-3"
+            className="bg-secondary dark:bg-accent-200 max-h-72 overflow-y-auto p-4 rounded-lg shadow-md col gap-3"
           >
             <div className="flex items-center">
               <div className="mr-4">

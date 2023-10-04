@@ -24,6 +24,7 @@ export default function Question({
     <></>,
     <></>,
   ]);
+  // set question state
   const [timesUp, setTimesUp] = useState(false);
   const [CTA, setCTA] = useState("Next Question");
   const [timerHasStarted, setTimerHasStarted] = useState(true);
@@ -36,6 +37,7 @@ export default function Question({
     _setUserAnswer(answer);
   };
 
+  // consume game context
   const {
     updateProgress,
     submitProgress,
@@ -49,6 +51,12 @@ export default function Question({
   const { storageIsAvailable } = useContext(GlobalContext);
 
   function handleUserAnswer(value: string, i: number) {
+    if (storageIsAvailable) {
+      localStorage.setItem("questionAnswered", "true");
+      localStorage.setItem("lastAnswer", value);
+      localStorage.setItem("lastAnswerIndex", i.toString());
+    }
+
     setUserAnswer(value);
     // display icon based on correct answer
     setAnswerFeedback((state) =>
@@ -154,6 +162,7 @@ export default function Question({
   }
 
   useEffect(() => {
+    // determine which action to take on question answer
     setCTA(
       !(index % 5)
         ? "Continue Playing"
@@ -161,7 +170,41 @@ export default function Question({
         ? "Submit Results"
         : "Next Question"
     );
-  });
+
+    // check if current question has already been answered
+    if (storageIsAvailable && questionIndex === index) {
+      // get state from local storage
+      const isQuestionAnswered =
+        localStorage.getItem("questionAnswered") || "false";
+      const prevAnswer = localStorage.getItem("lastAnswer");
+      const prevAnswerIndex = parseInt(
+        localStorage.getItem("lastAnswerIndex") || "0"
+      );
+
+      if (isQuestionAnswered === "true") {
+        handleTimesUp();
+
+        // display icon based on correct answer
+        setAnswerFeedback((state) =>
+          state.map((_, j) => {
+            if (prevAnswerIndex === j) {
+              return prevAnswer === correctAnswer ? (
+                <CheckCircleIcon width={30} />
+              ) : (
+                <XCircleIcon width={30} />
+              );
+            }
+
+            return j === answers.indexOf(correctAnswer) ? (
+              <CheckCircleIcon width={30} />
+            ) : (
+              <></>
+            );
+          })
+        );
+      }
+    }
+  }, []);
 
   return (
     <RenderQuestion

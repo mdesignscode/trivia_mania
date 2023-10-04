@@ -82,23 +82,21 @@ export default function useFetchQuestionsList(
   // fetch questions from api and store in local storage if given new params
   const fetchNewQuestions = useCallback(() => {
     // get previous params
-    const prevDiff = localStorage.getItem("difficulty");
-    const prevCategories = localStorage.getItem("categories");
-    const prevQuestions = localStorage.getItem("questionsList");
+    const prevDiff = localStorage.getItem("difficulty") || "";
+    const prevCategories = localStorage.getItem("categories") || "";
+    const prevQuestions = localStorage.getItem("questionsList") || "[]";
 
     // check if previous params match new params
-    if (prevDiff && prevCategories && prevQuestions) {
-      const parsedQuestions = JSON.parse(prevQuestions) as string[];
+    const parsedQuestions = JSON.parse(prevQuestions) as string[];
 
-      if (
-        prevCategories === categories.join(",") &&
-        prevDiff === difficulty &&
-        !!parsedQuestions.length
-      ) {
-        // storage has questions
-        setLocalStorageReady(true);
-        return;
-      }
+    if (
+      prevCategories === categories.join(",") &&
+      prevDiff === difficulty &&
+      !!parsedQuestions.length
+    ) {
+      // storage has questions
+      setLocalStorageReady(true);
+      return;
     }
 
     /// fetch questions and store in local storage
@@ -117,6 +115,13 @@ export default function useFetchQuestionsList(
       // delete previous pool
       localStorage.removeItem("questionsPool");
       setQuestionsLength(data.length);
+
+      // has not answered any quesions yet
+      localStorage.setItem("questionAnswered", "false")
+      localStorage.removeItem("answeredQuestions");
+      localStorage.removeItem("progress")
+      localStorage.removeItem("lastAnswer");
+      localStorage.removeItem("lastAnswerIndex");
 
       // storage is now ready
       setLocalStorageReady(true);
@@ -164,10 +169,12 @@ export default function useFetchQuestionsList(
     setQuestionIndex(questionIndex.current + 1);
 
     if (storageIsAvailable) {
+      localStorage.setItem("questionAnswered", "false")
       localStorage.setItem("currentIndex", questionIndex.current.toString());
     }
   }
 
+  // set questions pool
   useEffect(() => {
     if (storageIsAvailable) {
       // use local storage as pool
@@ -184,6 +191,8 @@ export default function useFetchQuestionsList(
           localStorage.getItem("questionsList") as string
         ) as IQuestion[];
         const localQuestionsPool = localStorage.getItem("questionsPool");
+
+        // get rendering starting indices
         const localPoolIndex = parseInt(
           localStorage.getItem("poolIndex") || "0"
         );

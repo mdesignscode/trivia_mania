@@ -10,7 +10,7 @@ import {
 } from "@/models/interfaces";
 import { GlobalContext } from "app/store";
 import axios from "axios";
-import { createContext, useContext, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 interface IGameContext {
   playerStats: IUserStats;
@@ -73,6 +73,19 @@ export function GameProvider({
   }
 
   const { storageIsAvailable } = useContext(GlobalContext);
+
+  // restore previous progress state
+  useEffect(() => {
+    // get previous answered questions and progress
+    const localAnsweredQuestions =
+      localStorage.getItem("answeredQuestions") || "";
+    const localProgress =
+      localStorage.getItem("progress") || JSON.stringify(initialStat);
+
+    // set state
+    setPlayerStats(() => JSON.parse(localProgress))
+    setAnsweredQuestions(() => localAnsweredQuestions.split(","))
+  }, []);
 
   function updateProgress(question: IQuestion, answer: string) {
     setAnsweredQuestions((state) => [...state, question.id]);
@@ -158,11 +171,11 @@ export function GameProvider({
     if (storageIsAvailable) {
       localStorage.removeItem("unsavedData");
       localStorage.setItem("hasUnsavedData", "false");
-      localStorage.removeItem("questionsList")
-      localStorage.removeItem("questionsPool")
-      localStorage.removeItem("poolIndex")
-      localStorage.removeItem("currentIndex")
-      localStorage.removeItem("answeredQuestions")
+      localStorage.removeItem("questionsList");
+      localStorage.removeItem("questionsPool");
+      localStorage.removeItem("poolIndex");
+      localStorage.removeItem("currentIndex");
+      localStorage.removeItem("answeredQuestions");
     }
 
     return data;

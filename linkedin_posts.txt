@@ -218,3 +218,43 @@ I'll continue to explore opportunities for refactoring and performance improveme
 The journey of Trivia Mania is an ever-evolving adventure, and I'm excited to have you all along for the ride. If you share my passion for technology, coding, and creating engaging experiences, please feel free to connect, share your insights, or simply be a part of this exciting project. Together, we'll continue to learn, grow, and have a blast as we navigate the world of Trivia Mania! 🌟👩‍💻
 
 Stay tuned for more updates, and thank you for being an integral part of this incredible journey! 🌐 #TriviaMania #SoftwareEngineering #UIUX #APIDevelopment
+
+
+
+
+Post 10 [03-10-2023]:
+
+🚀 Trivia Mania Project Update: Moving Forward with Exciting Developments! 🎉
+
+Hello, LinkedIn community! 👋 It's time for another thrilling update on the Trivia Mania project. The journey continues to be an exciting exploration of technology and creativity, and I'm delighted to share the latest developments with you all:
+
+📦 LocalStorage Integration:
+I'm thrilled to announce the successful integration of LocalStorage into Trivia Mania! This addition brings a new level of user convenience and data persistence to the platform. Users can now save their difficulty and category choices when they start playing, ensuring that their preferences are retained for future sessions. Additionally, users can now save any unsaved data stored in LocalStorage to the backend, ensuring that their progress is never lost. It's all about enhancing the user experience and making Trivia Mania as user-friendly as possible! 📂🔐
+
+🧩 Unique Questions Only:
+One of the key features I've implemented is the ability to provide users with unique questions they haven't answered yet. This is achieved by storing user-answered questions in the backend and serving only unattempted questions to the user. This not only keeps the gameplay fresh but also ensures that users are continually challenged. It's all about offering a dynamic and engaging trivia experience! 🧠🎯
+
+🗄 Simplified Storage Structure:
+To streamline and organize our data, I've simplified the storage structure within Trivia Mania. We now have separate categories for Users and Questions, making it easier to manage and retrieve relevant information. Additionally, I've provided TypeScript with the runtime structure of our storage, ensuring better code documentation and reducing the chances of runtime errors. It's all about maintaining a clean and organized codebase! 🗂️📝
+
+🎣 Custom Hooks for Enhanced Functionality:
+I've created custom hooks to enhance the functionality of Trivia Mania:
+
+    - Initial Questions Stats: When the homepage first loads, a lot of tasks need to be handled, such as fetching unique user stats and applying previous difficulty and category filters. I've developed a custom hook that takes care of all these operations, providing a seamless user experience from the start.
+    - Questions Pool: I've implemented a question pool system that renders only a limited number of questions at a time (5 questions per pool). This not only improves loading times but also ensures a smooth and responsive gameplay experience. The custom hook manages the pool logic, ensuring that users always have a fresh set of questions to answer.
+
+    - Modularization with Context API: To improve code organization and maintainability, I've modularized the game page using the Context API. This approach enhances code reusability and ensures a clean separation of concerns within the application.
+
+What's on the Horizon:
+
+The journey of Trivia Mania continues with exciting developments in the pipeline:
+
+🧪 Unit Testing for the Frontend: To maintain the project's quality and reliability, I'll be rigorously unit testing the frontend. This step is essential for ensuring that Trivia Mania operates smoothly and securely.
+
+🎨 Color Theme Update: I plan to update the color theme of Trivia Mania to provide a fresh and visually appealing look. A new color scheme can add a touch of excitement and modernity to the platform.
+
+🌐 Migration to MongoDB: In the future, I'll be making the transition from file storage to MongoDB. This change will further optimize data management and scalability, ensuring Trivia Mania can handle a growing user base and additional features seamlessly.
+
+The journey of Trivia Mania is an ever-evolving adventure, and I'm excited to have you all along for the ride. If you share my passion for technology, coding, and creating engaging experiences, please feel free to connect, share your insights, or simply be a part of this exciting project. Together, we'll continue to learn, grow, and have a blast as we navigate the world of Trivia Mania! 🌟👩‍💻
+
+Stay tuned for more updates, and thank you for being an integral part of this incredible journey! 🌐 #TriviaMania #SoftwareEngineering #UIUX #APIDevelopment

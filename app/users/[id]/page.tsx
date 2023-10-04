@@ -1,16 +1,18 @@
 import storage from "@/models/index";
 import DisplayUserProgress from "./components";
+import { initialStat } from "@/models/interfaces";
+import NotFound from "./components/404";
 
 export default function UserProgress({
   params: { id },
 }: {
   params: { id: string };
 }) {
-  const userStats = storage.getUserStats(id);
+  const userStats = storage.getUserStats(id) || initialStat;
   const user = storage.getUser(id);
   const topTen = storage.getTopTenUsers();
 
-  return (
+  return user ? (
     <DisplayUserProgress
       {...{
         serializedUser: JSON.stringify(user),
@@ -18,5 +20,7 @@ export default function UserProgress({
         userStats,
       }}
     />
+  ) : (
+    <NotFound id={id} />
   );
 }

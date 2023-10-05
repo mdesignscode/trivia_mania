@@ -1,5 +1,3 @@
-import Question from "./question";
-
 export interface IQuestion {
   category: string;
   answers: Array<string>;

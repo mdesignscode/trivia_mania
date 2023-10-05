@@ -3,6 +3,7 @@ import HandleUnsavedProgress from "@/components/handleUnsavedProgress";
 import { IUserStats } from "@/models/interfaces";
 import User from "@/models/user";
 import { GlobalContext } from "app/store";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import DisplayStats from "./displayStats";
@@ -41,7 +42,6 @@ export default function DisplayUserProgress({
 
       if (progressString) {
         const parsedProgress = JSON.parse(progressString);
-        console.log(parsedProgress);
         setProgress(parsedProgress);
       }
     }
@@ -51,8 +51,14 @@ export default function DisplayUserProgress({
     <div className="text-xl text-gray-800 w-11/12 col gap-4 mx-auto py-4">
       {/* Header */}
       <Header user={user} />
-
-      <HandleUnsavedProgress />
+      <motion.div
+        initial={{ perspective: 400, rotate: 20, y: -200, opacity: 0 }}
+        animate={{ y: 0, opacity: 1, perspective: 400, rotate: 0 }}
+        exit={{ y: 0, opacity: 0 }}
+        transition={{ duration: 1.5 }}
+      >
+        <HandleUnsavedProgress />
+      </motion.div>
 
       {Object.keys(userStats).length > 1 ? (
         <>

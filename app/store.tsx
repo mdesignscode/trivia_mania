@@ -25,9 +25,9 @@ const initialContext: IGlobalContext = {
     isLoaded: false,
   },
   storageIsAvailable: false,
-  setUserStatus: (state: IUserStats) => {},
+  setUserStatus: () => {},
   isPrevUser: true,
-  setIsPrevUser: (state: boolean) => {},
+  setIsPrevUser: () => {},
 };
 export const GlobalContext = createContext<IGlobalContext>(initialContext);
 

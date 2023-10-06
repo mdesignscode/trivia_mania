@@ -3,6 +3,7 @@ import { Button } from "@/components/styledComponents";
 import { GlobalContext } from "@/app/store";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
+import reloadPage from "./reloadPage";
 
 export default function HandleUnsavedProgress() {
   const [hasUnsavedProgress, setHasUnsavedProgress] = useState(false);
@@ -35,7 +36,7 @@ export default function HandleUnsavedProgress() {
         localStorage.removeItem("poolIndex");
         localStorage.removeItem("currentIndex");
         localStorage.removeItem("answeredQuestions");
-        location.reload();
+        reloadPage()
       } else console.log(data);
     }
   }
@@ -54,6 +55,7 @@ export default function HandleUnsavedProgress() {
     if (storageIsAvailable) {
       localStorage.removeItem("unsavedData");
       localStorage.setItem("hasUnsavedData", "false");
+      reloadPage()
     }
   }
 
@@ -76,7 +78,11 @@ export default function HandleUnsavedProgress() {
               Save progress
             </Button>
 
-            <Button type="submit" onClick={discardProgress}>
+            <Button
+              type="submit"
+              onClick={discardProgress}
+              data-testid="discard-progress-button"
+            >
               Discard Progress
             </Button>
           </div>

@@ -1,72 +1,68 @@
-import { render, fireEvent, waitFor, screen } from "@testing-library/react";
-import axios from "axios"; // You might want to use a mock for axios
 import HandleUnsavedProgress from "@/components/handleUnsavedProgress";
-import { CategoryStat, DifficultyStat, IUserStats } from "@/models/interfaces";
-import { GlobalProvider } from "@/app/store";
+import { mockContext, mockInitialProgress, mockUser, render, screen, userEvent } from "@/utils/test_utils";
+import axios from "axios";
 
-// Mock axios post request for testing
-jest.mock("axios");
+jest.mock("@/components/reloadPage");
 
-jest.mock("@/components/localStorageDetection");
+// setup API url
+const baseUrl = "mockhost/api";
+const url = `${baseUrl}/users/updateStats`;
 
-// Mock the useUser hook
-jest.mock("@clerk/nextjs", () => ({
-  useUser: () => ({
-    user: { id: "mockedUserId" },
-  }),
-}));
+// setup mock post data
+const mockAnsweredQuestions = ["Question1"];
 
-describe("HandleUnsavedProgress", () => {
-  const mockUnsavedProgress: IUserStats = {
-      total: {
-        correctAnswered: 1,
-        answered: 1,
-      },
-      easy: {
-        answered: 1,
-        correctAnswered: 1,
-      } as DifficultyStat,
-      Science: {
-        easy: {
-          answered: 1,
-          correctAnswered: 1,
-        } as DifficultyStat,
-      } as CategoryStat,
-    },
-    mockAnsweredQuestions = ["Question1"];
-
+describe("HandleUnsavedProgress component", () => {
   it("renders when there is unsaved progress", async () => {
     // Mock localStorage data
-    localStorage.setItem("unsavedData", JSON.stringify(mockUnsavedProgress));
-    localStorage.setItem(
-      "answeredQuestions",
-      JSON.stringify(mockAnsweredQuestions)
-    );
+    localStorage.setItem("unsavedData", JSON.stringify(mockInitialProgress));
+    localStorage.setItem("answeredQuestions", mockAnsweredQuestions.join(","));
 
-    render(
-      <GlobalProvider>
-        <HandleUnsavedProgress />
-      </GlobalProvider>
-    );
+    // setup mock response
+    const mockAxios = axios as jest.Mocked<typeof axios>;
+    mockAxios.post.mockResolvedValue({
+      data: "User stats updated successfully",
+    });
+    const user = userEvent.setup();
 
-    const container = await screen.findByTestId("handle-unsaved-progress-container")
-    expect(container).toBeInTheDocument()
+    // render component
+    render(<HandleUnsavedProgress />, { providerProps: mockContext });
 
+    // get container and buttons from DOM
+    const container = await screen.findByTestId(
+        "handle-unsaved-progress-container"
+      ),
+      saveButton = await screen.findByTestId("save-progress-button"),
+      discardButton = await screen.findByTestId("discard-progress-button");
 
     // Assert that the component renders
-    // expect(getByTestId("handle-unsaved-progress-container")).toBeInTheDocument();
+    expect(container).toBeInTheDocument();
 
-    // // Simulate a click on the "Save progress" button
-    // fireEvent.click(getByTestId("save-progress-button"));
+    // Simulate a click on the "Save progress" button
+    await user.click(saveButton);
 
-    // Assert that the axios.post function was called (you may need to adjust this based on your axios mock)
-    // expect(axios.post).toHaveBeenCalled();
+    // Assert that the axios.post function was called with correct body
+    expect(axios.post).toHaveBeenCalledWith(url, {
+      stats: mockInitialProgress,
+      id: mockUser.id,
+      answeredQuestions: mockAnsweredQuestions,
+    });
+
+    // Simulate a click on the "Save progress" button
+    await user.click(discardButton);
+
+    const unsavedData = localStorage.getItem("unsavedData");
+    expect(unsavedData).toBeNull();
   });
 
-  // it('does not render when there is no unsaved progress', () => {
-  //   const { queryByText } = render(<HandleUnsavedProgress />);
+  it("does not render when there is no unsaved progress", () => {
+    // clear unsaved data from localStorage
+    localStorage.removeItem("unsavedData");
 
-  //   // Assert that the component does not render
-  //   expect(queryByText('You have unsaved progress.')).toBeNull();
-  // });
+    const { queryByText } = render(<HandleUnsavedProgress />, {
+      providerProps: mockContext,
+    });
+
+    // Assert that the component does not render
+    expect(queryByText("You have unsaved progress.")).toBeNull();
+  });
 });

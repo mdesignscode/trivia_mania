@@ -10,7 +10,7 @@ interface IUserStats {
   isLoaded: boolean;
 }
 
-interface IGlobalContext {
+export interface IGlobalContext {
   userStatus: IUserStats;
   setUserStatus: (state: IUserStats) => void;
   storageIsAvailable: boolean;
@@ -18,7 +18,7 @@ interface IGlobalContext {
   setIsPrevUser: (state: boolean) => void;
 }
 
-const initialContext: IGlobalContext = {
+export const initialGlobalContext: IGlobalContext = {
   userStatus: {
     user: null as User | null,
     isOnline: false,
@@ -29,7 +29,7 @@ const initialContext: IGlobalContext = {
   isPrevUser: true,
   setIsPrevUser: () => {},
 };
-export const GlobalContext = createContext<IGlobalContext>(initialContext);
+export const GlobalContext = createContext<IGlobalContext>(initialGlobalContext);
 
 export function GlobalProvider({ children }: { children: React.ReactNode }) {
   // global state

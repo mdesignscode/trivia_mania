@@ -1,4 +1,4 @@
-import Question from "../../models/question";
+import Question from "@/models/question";
 
 // Sample data for testing
 const sampleQuestionData = {

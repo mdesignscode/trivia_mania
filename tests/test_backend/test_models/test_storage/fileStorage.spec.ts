@@ -2,12 +2,12 @@
 
 import { readFileSync, unlinkSync, writeFileSync } from "fs";
 import { stub } from "sinon";
-import Question from "../../../models/question";
+import Question from "@/models/question";
 import FileStorage, {
   IStorageObjects,
   QuestionsRecord,
-} from "../../../models/storage/fileStorage";
-import User from "../../../models/user";
+} from "@/models/storage/fileStorage";
+import User from "@/models/user";
 import { initialStat } from "@/models/interfaces";
 
 beforeAll(function () {

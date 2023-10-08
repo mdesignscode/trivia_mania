@@ -8,7 +8,10 @@ export default function Footer() {
       exit={{ opacity: 0 }}
       transition={{ duration: 1 }}
     >
-      <footer className="footer w-full py-4 flex justify-center mt-5">
+      <footer
+        data-testid="footer-container"
+        className="footer w-full py-4 flex justify-center mt-5"
+      >
         <p>&copy; 2023 Trivia Mania. All rights reserved.</p>
       </footer>
     </motion.div>

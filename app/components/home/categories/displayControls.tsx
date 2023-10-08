@@ -1,11 +1,12 @@
 /* `Show more categories` and `Reset categories` buttons */
 "use client";
+import { GlobalContext } from "@/app/store";
 import { buttonVariants } from "@/components/store";
 import { Button } from "@/components/styledComponents";
 import { motion } from "framer-motion";
 import { Dispatch, SetStateAction, useContext } from "react";
 import { HomeContext } from "../store";
-import { GlobalContext } from "app/store";
+import Loading from "../loading";
 
 interface DisplayControlsProps {
   setShowMore: Dispatch<SetStateAction<boolean>>;
@@ -18,7 +19,7 @@ export default function DisplayControls({
   showMore,
   setCategoryChoice,
 }: DisplayControlsProps) {
-  const { setCategories } = useContext(HomeContext);
+  const { setCategories, fetchingCategories } = useContext(HomeContext);
   const { storageIsAvailable } = useContext(GlobalContext);
 
   function handleReset() {
@@ -27,35 +28,60 @@ export default function DisplayControls({
     if (storageIsAvailable) localStorage.removeItem("categories");
   }
 
-  return (
-    <div className="flex justify-center gap-4">
+  return fetchingCategories ? (
+    <Loading length={2} width={120} />
+  ) : (
+    <div
+      className="flex justify-center gap-4"
+      data-testid="display-controls-container"
+    >
       {/* show more categories */}
-      <motion.span
-        variants={buttonVariants}
-        whileHover="hover"
-        whileTap="hover"
-        className="w-1/3"
+      <motion.div
+        initial={{ x: -100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: 100, opacity: 0 }}
+        transition={{ duration: 1.5 }}
       >
-        <Button
-          onClick={() => setShowMore(!showMore)}
-          $primary={true}
-          className="w-full"
+        <motion.span
+          variants={buttonVariants}
+          whileHover="hover"
+          whileTap="hover"
+          className="w-1/3"
         >
-          {!showMore ? "More categories" : "Less categories"}
-        </Button>
-      </motion.span>
+          <Button
+            onClick={() => setShowMore((state) => !state)}
+            $primary={true}
+            className="w-full"
+            data-testid="show-more-button"
+          >
+            {!showMore ? "More categories" : "Less categories"}
+          </Button>
+        </motion.span>
+      </motion.div>
 
       {/* reset categories */}
-      <motion.span
-        variants={buttonVariants}
-        whileHover="hover"
-        whileTap="hover"
-        className="w-1/3"
+      <motion.div
+        initial={{ x: 100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: -100, opacity: 0 }}
+        transition={{ duration: 1.5 }}
       >
-        <Button onClick={handleReset} $primary={true} className="w-full">
-          Reset categories
-        </Button>
-      </motion.span>
+        <motion.span
+          variants={buttonVariants}
+          whileHover="hover"
+          whileTap="hover"
+          className="w-1/3"
+        >
+          <Button
+            data-testid="reset-categories-button"
+            onClick={handleReset}
+            $primary={true}
+            className="w-full"
+          >
+            Reset categories
+          </Button>
+        </motion.span>
+      </motion.div>
     </div>
   );
 }

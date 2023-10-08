@@ -1,7 +1,7 @@
 "use client";
 
+import { GlobalContext } from "@/app/store";
 import { useUser } from "@clerk/nextjs";
-import { GlobalContext } from "app/store";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 
@@ -22,8 +22,7 @@ export default function useInitialStats(): IInitialStats {
     difficultiesLoading: true,
     previousDifficulty: "",
   });
-  const { user, isLoaded, isSignedIn } = useUser();
-  const { storageIsAvailable } = useContext(GlobalContext);
+  const { storageIsAvailable, userStatus: { user, isOnline, isLoaded} } = useContext(GlobalContext);
 
   // request body
   let reqBody = {
@@ -35,7 +34,7 @@ export default function useInitialStats(): IInitialStats {
     // wait for clerk to finish loading
     if (isLoaded) {
       // if user is available
-      if (isSignedIn) {
+      if (isOnline && user) {
         // add user id to request body
         reqBody.userId = user.id;
 
@@ -90,7 +89,7 @@ export default function useInitialStats(): IInitialStats {
 
   useEffect(() => {
     fetchInitialQuestionStats();
-  }, [isLoaded, isSignedIn, storageIsAvailable]);
+  }, [isLoaded, isOnline, storageIsAvailable]);
 
   return initialStats;
 }

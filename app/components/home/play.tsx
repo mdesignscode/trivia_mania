@@ -1,16 +1,17 @@
 "use client";
+import { GlobalContext } from "@/app/store";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useContext } from "react";
-import storageAvailable from "../localStorageDetection";
 import { buttonVariants } from "../store";
-import { HomeContext } from "./store";
 import { Button } from "../styledComponents";
+import { HomeContext } from "./store";
 
 export default function Play() {
   const { difficulty, categories } = useContext(HomeContext);
+  const { storageIsAvailable } = useContext(GlobalContext);
   function handlePlay() {
-    if (storageAvailable()) {
+    if (storageIsAvailable) {
       localStorage.setItem("difficulty", difficulty);
       localStorage.setItem("categories", categories.join(","));
     }
@@ -32,8 +33,9 @@ export default function Play() {
           href={encodeURI(
             `/game?difficulty=${difficulty}&categories=${categories.join(",")}`
           )}
+          data-testid="play-link"
         >
-          <Button $cta={true} onClick={handlePlay}>
+          <Button $cta={true} onClick={handlePlay} data-testid="play-button">
             Start Playing
           </Button>
         </Link>

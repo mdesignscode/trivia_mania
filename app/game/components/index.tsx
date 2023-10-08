@@ -1,10 +1,10 @@
 /* Handle question logic */
 "use client";
+import { GlobalContext } from "@/app/store";
 import { IQuestion } from "@/models/interfaces";
 import { useUser } from "@clerk/nextjs";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import "animate.css";
-import { GlobalContext } from "app/store";
 import { ReactNode, useContext, useEffect, useRef, useState } from "react";
 import RenderQuestion from "./question";
 import { GameContext } from "./store";

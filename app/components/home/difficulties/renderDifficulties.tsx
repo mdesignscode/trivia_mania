@@ -2,9 +2,9 @@
 import { buttonVariants } from "@/components/store";
 import { Button } from "@/components/styledComponents";
 import useInitialStats from "@/hooks/inititialStats";
-import Loading from "app/loading";
 import { motion } from "framer-motion";
 import { TDifficultyChoice } from ".";
+import Loading from "../loading";
 
 interface RenderDifficultiesProps {
   difficultyChoice: TDifficultyChoice;
@@ -24,7 +24,10 @@ export default function RenderDifficulties({
       exit={{ x: -100, opacity: 0 }}
       transition={{ duration: 1.5 }}
     >
-      <div className="text-center col gap-3">
+      <div
+        className="text-center col gap-3"
+        data-testid="render-difficulties-container"
+      >
         <h1 className="text-xl">Choose difficulty</h1>
 
         {!difficultiesLoading ? (
@@ -58,7 +61,7 @@ export default function RenderDifficulties({
             </div>
           </motion.div>
         ) : (
-          <Loading />
+          <Loading length={4} />
         )}
       </div>
     </motion.div>

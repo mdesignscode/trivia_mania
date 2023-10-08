@@ -1,6 +1,7 @@
 /* Handles all logic for home page */
 "use client";
-import { GlobalContext } from "app/store";
+import { GlobalContext } from "@/app/store";
+import useInitialStats from "@/hooks/inititialStats";
 import axios from "axios";
 import {
   Dispatch,
@@ -10,9 +11,8 @@ import {
   useEffect,
   useState,
 } from "react";
-import useInitialStats from "../../hooks/inititialStats";
 
-interface IHomeContext {
+export interface IHomeContext {
   categoryStats: Record<string, number>;
   difficulty: string;
   fetchingCategories: boolean;
@@ -23,7 +23,7 @@ interface IHomeContext {
   setFetchingCategories: Dispatch<SetStateAction<boolean>>;
 }
 
-const defaultHomeContext: IHomeContext = {
+export const defaultHomeContext: IHomeContext = {
   categoryStats: {},
   difficulty: "",
   fetchingCategories: true,

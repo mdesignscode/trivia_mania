@@ -8,7 +8,7 @@ import {
   IUserStats,
   initialStat,
 } from "@/models/interfaces";
-import { GlobalContext } from "app/store";
+import { GlobalContext } from "@/app/store";
 import axios from "axios";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 

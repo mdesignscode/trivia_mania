@@ -1,6 +1,6 @@
 /* Handles logic for categories components */
 "use client";
-import { GlobalContext } from "app/store";
+import { GlobalContext } from "@/app/store";
 import { useContext, useEffect, useState } from "react";
 import { HomeContext } from "../store";
 import RenderCategories from "./renderCategories";
@@ -8,7 +8,6 @@ import RenderCategories from "./renderCategories";
 function Categories() {
   const {
     categoryStats,
-    fetchingCategories,
     setCategories,
     setFetchingCategories,
   } = useContext(HomeContext);
@@ -70,7 +69,6 @@ function Categories() {
   return (
     <RenderCategories
       {...{
-        fetchingCategories,
         categoryChoice,
         handleCategories,
         setCategoryChoice,

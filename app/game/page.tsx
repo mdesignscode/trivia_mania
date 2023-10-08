@@ -1,8 +1,8 @@
 /* Fetches a list of questions based on search params */
 "use client";
-import Loading from "app/loading";
+import Loading from "@/app/loading";
 import { useSearchParams } from "next/navigation";
-import useFetchQuestionsList from "../hooks/fetchQuestionsList";
+import useFetchQuestionsList from "@/hooks/fetchQuestionsList";
 import RenderQuestions from "./components/renderQuestions";
 import { GameProvider } from "./components/store";
 

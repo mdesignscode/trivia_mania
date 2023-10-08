@@ -1,8 +1,8 @@
 /* Performs questions fetching */
 "use client";
+import { GlobalContext } from "@/app/store";
 import { IQuestion } from "@/models/interfaces";
 import { useQuery } from "@tanstack/react-query";
-import { GlobalContext } from "app/store";
 import axios from "axios";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 

@@ -1,6 +1,6 @@
 import storage from "@/models/index";
-import DisplayUserProgress from "./components";
 import { initialStat } from "@/models/interfaces";
+import DisplayUserProgress from "./components";
 import NotFound from "./components/404";
 
 export default function UserProgress({

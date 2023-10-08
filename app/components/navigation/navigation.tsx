@@ -1,4 +1,5 @@
 "use client";
+import { GlobalContext } from "@/app/store";
 import User from "@/models/user";
 import { useUser } from "@clerk/nextjs";
 import { Disclosure } from "@headlessui/react";
@@ -9,14 +10,13 @@ import {
   StarIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { GlobalContext } from "app/store";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useContext, useEffect } from "react";
 import DesktopNav from "./desktop";
 import MobileNav from "./mobile";
 
-const navigation = [
+export const navigation = [
   { name: "Home", href: "/", icon: <HomeIcon height={25} width={25} /> },
   {
     name: "Play",

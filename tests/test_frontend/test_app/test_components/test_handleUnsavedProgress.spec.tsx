@@ -1,5 +1,6 @@
 import HandleUnsavedProgress from "@/components/handleUnsavedProgress";
-import { mockContext, mockInitialProgress, mockUser, render, screen, userEvent } from "@/utils/test_utils";
+import { mockInitialProgress, mockUser, renderGlobalContext } from "@/utils/test_global_context";
+import { screen, userEvent } from "@/utils/test_utils";
 import axios from "axios";
 
 jest.mock("@/components/reloadPage");
@@ -25,7 +26,7 @@ describe("HandleUnsavedProgress component", () => {
     const user = userEvent.setup();
 
     // render component
-    render(<HandleUnsavedProgress />, { providerProps: mockContext });
+    renderGlobalContext(<HandleUnsavedProgress />);
 
     // get container and buttons from DOM
     const container = await screen.findByTestId(
@@ -58,9 +59,7 @@ describe("HandleUnsavedProgress component", () => {
     // clear unsaved data from localStorage
     localStorage.removeItem("unsavedData");
 
-    const { queryByText } = render(<HandleUnsavedProgress />, {
-      providerProps: mockContext,
-    });
+    const { queryByText } = renderGlobalContext(<HandleUnsavedProgress />);
 
     // Assert that the component does not render
     expect(queryByText("You have unsaved progress.")).toBeNull();

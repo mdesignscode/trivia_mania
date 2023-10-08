@@ -2,7 +2,7 @@
 "use client";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { ChartBarIcon, UserCircleIcon } from "@heroicons/react/24/outline";
-import { DotPulse } from "@uiball/loaders";
+import { CircularProgress } from "@mui/material";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { NavProps } from "./navigation";
@@ -26,7 +26,10 @@ export default function DesktopNav({
   userStatus: { user, isOnline, isLoaded },
 }: NavProps) {
   return (
-    <div className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
+    <div
+      className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0"
+      data-testid="desktop-nav-container"
+    >
       <div className="hidden md:ml-6 md:block">
         <div className="flex space-x-4">
           {navigation.map((item) => (
@@ -92,19 +95,11 @@ export default function DesktopNav({
                 </div>
               </>
             ) : (
-              <Loading />
+              <CircularProgress color="secondary" />
             )}
           </motion.div>
         </div>
       </div>
-    </div>
-  );
-}
-
-function Loading() {
-  return (
-    <div className="h-full w-full grid place-items-center">
-      <DotPulse size={50} color="#ffffff" />
     </div>
   );
 }

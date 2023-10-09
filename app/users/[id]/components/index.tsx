@@ -1,8 +1,8 @@
 "use client";
+import { GlobalContext } from "@/app/store";
 import HandleUnsavedProgress from "@/components/handleUnsavedProgress";
 import { IUserStats } from "@/models/interfaces";
 import User from "@/models/user";
-import { GlobalContext } from "app/store";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
@@ -48,7 +48,7 @@ export default function DisplayUserProgress({
   }, [storageIsAvailable]);
 
   return (
-    <div className="text-xl text-gray-800 w-11/12 col gap-4 mx-auto py-4">
+    <div className="text-xl text-gray-800 w-11/12 col gap-4 mx-auto py-4" data-testid="display-user-progress-container">
       {/* Header */}
       <Header user={user} />
       <motion.div
@@ -74,7 +74,7 @@ export default function DisplayUserProgress({
           <DisplayStats message="Your overall stats" stats={userStats} />
         </>
       ) : (
-        <h2>
+        <h2 data-testid="no-stats-available">
           You have not answered any questions yet.{" "}
           <Link
             className="text-gray-600 hover:text-gray-800 hover:underline decoration-solid"

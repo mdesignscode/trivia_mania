@@ -10,7 +10,10 @@ export default function Header({ user }: { user: User }) {
       animate={{ y: 0, opacity: 1, perspective: 400, rotate: 0 }}
       transition={{ duration: 1.5 }}
     >
-      <div className="flex items-center gap-5">
+      <div
+        className="flex items-center gap-5"
+        data-testid="user-header-container"
+      >
         <Image
           className="rounded-full"
           width={50}

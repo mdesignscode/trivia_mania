@@ -19,7 +19,7 @@ export default function DisplayStats({ stats, message }: DisplayStatsProps) {
     >
       <h2 className="my-3">{message}</h2>
 
-      <div className="col md:flex-row gap-3">
+      <div className="col md:flex-row gap-3" data-testid="stats-container">
         {sortedKeys.map((stat) => {
           if (["easy", "hard", "medium"].includes(stat)) {
             const difficultyStat = stats[stat] as DifficultyStat;

@@ -4,15 +4,15 @@ import { createContext, useEffect, useState } from "react";
 import storageAvailable from "./components/localStorageDetection";
 import User from "@/models/user";
 
-interface IUserStats {
+export interface IUserStatus {
   user: User | null;
   isOnline: boolean;
   isLoaded: boolean;
 }
 
 export interface IGlobalContext {
-  userStatus: IUserStats;
-  setUserStatus: (state: IUserStats) => void;
+  userStatus: IUserStatus;
+  setUserStatus: (state: IUserStatus) => void;
   storageIsAvailable: boolean;
   isPrevUser: boolean;
   setIsPrevUser: (state: boolean) => void;

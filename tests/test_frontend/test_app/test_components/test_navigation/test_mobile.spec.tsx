@@ -1,17 +1,19 @@
-import { IUserStatus } from "@/app/store";
-import DesktopNav from "@/components/navigation/desktop";
+import MobileNav from "@/components/navigation/mobile";
 import { navigation } from "@/components/navigation/navigation";
 import { mockGlobalContext } from "@/utils/test_global_context";
 import { renderHomeContext } from "@/utils/test_home_context";
-import { screen } from "@/utils/test_utils";
+import { screen, userEvent } from "@/utils/test_utils";
 
 jest.mock("@clerk/nextjs");
 
-describe("DesktopNav component", () => {
+describe("MobileNav component", () => {
   it("Should render a list of internal navigation buttons", async () => {
+    // setup user
+    const user = userEvent.setup()
+
     // render component
     renderHomeContext(
-      <DesktopNav
+      <MobileNav
         navigation={navigation}
         path="/"
         userStatus={mockGlobalContext.userStatus}
@@ -19,8 +21,13 @@ describe("DesktopNav component", () => {
     );
 
     // get container from DOM
-    const container = await screen.findByTestId("desktop-nav-container");
+    const container = await screen.findByTestId("mobile-nav-container");
     expect(container).toBeInTheDocument();
+
+    // get disclosure button
+    const disclosure = await screen.findByTestId("disclosure-button")
+    expect(disclosure).toBeInTheDocument()
+    await user.click(disclosure)
 
     // assert all navigation items are rendered
     navigation.forEach(async (nav) => {

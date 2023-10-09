@@ -36,52 +36,38 @@ export default function DisplayControls({
       data-testid="display-controls-container"
     >
       {/* show more categories */}
-      <motion.div
-        initial={{ x: -100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ x: 100, opacity: 0 }}
-        transition={{ duration: 1.5 }}
+      <motion.span
+        variants={buttonVariants}
+        whileHover="hover"
+        whileTap="hover"
+        className="w-1/3"
       >
-        <motion.span
-          variants={buttonVariants}
-          whileHover="hover"
-          whileTap="hover"
-          className="w-1/3"
+        <Button
+          onClick={() => setShowMore((state) => !state)}
+          $primary={true}
+          className="w-full"
+          data-testid="show-more-button"
         >
-          <Button
-            onClick={() => setShowMore((state) => !state)}
-            $primary={true}
-            className="w-full"
-            data-testid="show-more-button"
-          >
-            {!showMore ? "More categories" : "Less categories"}
-          </Button>
-        </motion.span>
-      </motion.div>
+          {!showMore ? "More categories" : "Less categories"}
+        </Button>
+      </motion.span>
 
       {/* reset categories */}
-      <motion.div
-        initial={{ x: 100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ x: -100, opacity: 0 }}
-        transition={{ duration: 1.5 }}
+      <motion.span
+        variants={buttonVariants}
+        whileHover="hover"
+        whileTap="hover"
+        className="w-1/3"
       >
-        <motion.span
-          variants={buttonVariants}
-          whileHover="hover"
-          whileTap="hover"
-          className="w-1/3"
+        <Button
+          data-testid="reset-categories-button"
+          onClick={handleReset}
+          $primary={true}
+          className="w-full"
         >
-          <Button
-            data-testid="reset-categories-button"
-            onClick={handleReset}
-            $primary={true}
-            className="w-full"
-          >
-            Reset categories
-          </Button>
-        </motion.span>
-      </motion.div>
+          Reset categories
+        </Button>
+      </motion.span>
     </div>
   );
 }

@@ -31,35 +31,28 @@ export default function RenderDifficulties({
         <h1 className="text-xl">Choose difficulty</h1>
 
         {!difficultiesLoading ? (
-          <motion.div
-            initial={{ x: 100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -100, opacity: 0 }}
-            transition={{ duration: 1.5 }}
-          >
-            <div className="flex gap-2 flex-wrap justify-center">
-              {Object.keys(difficultyChoice).map((stat) => {
-                return (
-                  <motion.span
-                    key={stat}
-                    variants={buttonVariants}
-                    whileHover="hover"
-                    whileTap="hover"
+          <div className="flex gap-2 flex-wrap justify-center">
+            {Object.keys(difficultyChoice).map((stat) => {
+              return (
+                <motion.span
+                  key={stat}
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="hover"
+                >
+                  <Button
+                    onClick={() => {
+                      const value = stat === "all difficulties" ? "" : stat;
+                      handleDifficulty(value);
+                    }}
+                    $primary={difficultyChoice[stat]}
                   >
-                    <Button
-                      onClick={() => {
-                        const value = stat === "all difficulties" ? "" : stat;
-                        handleDifficulty(value);
-                      }}
-                      $primary={difficultyChoice[stat]}
-                    >
-                      {stat} ({difficultyStats[stat]})
-                    </Button>
-                  </motion.span>
-                );
-              })}
-            </div>
-          </motion.div>
+                    {stat} ({difficultyStats[stat]})
+                  </Button>
+                </motion.span>
+              );
+            })}
+          </div>
         ) : (
           <Loading length={4} />
         )}

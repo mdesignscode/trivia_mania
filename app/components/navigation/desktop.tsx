@@ -26,78 +26,93 @@ export default function DesktopNav({
   userStatus: { user, isOnline, isLoaded },
 }: NavProps) {
   return (
-    <div
-      className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0"
-      data-testid="desktop-nav-container"
-    >
-      <div className="hidden md:ml-6 md:block">
-        <div className="flex space-x-4">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={classNames(
-                item.href === path ? navStyles.active : navStyles.inActive[0],
-                navStyles.inActive[1]
-              )}
-              aria-current={item.href === path ? "page" : undefined}
-            >
-              {item.icon}
-              {item.name}
+    <div className="hidden md:block mx-auto w-full px-2 md:px-6 lg:px-8 bg-secondary text-light z-10 sticky top-0">
+      <div className="relative flex h-16 items-center justify-between">
+        <div className="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
+          <div className="flex flex-shrink-0 items-center">
+            <Link className="hover:bg-gray-700 rounded-md px-3 py-1" href="/">
+              <h1 className="text-white text-3xl">Trivia Mania</h1>
             </Link>
-          ))}
+          </div>
+        </div>
 
-          {/* User stats and Clerk.js User button */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.5 }}
-            className="flex gap-3"
-          >
-            {isLoaded ? (
-              <>
-                {user && isOnline && (
-                  <Link
-                    href={`/users/${user.id}`}
-                    className={classNames(
-                      `/users/${user.id}` === path
-                        ? navStyles.active
-                        : navStyles.inActive[0],
-                      navStyles.inActive[1]
-                    )}
-                    aria-current={
-                      `/users/${user.id}` === path ? "page" : undefined
-                    }
-                  >
-                    <ChartBarIcon height={25} width={25} />
-                    Your Stats
-                  </Link>
-                )}
-
-                <div
+        {/* Desktop Navigation */}
+        <div
+          className="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0"
+          data-testid="desktop-nav-container"
+        >
+          <div className="hidden md:ml-6 md:block">
+            <div className="flex space-x-4">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
                   className={classNames(
-                    /signin|signup/.test(path)
+                    item.href === path
                       ? navStyles.active
                       : navStyles.inActive[0],
                     navStyles.inActive[1]
                   )}
+                  aria-current={item.href === path ? "page" : undefined}
                 >
-                  <SignedIn>
-                    {/* Mount the UserButton component */}
-                    <UserButton />
-                  </SignedIn>
-                  <SignedOut>
-                    <UserCircleIcon height={25} width={25} />
-                    {/* Signed out users get sign in button */}
-                    <SignInButton />
-                  </SignedOut>
-                </div>
-              </>
-            ) : (
-              <CircularProgress color="secondary" />
-            )}
-          </motion.div>
+                  {item.icon}
+                  {item.name}
+                </Link>
+              ))}
+
+              {/* User stats and Clerk.js User button */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.5 }}
+                className="flex gap-3"
+              >
+                {isLoaded ? (
+                  <>
+                    {user && isOnline && (
+                      <Link
+                        href={`/users/${user.id}`}
+                        className={classNames(
+                          `/users/${user.id}` === path
+                            ? navStyles.active
+                            : navStyles.inActive[0],
+                          navStyles.inActive[1]
+                        )}
+                        aria-current={
+                          `/users/${user.id}` === path ? "page" : undefined
+                        }
+                      >
+                        <ChartBarIcon height={25} width={25} />
+                        Your Stats
+                      </Link>
+                    )}
+
+                    <div
+                      className={classNames(
+                        /signin|signup/.test(path)
+                          ? navStyles.active
+                          : navStyles.inActive[0],
+                        navStyles.inActive[1]
+                      )}
+                    >
+                      <SignedIn>
+                        {/* Mount the UserButton component */}
+                        <UserButton />
+                      </SignedIn>
+                      <SignedOut>
+                        <UserCircleIcon height={25} width={25} />
+                        {/* Signed out users get sign in button */}
+                        <SignInButton />
+                      </SignedOut>
+                    </div>
+                  </>
+                ) : (
+                  <CircularProgress color="secondary" />
+                )}
+              </motion.div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

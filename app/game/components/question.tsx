@@ -3,17 +3,11 @@
 import { Button, QuestionBox } from "@/components/styledComponents";
 import { IQuestion } from "@/models/interfaces";
 import { Transition } from "@headlessui/react";
-import {
-  Fragment,
-  MouseEventHandler,
-  MutableRefObject,
-  ReactNode,
-  useContext,
-} from "react";
+import { Fragment, MouseEventHandler, ReactNode, useContext } from "react";
 import { GameContext } from "./store";
 import Timer from "./timerCountdown";
 
-interface IRenderQuestion {
+export interface IRenderQuestion {
   questionObj: IQuestion;
   index: number;
   handleUserAnswer: Function;
@@ -24,7 +18,7 @@ interface IRenderQuestion {
   timesUp: boolean;
   handleNextQuestion: MouseEventHandler<HTMLButtonElement>;
   handleViewProgress: MouseEventHandler<HTMLButtonElement>;
-  userAnswer: MutableRefObject<string>;
+  userAnswer: string;
   answerFeedback: ReactNode[];
 }
 
@@ -60,7 +54,10 @@ export default function RenderQuestion({
       leaveFrom="opacity-100 rotate-0 scale-100 "
       leaveTo="opacity-0 scale-95 "
     >
-      <QuestionBox className="question col gap-7 rounded-lg p-6">
+      <QuestionBox
+        className="question col gap-7 rounded-lg p-6"
+        data-testid="question-container"
+      >
         <div className="flex justify-between items-center">
           <h1 className="text-xl">{category}</h1>
 
@@ -82,7 +79,8 @@ export default function RenderQuestion({
         />
 
         <div className="question_options grid grid-cols-2 grid-rows-2 gap-4">
-          {answers.map((answer, i) => {
+          {answers.map((entity, i) => {
+            const answer = decodeHTMLEntities(entity)
             return (
               <Button
                 className="flex justify-center gap-2 items-center animate__animated"
@@ -93,12 +91,10 @@ export default function RenderQuestion({
                 style={{
                   cursor: !timesUp ? "pointer" : "not-allowed",
                 }}
-                $primary={
-                  !userAnswer.current && timesUp && answer === correctAnswer
-                }
+                $primary={!userAnswer && timesUp && answer === correctAnswer}
               >
                 <span>{answerFeedback[i]}</span>
-                <p>{answer}</p>
+                <p>{decodeHTMLEntities(answer)}</p>
               </Button>
             );
           })}
@@ -131,8 +127,8 @@ export default function RenderQuestion({
   );
 }
 
-function decodeHTMLEntities(text: string): string {
-  const p = document.createElement("p");
-  p.innerHTML = text;
-  return p.innerText;
+export function decodeHTMLEntities(text: string): string {
+  const element = document.createElement('div');
+  element.innerHTML = text;
+  return element.textContent || "";
 }

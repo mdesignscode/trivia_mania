@@ -8,7 +8,7 @@ export interface ITimerProps {
   timerHasStarted: boolean;
 }
 
-function Timer({ handleTimesUp, timerHasStarted }: ITimerProps) {
+export default function Timer({ handleTimesUp, timerHasStarted }: ITimerProps) {
   const [timePassed, setTimePassed] = useState(0);
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT);
   const [remainingPathColor, setRemainingPathColor] = useState("green");
@@ -40,6 +40,7 @@ function Timer({ handleTimesUp, timerHasStarted }: ITimerProps) {
       viewBox="0 0 100 5"
       xmlns="http://www.w3.org/2000/svg"
       style={{ border: "2px solid " + remainingPathColor, borderRadius: "5px" }}
+      data-testid="timer-container"
     >
       <line
         x1="0"
@@ -54,5 +55,3 @@ function Timer({ handleTimesUp, timerHasStarted }: ITimerProps) {
     </svg>
   );
 }
-
-export default Timer;

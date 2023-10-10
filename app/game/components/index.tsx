@@ -28,7 +28,6 @@ export default function Question({
   const [timesUp, setTimesUp] = useState(false);
   const [CTA, setCTA] = useState("Next Question");
   const [timerHasStarted, setTimerHasStarted] = useState(true);
-  const { user, isSignedIn } = useUser();
   const [error, setError] = useState("");
   const [_userAnswer, _setUserAnswer] = useState("");
   const userAnswer = useRef(_userAnswer);
@@ -48,7 +47,7 @@ export default function Question({
     questionIndex,
   } = useContext(GameContext);
 
-  const { storageIsAvailable } = useContext(GlobalContext);
+  const { storageIsAvailable, userStatus: { user, isOnline } } = useContext(GlobalContext);
 
   function handleUserAnswer(value: string, i: number) {
     if (storageIsAvailable) {
@@ -119,7 +118,7 @@ export default function Question({
 
   async function handleNextQuestion() {
     if (CTA === "Submit Results") {
-      if (user && isSignedIn) {
+      if (user && isOnline) {
         const res = await submitProgress(user.id);
         if (res === "User stats updated successfully") {
           window.location.href = "/users/" + user.id;
@@ -151,7 +150,7 @@ export default function Question({
   }
 
   async function handleViewProgress() {
-    if (user && isSignedIn) {
+    if (user && isOnline) {
       const res = await submitProgress(user.id);
       if (res === "User stats updated successfully") {
         window.location.href = "/users/" + user.id;
@@ -226,7 +225,7 @@ export default function Question({
         timesUp,
         handleNextQuestion,
         handleViewProgress,
-        userAnswer,
+        userAnswer: userAnswer.current,
         answerFeedback,
       }}
     />

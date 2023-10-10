@@ -1,6 +1,7 @@
 /* Handle all logic for game page */
 "use client";
 
+import { GlobalContext } from "@/app/store";
 import {
   CategoryStat,
   DifficultyStat,
@@ -8,11 +9,10 @@ import {
   IUserStats,
   initialStat,
 } from "@/models/interfaces";
-import { GlobalContext } from "@/app/store";
 import axios from "axios";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
-interface IGameContext {
+export interface IGameContext {
   playerStats: IUserStats;
   submitProgress: (id: string) => Promise<any>;
   updateProgress: (question: IQuestion, answer: string) => void;
@@ -24,7 +24,7 @@ interface IGameContext {
   poolIndex: number;
 }
 
-const initialContext: IGameContext = {
+export const initialGameContext: IGameContext = {
   playerStats: initialStat,
   submitProgress: async () => {},
   updateProgress: () => {},
@@ -36,7 +36,7 @@ const initialContext: IGameContext = {
   poolIndex: 0,
 };
 
-export const GameContext = createContext<IGameContext>(initialContext);
+export const GameContext = createContext<IGameContext>(initialGameContext);
 
 interface GameProviderProps {
   children: React.ReactNode;
@@ -83,8 +83,8 @@ export function GameProvider({
       localStorage.getItem("progress") || JSON.stringify(initialStat);
 
     // set state
-    setPlayerStats(() => JSON.parse(localProgress))
-    setAnsweredQuestions(() => localAnsweredQuestions.split(","))
+    setPlayerStats(() => JSON.parse(localProgress));
+    setAnsweredQuestions(() => localAnsweredQuestions.split(","));
   }, []);
 
   function updateProgress(question: IQuestion, answer: string) {

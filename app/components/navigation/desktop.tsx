@@ -5,7 +5,7 @@ import { ChartBarIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { CircularProgress } from "@mui/material";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { NavProps } from "./navigation";
+import { NavProps } from ".";
 
 function classNames(...classes: Array<string>) {
   return classes.filter(Boolean).join(" ");
@@ -48,7 +48,7 @@ export default function DesktopNav({
                   key={item.name}
                   href={item.href}
                   className={classNames(
-                    item.href === path
+                    item.href.split("?")[0] === path
                       ? navStyles.active
                       : navStyles.inActive[0],
                     navStyles.inActive[1]

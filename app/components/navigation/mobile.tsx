@@ -9,7 +9,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { NavProps } from "./navigation";
+import { NavProps } from ".";
 import { navStyles } from "./desktop";
 
 function classNames(...classes: Array<string>) {
@@ -66,7 +66,7 @@ export default function MobileNav({
                   as="a"
                   href={item.href}
                   className={classNames(
-                    item.href === path
+                    item.href.split("?")[0] === path
                       ? navStyles.active
                       : navStyles.inActive[0],
                     navStyles.inActive[1]

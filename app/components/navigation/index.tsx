@@ -1,7 +1,65 @@
-import storage from "@/models/index";
-import Navbar from "./navigation";
+"use client";
+import { GlobalContext } from "@/app/store";
+import User from "@/models/user";
+import {
+  HomeIcon,
+  PuzzlePieceIcon,
+  StarIcon,
+} from "@heroicons/react/24/outline";
+import { usePathname } from "next/navigation";
+import { useContext } from "react";
+import DesktopNav from "./desktop";
+import MobileNav from "./mobile";
 
-export default async function Navigation() {
-  const users = JSON.stringify(storage.getAllUsers())
-  return <Navbar serializedUsers={users} />
+type TNavigation = {
+  name: string;
+  href: string;
+  icon: JSX.Element;
+}[];
+export interface NavProps {
+  navigation: TNavigation;
+  path: string;
+  userStatus: {
+    user: User | null;
+    isLoaded: boolean;
+    isOnline: boolean;
+  };
+}
+
+export default function Navigation() {
+  const path = usePathname();
+  const {
+    userStatus,
+    playFilters: { difficulty, categories },
+  } = useContext(GlobalContext);
+
+  const navigation = [
+    { name: "Home", href: "/", icon: <HomeIcon height={25} width={25} /> },
+    {
+      name: "Play",
+      href: `/game?difficulty=${difficulty}&categories=${categories}`,
+      icon: <PuzzlePieceIcon height={25} width={25} />,
+    },
+    {
+      name: "Score Board",
+      href: "/scoreboard",
+      icon: <StarIcon height={25} width={25} />,
+    },
+  ];
+
+  return (
+    <>
+      {/* Desktop Navigation */}
+      <DesktopNav
+        {...{
+          path,
+          navigation,
+          userStatus,
+        }}
+      />
+
+      {/* Mobile Navigation */}
+      <MobileNav {...{ path, navigation, userStatus }} />
+    </>
+  );
 }

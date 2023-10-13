@@ -9,11 +9,33 @@ import { HomeContext } from "./store";
 
 export default function Play() {
   const { difficulty, categories } = useContext(HomeContext);
-  const { storageIsAvailable } = useContext(GlobalContext);
+  const { storageIsAvailable, setPlayFilters } = useContext(GlobalContext);
+
   function handlePlay() {
+    // update filters in local storage new filters different
     if (storageIsAvailable) {
-      localStorage.setItem("difficulty", difficulty);
-      localStorage.setItem("categories", categories.join(","));
+      const localDifficulty = localStorage.getItem("difficulty");
+      const localCategories = localStorage.getItem("categories");
+
+      if (
+        localDifficulty === difficulty &&
+        localCategories === categories.join(",")
+      ) {
+        return;
+      } else {
+        // new filters are different
+        localStorage.setItem("difficulty", difficulty);
+        localStorage.setItem("categories", categories.join(","));
+
+        // notify game page to fetch new questions
+        localStorage.setItem("newParams", "true");
+
+        // update filters in state
+        setPlayFilters({
+          difficulty,
+          categories: categories.join(","),
+        });
+      }
     }
   }
 

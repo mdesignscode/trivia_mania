@@ -44,7 +44,11 @@ export default function useFetchQuestionsList(
   }
   const [questionsLength, setQuestionsLength] = useState(0);
 
-  const { storageIsAvailable } = useContext(GlobalContext);
+  const {
+    storageIsAvailable,
+    userStatus: { user },
+    setPlayFilters,
+  } = useContext(GlobalContext);
 
   /* Fetch questions from api if previous filters don't match new filters
   Else use questions in local storage */
@@ -55,7 +59,11 @@ export default function useFetchQuestionsList(
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const url = `${baseUrl}questions/play`;
 
-    const { data } = await axios.post(url, { difficulty, categories });
+    const { data } = await axios.post(url, {
+      difficulty,
+      categories,
+      id: user?.id,
+    });
 
     return data;
   }
@@ -85,6 +93,7 @@ export default function useFetchQuestionsList(
     const prevDiff = localStorage.getItem("difficulty") || "";
     const prevCategories = localStorage.getItem("categories") || "";
     const prevQuestions = localStorage.getItem("questionsList") || "[]";
+    const newParams = localStorage.getItem("newParams");
 
     // check if previous params match new params
     const parsedQuestions = JSON.parse(prevQuestions) as string[];
@@ -92,7 +101,8 @@ export default function useFetchQuestionsList(
     if (
       prevCategories === categories.join(",") &&
       prevDiff === difficulty &&
-      !!parsedQuestions.length
+      !!parsedQuestions.length &&
+      !newParams
     ) {
       // storage has questions
       setLocalStorageReady(true);
@@ -107,6 +117,10 @@ export default function useFetchQuestionsList(
       // update search filters
       localStorage.setItem("difficulty", difficulty);
       localStorage.setItem("categories", categories.join(","));
+      setPlayFilters({
+        difficulty,
+        categories: categories.join(","),
+      });
 
       // reset pool index
       setPoolIndex(0);
@@ -117,11 +131,13 @@ export default function useFetchQuestionsList(
       setQuestionsLength(data.length);
 
       // has not answered any quesions yet
-      localStorage.setItem("questionAnswered", "false")
+      localStorage.setItem("questionAnswered", "false");
       localStorage.removeItem("answeredQuestions");
-      localStorage.removeItem("progress")
+      localStorage.removeItem("progress");
       localStorage.removeItem("lastAnswer");
       localStorage.removeItem("lastAnswerIndex");
+
+      localStorage.removeItem("newParams");
 
       // storage is now ready
       setLocalStorageReady(true);
@@ -169,7 +185,7 @@ export default function useFetchQuestionsList(
     setQuestionIndex(questionIndex.current + 1);
 
     if (storageIsAvailable) {
-      localStorage.setItem("questionAnswered", "false")
+      localStorage.setItem("questionAnswered", "false");
       localStorage.setItem("currentIndex", questionIndex.current.toString());
     }
   }

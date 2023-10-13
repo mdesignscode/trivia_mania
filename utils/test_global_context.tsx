@@ -1,20 +1,35 @@
-import { GlobalContext, IGlobalContext, initialGlobalContext } from "@/app/store";
+import {
+  GlobalContext,
+  IGlobalContext,
+} from "@/app/store";
 import { CategoryStat, DifficultyStat, IUserStats } from "@/models/interfaces";
 import User from "@/models/user";
 import { render } from "./test_utils";
 import { ReactElement } from "react";
+import Providers from "@/app/providers";
 
-// setup context values
-export const mockGlobalContext = JSON.parse(
-  JSON.stringify(initialGlobalContext)
-) as IGlobalContext
-mockGlobalContext.storageIsAvailable = true;
+jest.mock("@tanstack/react-query");
+
+jest.mock("@/components/localStorageDetection", () => true);
 
 // create mock user
 export const mockUser = new User("mock user");
-mockGlobalContext.userStatus.isLoaded = true;
-mockGlobalContext.userStatus.isOnline = true;
-mockGlobalContext.userStatus.user = mockUser;
+
+// setup context values
+export const mockGlobalContext: IGlobalContext = {
+  userStatus: {
+    user: mockUser,
+    isOnline: true,
+    isLoaded: true,
+  },
+  storageIsAvailable: true,
+  setUserStatus: jest.fn(),
+  playFilters: {
+    difficulty: "",
+    categories: "",
+  },
+  setPlayFilters: jest.fn(),
+};
 
 export const mockInitialProgress: IUserStats = {
   total: {
@@ -35,8 +50,10 @@ export const mockInitialProgress: IUserStats = {
 
 export const renderGlobalContext = (ui: ReactElement) => {
   return render(
-    <GlobalContext.Provider value={mockGlobalContext}>
-      {ui}
-    </GlobalContext.Provider>
+    <Providers>
+      <GlobalContext.Provider value={mockGlobalContext}>
+        {ui}
+      </GlobalContext.Provider>
+    </Providers>
   );
 };

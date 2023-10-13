@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Board component snapshot matches 1`] = `
+<body>
+  <div>
+    <div
+      class="p-4"
+      data-testid="scoreboard-container"
+    >
+      <h1
+        class="text-2xl font-semibold mb-4"
+      >
+        Top 10 Scoreboard
+      </h1>
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+      >
+        <div
+          class="bg-secondary dark:bg-accent-200 max-h-72 overflow-y-auto p-4 rounded-lg shadow-md col gap-3"
+          data-testid="user-0-stat"
+        >
+          <div
+            class="flex items-center"
+          >
+            <div
+              class="mr-4"
+            >
+              <img
+                alt="Avatar for mock user"
+                class="rounded-full"
+                data-nimg="1"
+                decoding="async"
+                height="50"
+                loading="lazy"
+                src="/_next/image?url=%2Favatar.png&w=128&q=75"
+                srcset="/_next/image?url=%2Favatar.png&w=64&q=75 1x, /_next/image?url=%2Favatar.png&w=128&q=75 2x"
+                style="color: transparent;"
+                width="50"
+              />
+            </div>
+            <div>
+              <p
+                class="text-xl font-semibold"
+              >
+                1
+                . 
+                mock user
+              </p>
+              <p
+                class="text-gray-500"
+              >
+                Total Correct Answers: 
+                0
+              </p>
+            </div>
+          </div>
+          <div
+            class="flex gap-2 flex-col"
+          />
+        </div>
+        <div
+          class="bg-secondary dark:bg-accent-200 max-h-72 overflow-y-auto p-4 rounded-lg shadow-md col gap-3"
+          data-testid="user-1-stat"
+        >
+          <div
+            class="flex items-center"
+          >
+            <div
+              class="mr-4"
+            >
+              <img
+                alt="Avatar for mock user"
+                class="rounded-full"
+                data-nimg="1"
+                decoding="async"
+                height="50"
+                loading="lazy"
+                src="/_next/image?url=%2Favatar.png&w=128&q=75"
+                srcset="/_next/image?url=%2Favatar.png&w=64&q=75 1x, /_next/image?url=%2Favatar.png&w=128&q=75 2x"
+                style="color: transparent;"
+                width="50"
+              />
+            </div>
+            <div>
+              <p
+                class="text-xl font-semibold"
+              >
+                2
+                . 
+                mock user
+              </p>
+              <p
+                class="text-gray-500"
+              >
+                Total Correct Answers: 
+                0
+              </p>
+            </div>
+          </div>
+          <div
+            class="flex gap-2 flex-col"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

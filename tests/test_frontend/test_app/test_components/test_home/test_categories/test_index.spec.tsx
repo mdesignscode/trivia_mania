@@ -8,4 +8,10 @@ describe("Categories component", () => {
     const container = await screen.findByTestId("render-categories-container");
     expect(container).toBeInTheDocument();
   });
+
+  it("snapshot matches", () => {
+  // render component
+  const { baseElement } = renderHomeContext(<Categories />);
+  expect(baseElement).toMatchSnapshot();
+  });
 });

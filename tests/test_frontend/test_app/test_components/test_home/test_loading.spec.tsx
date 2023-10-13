@@ -14,4 +14,10 @@ describe("Loading component", () => {
       expect(skeleton).toHaveStyle("width: 80px");
     });
   });
+
+  it("snapshot matches", () => {
+    // render component
+    const { baseElement } = render(<Loading length={3} width={80} />);
+    expect(baseElement).toMatchSnapshot();
+  });
 });

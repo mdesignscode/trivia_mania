@@ -1,5 +1,9 @@
 import HandleUnsavedProgress from "@/components/handleUnsavedProgress";
-import { mockInitialProgress, mockUser, renderGlobalContext } from "@/utils/test_global_context";
+import {
+  mockInitialProgress,
+  mockUser,
+  renderGlobalContext,
+} from "@/utils/test_global_context";
 import { screen, userEvent } from "@/utils/test_utils";
 import axios from "axios";
 
@@ -63,5 +67,30 @@ describe("HandleUnsavedProgress component", () => {
 
     // Assert that the component does not render
     expect(queryByText("You have unsaved progress.")).toBeNull();
+  });
+
+  it("snapshot matches with unsaved progress", () => {
+    // Mock localStorage data
+    localStorage.setItem("unsavedData", JSON.stringify(mockInitialProgress));
+    localStorage.setItem("answeredQuestions", mockAnsweredQuestions.join(","));
+
+    // setup mock response
+    const mockAxios = axios as jest.Mocked<typeof axios>;
+    mockAxios.post.mockResolvedValue({
+      data: "User stats updated successfully",
+    });
+
+    // render component
+    const { baseElement } = renderGlobalContext(<HandleUnsavedProgress />);
+    expect(baseElement).toMatchSnapshot();
+  });
+
+  it("snapshot matches with no unsaved progress", () => {
+    // clear unsaved data from localStorage
+    localStorage.removeItem("unsavedData");
+
+    // render component
+    const { baseElement } = renderGlobalContext(<HandleUnsavedProgress />);
+    expect(baseElement).toMatchSnapshot();
   });
 });

@@ -1,7 +1,7 @@
-import storage from "../../../../../models/index";
-import { POST } from "../../../../../app/api/users/updateStats/route";
+import storage from "@/models/index";
+import { POST } from "@/app/api/users/updateStats/route";
 import { spy, stub } from "sinon";
-import User from "../../../../../models/user";
+import User from "@/models/user";
 import { IUserStats } from "@/models/interfaces";
 
 describe("POST users/updateStats", function () {

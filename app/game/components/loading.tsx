@@ -30,9 +30,10 @@ export default function Loading() {
 
       {/* answers */}
       <div className="w-full grid grid-cols-2 grid-rows-2 gap-4">
-        {Array.from({ length: 4 }).map(() => {
+        {Array.from({ length: 4 }).map((_, i) => {
           return (
             <Skeleton
+              key={`skeleton_${i}`}
               variant="rectangular"
               height={40}
               sx={{ bgcolor: "#ffcb74", borderRadius: 2 }}

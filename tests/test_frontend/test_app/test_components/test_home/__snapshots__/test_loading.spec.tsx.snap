@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Loading component snapshot matches 1`] = `
+<body>
+  <div>
+    <div
+      class="m-auto w-2/3 flex gap-2 flex-wrap justify-center"
+      data-testid="loading-skeleton-container"
+    >
+      <span
+        class="MuiSkeleton-root MuiSkeleton-rectangular MuiSkeleton-pulse css-1w0cu22-MuiSkeleton-root"
+        data-testid="loading-skeleton"
+        style="width: 80px; height: 40px;"
+      />
+      <span
+        class="MuiSkeleton-root MuiSkeleton-rectangular MuiSkeleton-pulse css-1w0cu22-MuiSkeleton-root"
+        data-testid="loading-skeleton"
+        style="width: 80px; height: 40px;"
+      />
+      <span
+        class="MuiSkeleton-root MuiSkeleton-rectangular MuiSkeleton-pulse css-1w0cu22-MuiSkeleton-root"
+        data-testid="loading-skeleton"
+        style="width: 80px; height: 40px;"
+      />
+    </div>
+  </div>
+</body>
+`;

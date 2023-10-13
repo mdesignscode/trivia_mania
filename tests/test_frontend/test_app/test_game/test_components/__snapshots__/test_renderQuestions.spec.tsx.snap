@@ -1,0 +1,397 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RenderQuestion component snapshot matches 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        class="sc-grXZZQ iUsqQT question col gap-7 rounded-lg p-6"
+        data-testid="question-container"
+      >
+        <div
+          class="flex justify-between items-center"
+        >
+          <h1
+            class="text-xl"
+          >
+            Mock Category
+          </h1>
+          <p
+            class="text-xl"
+            style="color: green;"
+          >
+            easy
+          </p>
+        </div>
+        <h1
+          class="text-2xl"
+        >
+          Mock &lt;Question&gt;
+        </h1>
+        <svg
+          data-testid="timer-container"
+          style="border: 2px solid green; border-radius: 5px;"
+          viewBox="0 0 100 5"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <line
+            class="transition-all"
+            stroke="green"
+            stroke-width="20"
+            x1="0"
+            x2="0"
+            y1="5"
+            y2="5"
+          />
+          30
+        </svg>
+        <div
+          class="question_options grid grid-cols-2 grid-rows-2 gap-4"
+        >
+          <button
+            class="sc-bcPKhP fjXGcT flex justify-center gap-2 items-center animate__animated"
+            id="Mocha & Chai"
+            style="cursor: pointer;"
+          >
+            <span />
+            <p>
+              Mocha & Chai
+            </p>
+          </button>
+          <button
+            class="sc-bcPKhP fjXGcT flex justify-center gap-2 items-center animate__animated"
+            id="React | Vue | Angular"
+            style="cursor: pointer;"
+          >
+            <span />
+            <p>
+              React | Vue | Angular
+            </p>
+          </button>
+          <button
+            class="sc-bcPKhP fjXGcT flex justify-center gap-2 items-center animate__animated"
+            id="Mock Aswer 3"
+            style="cursor: pointer;"
+          >
+            <span />
+            <p>
+              Mock Aswer 3
+            </p>
+          </button>
+          <button
+            class="sc-bcPKhP fjXGcT flex justify-center gap-2 items-center animate__animated"
+            id="Mock Correct Answer"
+            style="cursor: pointer;"
+          >
+            <span />
+            <p>
+              Mock Correct Answer
+            </p>
+          </button>
+        </div>
+        <audio
+          id="success"
+        >
+          <source
+            src="/success.mp3"
+            type="audio/mpeg"
+          />
+          Your browser does not support the audio element.
+        </audio>
+        <audio
+          id="error"
+        >
+          <source
+            src="/error.mp3"
+            type="audio/mpeg"
+          />
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`RenderQuestions component snapshot matches with a list of questions 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        class="h-full flex-1 flex justify-center"
+        style="opacity: 0;"
+      >
+        <div
+          class="col justify-center items-center gap-4 max-w-3xl mx-8 h-full"
+          data-testid="render-questions-container"
+        >
+          <h1
+            class="text-2xl"
+          >
+            Question 
+            1
+             of 
+            2
+          </h1>
+          <div
+            class="sc-grXZZQ iUsqQT question col gap-7 rounded-lg p-6"
+            data-testid="question-container"
+          >
+            <div
+              class="flex justify-between items-center"
+            >
+              <h1
+                class="text-xl"
+              >
+                Mock Category
+              </h1>
+              <p
+                class="text-xl"
+                style="color: green;"
+              >
+                easy
+              </p>
+            </div>
+            <h1
+              class="text-2xl"
+            >
+              Mock &lt;Question&gt;
+            </h1>
+            <svg
+              data-testid="timer-container"
+              style="border: 2px solid green; border-radius: 5px;"
+              viewBox="0 0 100 5"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <line
+                class="transition-all"
+                stroke="green"
+                stroke-width="20"
+                x1="0"
+                x2="0"
+                y1="5"
+                y2="5"
+              />
+              30
+            </svg>
+            <div
+              class="question_options grid grid-cols-2 grid-rows-2 gap-4"
+            >
+              <button
+                class="sc-bcPKhP fjXGcT flex justify-center gap-2 items-center animate__animated"
+                id="Mocha & Chai"
+                style="cursor: pointer;"
+              >
+                <span />
+                <p>
+                  Mocha & Chai
+                </p>
+              </button>
+              <button
+                class="sc-bcPKhP fjXGcT flex justify-center gap-2 items-center animate__animated"
+                id="React | Vue | Angular"
+                style="cursor: pointer;"
+              >
+                <span />
+                <p>
+                  React | Vue | Angular
+                </p>
+              </button>
+              <button
+                class="sc-bcPKhP fjXGcT flex justify-center gap-2 items-center animate__animated"
+                id="Mock Aswer 3"
+                style="cursor: pointer;"
+              >
+                <span />
+                <p>
+                  Mock Aswer 3
+                </p>
+              </button>
+              <button
+                class="sc-bcPKhP fjXGcT flex justify-center gap-2 items-center animate__animated"
+                id="Mock Correct Answer"
+                style="cursor: pointer;"
+              >
+                <span />
+                <p>
+                  Mock Correct Answer
+                </p>
+              </button>
+            </div>
+            <audio
+              id="success"
+            >
+              <source
+                src="/success.mp3"
+                type="audio/mpeg"
+              />
+              Your browser does not support the audio element.
+            </audio>
+            <audio
+              id="error"
+            >
+              <source
+                src="/error.mp3"
+                type="audio/mpeg"
+              />
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`RenderQuestions component snapshot matches with all questions answered 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        class="h-full flex-1 flex justify-center"
+        style="opacity: 0;"
+      >
+        <div
+          class="col gap-2 mt-6 text-2xl"
+          data-testid="all-questions-answered-container"
+        >
+          <h1
+            class="text-3xl"
+          >
+            You have finished all questions for
+          </h1>
+          <div
+            class="flex gap-3"
+          >
+            <p>
+              Difficulty:
+            </p>
+            <p>
+              medium
+            </p>
+          </div>
+          <div
+            class="flex gap-3"
+          >
+            <p>
+              Categories:
+            </p>
+            <p>
+              Mock Category 1, Mock Category 2
+            </p>
+          </div>
+          <div
+            class="border-2 dark:border-light pt-3 pb-5 text-center md:text-left col rounded-lg md:w-96 items-center"
+            data-testid="handle-unsaved-progress-container"
+          >
+            <div
+              class="col gap-2"
+            >
+              <h1
+                class="text-2xl"
+              >
+                You have unsaved progress.
+              </h1>
+              <div
+                class="flex gap-4 text-xl"
+              >
+                <button
+                  class="sc-bcPKhP coQATf"
+                  data-testid="save-progress-button"
+                  type="submit"
+                >
+                  Save progress
+                </button>
+                <button
+                  class="sc-bcPKhP fjXGcT"
+                  data-testid="discard-progress-button"
+                  type="submit"
+                >
+                  Discard Progress
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`RenderQuestions component snapshot matches with unsaved data 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        class="h-full flex-1 flex justify-center"
+        style="opacity: 0;"
+      >
+        <div
+          class="col gap-2 mt-6 text-2xl"
+          data-testid="all-questions-answered-container"
+        >
+          <h1
+            class="text-3xl"
+          >
+            You have finished all questions for
+          </h1>
+          <div
+            class="flex gap-3"
+          >
+            <p>
+              Difficulty:
+            </p>
+            <p>
+              medium
+            </p>
+          </div>
+          <div
+            class="flex gap-3"
+          >
+            <p>
+              Categories:
+            </p>
+            <p>
+              Mock Category 1, Mock Category 2
+            </p>
+          </div>
+          <div
+            class="border-2 dark:border-light pt-3 pb-5 text-center md:text-left col rounded-lg md:w-96 items-center"
+            data-testid="handle-unsaved-progress-container"
+          >
+            <div
+              class="col gap-2"
+            >
+              <h1
+                class="text-2xl"
+              >
+                You have unsaved progress.
+              </h1>
+              <div
+                class="flex gap-4 text-xl"
+              >
+                <button
+                  class="sc-bcPKhP coQATf"
+                  data-testid="save-progress-button"
+                  type="submit"
+                >
+                  Save progress
+                </button>
+                <button
+                  class="sc-bcPKhP fjXGcT"
+                  data-testid="discard-progress-button"
+                  type="submit"
+                >
+                  Discard Progress
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

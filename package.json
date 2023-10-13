@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:frontend": "jest -c jest.config.frontend.js tests/test_frontend/",
-    "test:backend": "jest -c jest.config.backend.js tests/test_backend/"
+    "test:frontend": "jest -c jest.config.frontend.js tests/test_frontend/ --coverage",
+    "test:backend": "jest -c jest.config.backend.js tests/test_backend/ --coverage"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.23.5",

@@ -48,4 +48,22 @@ describe("DisplayCategories component", () => {
       expect(mockHandler).toBeCalledWith(i, stat);
     });
   });
+
+  it("snapshot matches", () => {
+    // setup mock values
+    const mockCategoryChoice = Object.keys(mockCategoriesStats).map(
+      () => false
+    );
+    const mockHandler = jest.fn();
+
+    // render component
+    const { baseElement } = renderHomeContext(
+      <DisplayCategories
+        handleCategories={mockHandler}
+        showMore={true}
+        categoryChoice={mockCategoryChoice}
+      />
+    );
+    expect(baseElement).toMatchSnapshot();
+  });
 });

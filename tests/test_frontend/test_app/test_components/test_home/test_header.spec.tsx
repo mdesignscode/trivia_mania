@@ -9,4 +9,10 @@ describe("Header component", () => {
 
     expect(container).toBeInTheDocument()
   })
+
+  it("snapshot matches", () => {
+    // render component
+    const { baseElement } = render(<Header />)
+    expect(baseElement).toMatchSnapshot();
+  });
 });

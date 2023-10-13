@@ -44,4 +44,26 @@ describe("UserProgress component", () => {
     const container = await screen.findByTestId("not-found-container");
     expect(container).toBeInTheDocument();
   });
+
+  it("snapshot matches valid id", () => {
+    // set mock to return a valid user
+    (storage.getUser as jest.Mock<any, any, any>).mockReturnValue(mockUser);
+
+    // render component
+    const { baseElement } = render(
+      <UserProgress params={{ id: mockUser.id }} />
+    );
+    expect(baseElement).toMatchSnapshot();
+  });
+
+  it("snapshot matches invalid id", () => {
+    // set mock to return an invalid user
+    (storage.getUser as jest.Mock<any, any, any>).mockReturnValue(null);
+
+    // render component
+    const { baseElement } = render(
+      <UserProgress params={{ id: "invalidId" }} />
+    );
+    expect(baseElement).toMatchSnapshot();
+  });
 });

@@ -94,4 +94,21 @@ describe("DisplayControls component", () => {
     expect(mockSetCategoryChoice).toBeCalled();
     expect(mockSetCategories).toBeCalledWith([]);
   });
+
+  it("snapshot matches", () => {
+    // create mock props
+    const mockSetShowMore = jest.fn();
+    const mockSetCategoryChoice = jest.fn();
+
+    // render component
+    const { baseElement } = renderHomeContext(
+      <DisplayControls
+        showMore={false}
+        setShowMore={mockSetShowMore}
+        setCategoryChoice={mockSetCategoryChoice}
+      />
+    );
+
+    expect(baseElement).toMatchSnapshot()
+  })
 });

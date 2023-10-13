@@ -52,7 +52,7 @@ export function HomeProvider({ children }: { children: React.ReactNode }) {
   } = useContext(GlobalContext);
 
   useEffect(() => {
-    if (!categoriesLoading) setFetchingCategories(false);
+    setFetchingCategories(categoriesLoading);
     setCategoryStats(initialCategoryStats);
   }, [categoriesLoading, initialCategoryStats]);
 

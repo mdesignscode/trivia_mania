@@ -1,4 +1,4 @@
-import storage from "../../../../models/index";
+import storage from "@/models/index";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -18,8 +18,9 @@ export async function POST(request: Request) {
 
     const difficulty = body.difficulty || "";
     const categories = body.categories || [];
+    const userId = body.userId || "";
 
-    const data = storage.filterQuestions({ difficulty, categories });
+    const data = storage.filterQuestions({ difficulty, categories }, userId);
 
     return NextResponse.json(data);
   } catch (error) {

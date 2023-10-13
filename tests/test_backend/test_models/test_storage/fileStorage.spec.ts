@@ -251,7 +251,7 @@ describe("FileStorage", function () {
       });
 
       test("Return an object with stats count for all filters, excluding a given user's answered questions", function () {
-        const stats = storage.questionsStats("", "1");
+        const stats = storage.questionsStats(null, "1");
 
         const easyCount = stats.easy;
         const mediumCount = stats.medium;

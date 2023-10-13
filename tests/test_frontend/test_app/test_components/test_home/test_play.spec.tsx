@@ -59,4 +59,10 @@ describe("Play component", () => {
       }&categories=${mockFilters.categories.join(",")}`)
     );
   });
+
+  it("snapshot matches", () => {
+    // render component
+    const { baseElement } = renderHomeContext(<Play />, mockFilters);
+    expect(baseElement).toMatchSnapshot();
+  });
 });

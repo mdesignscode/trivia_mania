@@ -4,7 +4,10 @@ import { mockUser } from "@/utils/test_global_context";
 import { screen, render } from "@/utils/test_utils";
 
 // mock props
-export const mockTopTenUsers = [mockUser, { ...mockUser, id: "mockUser2" } as User];
+export const mockTopTenUsers = [
+  mockUser,
+  { ...mockUser, id: "mockUser2" } as User,
+];
 
 describe("Board component", () => {
   it("Should render a list of top ten users' stats", async () => {
@@ -22,5 +25,11 @@ describe("Board component", () => {
     expect(text).toBeInTheDocument();
     expect(stat1).toBeInTheDocument();
     expect(stat2).toBeInTheDocument();
+  });
+
+  it("snapshot matches", () => {
+    // render component
+    const { baseElement } = render(<Board topTenUsers={mockTopTenUsers} />);
+    expect(baseElement).toMatchSnapshot();
   });
 });

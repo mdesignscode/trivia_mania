@@ -11,8 +11,8 @@ import { renderGlobalContext } from "./test_global_context";
 // create mock category stats
 const mockList = Array.from({ length: 20 }, (_, i) => i + 1);
 export const mockCategoriesStats: Record<string, number> = {};
-mockList.forEach((item) => {
-  mockCategoriesStats[`Category ${item}`] = Math.floor(Math.random() * 100);
+mockList.forEach((item, i) => {
+  mockCategoriesStats[`Category ${item}`] = i;
 });
 
 // create context object
@@ -42,8 +42,8 @@ export const renderHomeContext = (
 ) => {
   const value = {
     ...mockHomeContext,
-    ...customData
-  }
+    ...customData,
+  };
 
   return renderGlobalContext(
     <HomeContext.Provider value={value}>{ui}</HomeContext.Provider>

@@ -14,4 +14,14 @@ describe("Timer component", () => {
       expect(mockHandleTimesUp).toBeCalled();
     }, 1000);
   });
+
+  it("snapshot matches", () => {
+    const mockHandleTimesUp = jest.fn();
+
+    // render component
+    const { baseElement } = render(
+      <Timer timerHasStarted={false} handleTimesUp={mockHandleTimesUp} />
+    );
+    expect(baseElement).toMatchSnapshot();
+  });
 });

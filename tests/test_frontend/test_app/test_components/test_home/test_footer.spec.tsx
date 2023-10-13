@@ -9,4 +9,10 @@ describe("Footer component", () => {
 
     expect(container).toBeInTheDocument()
   })
+
+  it("snapshot matches", () => {
+    // render component
+    const { baseElement } = render(<Footer />)
+    expect(baseElement).toMatchSnapshot();
+  });
 });

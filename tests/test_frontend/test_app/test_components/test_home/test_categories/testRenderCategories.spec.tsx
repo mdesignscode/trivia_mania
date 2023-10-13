@@ -38,4 +38,20 @@ describe("RenderCategories component", () => {
     expect(dipayContainer).toBeInTheDocument();
     expect(text).toBeInTheDocument();
   });
+
+  it("snapshot matches", () => {
+    // create mock props
+    const mockHandleCategories = jest.fn(),
+      mockSetCategoryChoice = jest.fn();
+
+    // render component
+    const { baseElement } = renderHomeContext(
+      <RenderCategories
+        handleCategories={mockHandleCategories}
+        setCategoryChoice={mockSetCategoryChoice}
+        categoryChoice={Object.keys(mockCategoriesStats).map(() => false)}
+      />
+    );
+    expect(baseElement).toMatchSnapshot();
+  });
 });

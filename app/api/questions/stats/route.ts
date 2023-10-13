@@ -1,4 +1,4 @@
-import storage from "../../../../models/index";
+import storage from "@/models/index";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       return NextResponse.json("Invalid difficulty");
     }
 
-    const data = storage.questionsStats(body?.difficulty || "", body?.userId || "");
+    const data = storage.questionsStats(body?.difficulty, body?.userId || "");
 
     return NextResponse.json(data);
   } catch (error) {

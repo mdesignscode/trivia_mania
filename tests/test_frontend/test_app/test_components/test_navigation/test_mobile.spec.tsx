@@ -1,5 +1,5 @@
 import MobileNav from "@/components/navigation/mobile";
-import { navigation } from "@/components/navigation/navigation";
+import { navigation } from "./test_desktop.spec";
 import { mockGlobalContext } from "@/utils/test_global_context";
 import { renderHomeContext } from "@/utils/test_home_context";
 import { screen, userEvent } from "@/utils/test_utils";
@@ -9,7 +9,7 @@ jest.mock("@clerk/nextjs");
 describe("MobileNav component", () => {
   it("Should render a list of internal navigation buttons", async () => {
     // setup user
-    const user = userEvent.setup()
+    const user = userEvent.setup();
 
     // render component
     renderHomeContext(
@@ -25,9 +25,9 @@ describe("MobileNav component", () => {
     expect(container).toBeInTheDocument();
 
     // get disclosure button
-    const disclosure = await screen.findByTestId("disclosure-button")
-    expect(disclosure).toBeInTheDocument()
-    await user.click(disclosure)
+    const disclosure = await screen.findByTestId("disclosure-button");
+    expect(disclosure).toBeInTheDocument();
+    await user.click(disclosure);
 
     // assert all navigation items are rendered
     navigation.forEach(async (nav) => {
@@ -35,5 +35,17 @@ describe("MobileNav component", () => {
       expect(navButton).toBeInTheDocument();
       expect(navButton).toHaveAttribute("href", nav.href);
     });
+  });
+
+  it("snapshot matches", () => {
+    // render component
+    const { baseElement } = renderHomeContext(
+      <MobileNav
+        navigation={navigation}
+        path="/"
+        userStatus={mockGlobalContext.userStatus}
+      />
+    );
+    expect(baseElement).toMatchSnapshot();
   });
 });

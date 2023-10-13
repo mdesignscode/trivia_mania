@@ -10,4 +10,10 @@ describe("Question component", () => {
     const container = await screen.findByTestId("question-container");
     expect(container).toBeInTheDocument();
   });
+
+  it("snapshot matches", () => {
+    // render component
+    const { baseElement } = renderGameContext(<Question questionObj={mockQuestion} index={1} />);
+    expect(baseElement).toMatchSnapshot();
+  });
 });

@@ -1,6 +1,6 @@
-import storage from "../../../../../models/index";
-import Question from "../../../../../models/question";
-import { POST } from "../../../../../app/api/questions/play/route";
+import storage from "@/models/index";
+import Question from "@/models/question";
+import { POST } from "@/app/api/questions/play/route";
 import { stub } from "sinon";
 
 describe("POST questions/play", function () {

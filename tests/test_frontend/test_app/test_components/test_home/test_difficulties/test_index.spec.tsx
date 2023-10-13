@@ -26,4 +26,10 @@ describe("RenderDifficulties component", () => {
     );
     expect(container).toBeInTheDocument();
   });
+
+  it("snapshot matches", () => {
+  // render component
+  const { baseElement } = renderHomeContext(<Difficulties />);
+  expect(baseElement).toMatchSnapshot();
+  });
 });

@@ -45,9 +45,9 @@ function Categories() {
 
           setCategories(newPreferences);
           setCategoryChoice(Object.values(newState));
-          setFetchingCategories(false);
         }
       }
+      setFetchingCategories(false);
     }
   }, [categoryStats, storageIsAvailable]);
 

@@ -68,4 +68,60 @@ describe("DisplayUserProgress component", () => {
     const text = await screen.findByTestId("no-stats-available");
     expect(text).toBeInTheDocument();
   });
+
+  it("snapshot matches user's progress", () => {
+    // mock props
+    const serializedUser = JSON.stringify(mockUser);
+    const serializedTopTen = JSON.stringify([mockUser]);
+
+    // render component
+    const { baseElement } = renderGlobalContext(
+      <DisplayUserProgress
+        serializedTopTen={serializedTopTen}
+        serializedUser={serializedUser}
+        userStats={mockInitialProgress}
+      />
+    );
+    expect(baseElement).toMatchSnapshot();
+  });
+
+  it("snapshot matches last results", () => {
+    // mock props
+    const serializedUser = JSON.stringify(mockUser);
+    const serializedTopTen = JSON.stringify([mockUser]);
+
+    // set last results in local storage
+    localStorage.setItem("progress", JSON.stringify(mockInitialProgress));
+
+    // render component
+    const { baseElement } = renderGlobalContext(
+      <DisplayUserProgress
+        serializedTopTen={serializedTopTen}
+        serializedUser={serializedUser}
+        userStats={mockInitialProgress}
+      />
+    );
+    expect(baseElement).toMatchSnapshot();
+  });
+
+  it("snapshot matches no user stats", () => {
+    // mock props
+    const serializedUser = JSON.stringify(mockUser);
+    const serializedTopTen = JSON.stringify([]);
+
+    // render component
+    const { baseElement } = renderGlobalContext(
+      <DisplayUserProgress
+        serializedTopTen={serializedTopTen}
+        serializedUser={serializedUser}
+        userStats={{
+          total: {
+            answered: 0,
+            correctAnswered: 0,
+          },
+        }}
+      />
+    );
+    expect(baseElement).toMatchSnapshot();
+  });
 });

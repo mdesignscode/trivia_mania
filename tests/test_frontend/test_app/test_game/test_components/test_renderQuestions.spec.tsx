@@ -72,4 +72,41 @@ describe("RenderQuestions component", () => {
     expect(container).toBeInTheDocument();
     expect(unsavedProgressContainer).toBeInTheDocument();
   });
+
+  it("snapshot matches with a list of questions", () => {
+    const categories = "Mock Category 1, Mock Category 2";
+
+    // render component
+    const { baseElement } = renderGameContext(
+      <RenderQuestions difficulty="medium" categories={categories} />,
+      mockAdditionalContext
+    );
+    expect(baseElement).toMatchSnapshot();
+  });
+
+  it("snapshot matches with all questions answered", () => {
+    const categories = "Mock Category 1, Mock Category 2";
+
+    // render component
+    const { baseElement } = renderGameContext(
+      <RenderQuestions difficulty="medium" categories={categories} />,
+      { ...mockAdditionalContext, questionIndex: {} }
+    );
+
+    expect(baseElement).toMatchSnapshot();
+  });
+
+  it("snapshot matches with unsaved data", () => {
+    // set unsaved data in local storage
+    localStorage.setItem("unsavedData", JSON.stringify(mockInitialProgress));
+
+    const categories = "Mock Category 1, Mock Category 2";
+
+    // render component
+    const { baseElement } = renderGameContext(
+      <RenderQuestions difficulty="medium" categories={categories} />,
+      { ...mockAdditionalContext, questionIndex: {} }
+    );
+    expect(baseElement).toMatchSnapshot();
+  });
 });

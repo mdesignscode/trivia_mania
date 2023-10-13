@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HandleUnsavedProgress component snapshot matches with no unsaved progress 1`] = `
+<body>
+  <div>
+    <div />
+  </div>
+</body>
+`;
+
+exports[`HandleUnsavedProgress component snapshot matches with unsaved progress 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        class="border-2 dark:border-light pt-3 pb-5 text-center md:text-left col rounded-lg md:w-96 items-center"
+        data-testid="handle-unsaved-progress-container"
+      >
+        <div
+          class="col gap-2"
+        >
+          <h1
+            class="text-2xl"
+          >
+            You have unsaved progress.
+          </h1>
+          <div
+            class="flex gap-4 text-xl"
+          >
+            <button
+              class="sc-bcPKhP coQATf"
+              data-testid="save-progress-button"
+              type="submit"
+            >
+              Save progress
+            </button>
+            <button
+              class="sc-bcPKhP fjXGcT"
+              data-testid="discard-progress-button"
+              type="submit"
+            >
+              Discard Progress
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

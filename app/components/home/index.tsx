@@ -7,7 +7,7 @@ import Header from "./header";
 import Play from "./play";
 import Footer from "./footer";
 
-function HomePage() {
+export default function HomePage() {
   return (
     <AnimatePresence>
       <motion.div
@@ -16,7 +16,7 @@ function HomePage() {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="col">
+        <div className="col" data-testid="home-container">
           <main className="col items-center">
             <Header />
 
@@ -35,5 +35,3 @@ function HomePage() {
     </AnimatePresence>
   );
 }
-
-export default HomePage;

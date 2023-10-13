@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Trivia Mania",
-  description: "Portfolio Project by Marlon for ALX",
+  description: "Portfolio Project by Marlon Baatjes",
 };
 
 export default function RootLayout({
@@ -20,15 +20,19 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <GlobalProvider>
-        <html lang="en" className="h-full">
-          <body className={`${inter.className} h-full bg-light dark:bg-secondary text-dark dark:text-light col`}>
-            <Navigation />
+      <Providers>
+        <GlobalProvider>
+          <html lang="en" className="h-full">
+            <body
+              className={`${inter.className} h-full bg-light dark:bg-secondary text-dark dark:text-light col`}
+            >
+              <Navigation />
 
-            <Providers>{children}</Providers>
-          </body>
-        </html>
-      </GlobalProvider>
+              {children}
+            </body>
+          </html>
+        </GlobalProvider>
+      </Providers>
     </ClerkProvider>
   );
 }

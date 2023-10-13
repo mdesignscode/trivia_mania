@@ -151,10 +151,11 @@ class FileStorage {
    * @date 04/09/2023 - 13:11:21
    *
    * @param {IFilters} filters
+   * @param {string} userId - optionally returns a list of questions unique to a user
    * @returns {Array<Question>}
    */
-  filterQuestions(filters: IFilters): Array<Question> {
-    const questions = this.getAllQuestions(true);
+  filterQuestions(filters: IFilters, userId: string = ""): Array<Question> {
+    const questions = this.getAllQuestions(true, userId);
     const filteredCategories: Array<Question> = filters.categories?.length
       ? Object.values(questions).filter((question) =>
           filters.categories?.includes(question.category)
@@ -182,12 +183,12 @@ class FileStorage {
    * counts all question filters, or counts all categories by difficulty
    * @date 29/09/2023 - 15:05:49
    *
-   * @param {string} [difficulty=""]
+   * @param {string} [difficulty=null]
    * @param {string} [userId=""] - optionally counts filters user has not answered
    * @returns {Record<string, number>}
    */
   questionsStats(
-    difficulty: string = "",
+    difficulty: string | null = null,
     userId: string = ""
   ): Record<string, number> {
     const stats: Record<string, number> = {};
@@ -198,7 +199,7 @@ class FileStorage {
       : (this.getAllQuestions(true, userId) as Record<string, Question>);
 
     const uniqueValues = Object.values(uniqueQuestions);
-    if (difficulty) {
+    if (difficulty != null) {
       for (const value of uniqueValues) {
         const category = value.category;
         if (!stats[category]) {

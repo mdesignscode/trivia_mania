@@ -2,8 +2,6 @@ import RenderDifficulties from "@/components/home/difficulties/renderDifficultie
 import { IInitialStats } from "@/hooks/inititialStats";
 import {
   mockCategoriesStats,
-  mockGetQuestionStats,
-  mockSetDifficulty,
   renderHomeContext,
 } from "@/utils/test_home_context";
 import { screen, userEvent } from "@/utils/test_utils";
@@ -60,22 +58,31 @@ describe("RenderDifficulties component", () => {
     expect(text).toBeInTheDocument();
 
     // should call the event handler on click
-    Object.keys(mockDifficultyStats).forEach(async (key) => {
+    for (const key of Object.keys(mockDifficultyStats)) {
       // get button
       const buttonValue = `${key} (${mockDifficultyStats[key]})`;
 
-      const difficultyButton = await screen.findByDisplayValue(buttonValue);
+      const difficultyButton = await screen.findByText(buttonValue);
 
       // check if button is present
       expect(difficultyButton).toBeInTheDocument();
-      // fire button
+      // fire event
       await user.click(difficultyButton);
 
-      // assert event was hadled as expected
+      // assert event was handled as expected
       const value = key === "all difficulties" ? "" : key;
       expect(mockHander).toBeCalledWith(value);
-      expect(mockSetDifficulty).toBeCalledWith(key);
-      expect(mockGetQuestionStats).toBeCalled();
-    });
+    }
+  });
+
+  it("snapshot matches", () => {
+    // render component
+    const { baseElement } = renderHomeContext(
+      <RenderDifficulties
+        difficultyChoice={mockDifficultyChoice}
+        handleDifficulty={mockHander}
+      />
+    );
+    expect(baseElement).toMatchSnapshot();
   });
 });

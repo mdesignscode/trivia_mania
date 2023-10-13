@@ -1,4 +1,4 @@
-import storage from "../../../../models/index";
+import storage from "@/models/index";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {

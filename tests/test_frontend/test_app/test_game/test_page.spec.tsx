@@ -49,4 +49,25 @@ describe("GamePage component", () => {
     );
     expect(container).toBeInTheDocument();
   });
+
+  it("snapshot matches with questions", () => {
+    (useFetchQuestionsList as jest.Mock<any, any, any>).mockReturnValue(
+      mockHookData
+    );
+
+    // render component
+    const { baseElement } = render(<GamePage />);
+    expect(baseElement).toMatchSnapshot();
+  });
+
+  it("snapshot matches", () => {
+    (useFetchQuestionsList as jest.Mock<any, any, any>).mockReturnValue({
+      ...mockHookData,
+      questionIndex: {},
+    });
+
+    // render component
+    const { baseElement } = render(<GamePage />);
+    expect(baseElement).toMatchSnapshot();
+  });
 });

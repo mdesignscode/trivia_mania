@@ -151,11 +151,14 @@ export function GameProvider({
       return newState;
     });
 
-    localStorage.setItem("progress", JSON.stringify(playerStats.current));
-    localStorage.setItem(
-      "answeredQuestions",
-      answeredQuestions.current.join(",")
-    );
+    if (storageIsAvailable) {
+      localStorage.setItem("progress", JSON.stringify(playerStats.current));
+      localStorage.setItem(
+        "answeredQuestions",
+        answeredQuestions.current.join(",")
+      );
+      localStorage.setItem("unsavedData", JSON.stringify(playerStats.current));
+    }
   }
 
   async function submitProgress(id: string) {

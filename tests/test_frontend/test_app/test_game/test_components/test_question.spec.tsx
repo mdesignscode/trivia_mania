@@ -65,7 +65,7 @@ describe("RenderQuestion component", () => {
     expect(timer).toBeInTheDocument();
 
     // assert answer buttons are in DOM
-    for await (const entity of mockQuestion.answers) {
+    for (const entity of mockQuestion.answers) {
       const answer = decodeHTMLEntities(entity);
       const button = await screen.findByText(answer);
 
@@ -139,5 +139,13 @@ describe("RenderQuestion component", () => {
     await user.click(sumbitResultsButton);
 
     expect(mockHandleNextQuestion).toBeCalled();
+  });
+
+  it("snapshot matches", () => {
+    // render component
+    const { baseElement } = renderGameContext(
+      <RenderQuestion {...mockProps} />
+    );
+    expect(baseElement).toMatchSnapshot();
   });
 });

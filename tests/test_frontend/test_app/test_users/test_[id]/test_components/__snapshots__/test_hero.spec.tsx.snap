@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Hero component snapshot matches not in top ten 1`] = `
+<body>
+  <div>
+    <div
+      style="opacity: 0; transform: translateY(-200px) rotate(20deg) translateZ(0);"
+    >
+      <h2>
+        This is your progress
+      </h2>
+      <h3>
+        Total questions answered: 
+        0
+      </h3>
+      <h3>
+        Total correct answers: 
+        0
+      </h3>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`Hero component snapshot matches user's progress 1`] = `
+<body>
+  <div>
+    <div
+      style="opacity: 0; transform: translateY(-200px) rotate(20deg) translateZ(0);"
+    >
+      <h2>
+        This is your progress
+      </h2>
+      <h2>
+        Congratulations you are number 
+        1
+         in the Leader board
+      </h2>
+      <h3>
+        Total questions answered: 
+        0
+      </h3>
+      <h3>
+        Total correct answers: 
+        0
+      </h3>
+    </div>
+  </div>
+</body>
+`;

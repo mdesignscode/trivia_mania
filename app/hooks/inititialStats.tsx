@@ -1,9 +1,9 @@
 "use client";
 
 import { GlobalContext } from "@/app/store";
-import { useUser } from "@clerk/nextjs";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
+import { QueryClient, useQuery } from "@tanstack/react-query";
 
 type TStat = Record<string, number>;
 export interface IInitialStats {
@@ -22,74 +22,121 @@ export default function useInitialStats(): IInitialStats {
     difficultiesLoading: true,
     previousDifficulty: "",
   });
-  const { storageIsAvailable, userStatus: { user, isOnline, isLoaded} } = useContext(GlobalContext);
+  const {
+    storageIsAvailable,
+    userStatus: { user, isOnline, isLoaded },
+  } = useContext(GlobalContext);
 
   // request body
-  let reqBody = {
+  const [requestBody, setRequestBody] = useState({
     difficulty: "",
     userId: "",
-  };
+  });
+  const [shouldFetchCategories, setShouldFetchCategories] = useState(false);
+  const [shouldFetchDifficulties, setShouldFetchDifficulties] = useState(false);
 
-  async function fetchInitialQuestionStats() {
-    // wait for clerk to finish loading
-    if (isLoaded) {
-      // if user is available
-      if (isOnline && user) {
-        // add user id to request body
-        reqBody.userId = user.id;
+  // Create a client
+  const queryClient = new QueryClient();
 
-        // check for previous difficulty set
-        if (storageIsAvailable) {
-          const prevDiff = localStorage.getItem("difficulty");
-          if (prevDiff) {
-            // add difficulty to request body
-            reqBody.difficulty = prevDiff;
-          }
-        }
-      }
+  // prepare url for question stats
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const url = baseUrl + "questions/stats";
 
+  // fetch category stats
+  const { data: categoryStats, isFetched: fetchedCategories } = useQuery({
+    queryKey: ["categoryStats", requestBody.userId],
+    queryFn: async () => {
       try {
-        // prepare url for question stats
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const url = baseUrl + "questions/stats";
-
-        // fetch initial questions stats
-        // get categories based on difficulty
-        const { data } = await axios.post(url, reqBody);
-        // get difficulty stats, which is not included above
-        const { data: diffStats } = await axios.post(url, { userId: reqBody.userId });
-
-        const difficultyStats: TStat = {};
-        const categoryStats: TStat = {};
-
-        for (const key in data) {
-          // set categories stats
-          categoryStats[key] = data[key];
-        }
-
-        for (const key in diffStats) {
-          // set difficulty stats
-          if (["easy", "medium", "hard", "all difficulties"].includes(key)) {
-            difficultyStats[key] = diffStats[key];
-          }
-        }
-
-        setInitialStats({
-          difficultyStats,
-          categoryStats,
-          categoriesLoading: false,
-          previousDifficulty: reqBody.difficulty,
-          difficultiesLoading: false,
-        });
+        const { data } = await axios.post(url, requestBody);
+        return data;
       } catch (error) {
         console.log(error);
       }
+    },
+    initialData: {},
+    enabled: shouldFetchCategories,
+  });
+
+  // fetch difficulty stats
+  const { data: difficultyStats, isFetched: fetchedDifficulties } = useQuery({
+    queryKey: ["difficultyStats", requestBody.userId],
+    queryFn: async () => {
+      try {
+        const { data } = await axios.post(url, { userId: requestBody.userId });
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    initialData: {},
+    enabled: shouldFetchDifficulties,
+  });
+
+  function prepareRequestBody() {
+    // check for previous difficulty set
+    if (storageIsAvailable) {
+      const prevDiff = localStorage.getItem("difficulty");
+      if (prevDiff) {
+        // add difficulty to request body
+        setRequestBody((state) => ({
+          ...state,
+          difficulty: prevDiff,
+        }));
+      }
+    }
+
+    // if user is available
+    if (isOnline && user) {
+      // add user id to request body
+      setRequestBody((state) => ({
+        ...state,
+        userId: user.id,
+      }));
     }
   }
 
+  function getStats() {
+    // fetch difficulties
+    setShouldFetchDifficulties(true);
+    if (fetchedDifficulties) {
+      setInitialStats((state) => ({
+        ...state,
+        difficultyStats,
+        previousDifficulty: requestBody.difficulty,
+        difficultiesLoading: false,
+      }));
+      setShouldFetchDifficulties(false);
+    }
+
+    // fetch categories
+    setShouldFetchCategories(true);
+    if (fetchedCategories) {
+      setInitialStats((state) => ({
+        ...state,
+        categoryStats,
+        categoriesLoading: false,
+      }));
+      setShouldFetchCategories(false);
+    }
+  }
+
+  // prepare request body
   useEffect(() => {
-    fetchInitialQuestionStats();
+    // wait for user status to be updated
+    if (isLoaded) {
+      prepareRequestBody();
+    }
   }, [isLoaded, isOnline, storageIsAvailable]);
+
+  // fetch stats
+  useEffect(() => {
+    getStats();
+
+    if (requestBody.userId) {
+      queryClient.invalidateQueries({ queryKey: ["difficultyStats"] });
+      queryClient.invalidateQueries({ queryKey: ["categoryStats"] });
+    }
+  }, [fetchedCategories, fetchedDifficulties, requestBody]);
 
   return initialStats;
 }

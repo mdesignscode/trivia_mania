@@ -1,10 +1,26 @@
-/* Mock data for testing home page */
+import { CategoryStat, DifficultyStat, IUserStats } from "@/models/interfaces";
+import { IQuestion } from "@/models/interfaces";
 
 type TStat = Record<string, number>
 
-import { IQuestion } from "@/models/interfaces";
+export const mockInitialProgress: IUserStats = {
+  total: {
+    correctAnswered: 1,
+    answered: 1,
+  },
+  easy: {
+    answered: 1,
+    correctAnswered: 1,
+  } as DifficultyStat,
+  Science: {
+    easy: {
+      answered: 1,
+      correctAnswered: 1,
+    } as DifficultyStat,
+  } as CategoryStat,
+};
 
-// create mock
+// create mock questions
 export const mockQuestions: Record<string, IQuestion> = {
   "63805aab-b589-4256-9493-769eecc23966": {
     "category": "Entertainment: Film",
@@ -128,3 +144,18 @@ export const mockMediumStats: TStat = {
   "Entertainment: Music": 1,
   "all categories": 3
 }
+
+// mock question
+export const mockQuestion: IQuestion = {
+  question: "Mock &lt;Question&gt;",
+  id: "mockId",
+  difficulty: "easy",
+  correctAnswer: "Mock Correct Answer",
+  category: "Mock Category",
+  answers: [
+    "Mocha &amp; Chai",
+    "React &#124; Vue &#124; Angular",
+    "Mock Aswer 3",
+    "Mock Correct Answer",
+  ],
+};

@@ -5,10 +5,8 @@ const createJestConfig = nextJest({ dir: './' })
 
 // Any custom config you want to pass to Jest
 const customJestConfig = {
-  "resetMocks": false,
-  "setupFiles": ["jest-localstorage-mock"],
   "setupFilesAfterEnv": [
-    "<rootDir>/setupTests.ts"
+    "<rootDir>/setupTests_backend.ts"
   ],
   "moduleNameMapper": {
     "^@/components/(.*)$": "<rootDir>/app/components/$1",
@@ -18,9 +16,11 @@ const customJestConfig = {
     "^@/api/(.*)$": "<rootDir>/app/api/$1",
     "^@/store(.*)$": "<rootDir>/app/components/store$1",
     "^@/hooks/(.*)$": "<rootDir>/app/hooks/$1",
-    "^@/app/(.*)$": "<rootDir>/app/$1"
+    "^@/app/(.*)$": "<rootDir>/app/$1",
+    "^@/utils/(.*)$": "<rootDir>/utils/$1",
   },
-  preset: "ts-jest"
+  preset: "ts-jest",
+  testEnvironment: "node"
 }
 
 // createJestConfig is exported in this way to ensure that next/jest can load the Next.js configuration, which is async

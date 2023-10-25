@@ -8,7 +8,7 @@ const customJestConfig = {
   "resetMocks": false,
   "setupFiles": ["jest-localstorage-mock"],
   "setupFilesAfterEnv": [
-    "<rootDir>/setupTests.ts"
+    "<rootDir>/setupTests_frontend.ts"
   ],
   "moduleNameMapper": {
     "^@/components/(.*)$": "<rootDir>/app/components/$1",

@@ -1,5 +1,10 @@
 import '@testing-library/jest-dom';
 
+// clear localStorage
+beforeEach(() => {
+  localStorage.clear();
+});
+
 // Mock process.env
 const originalEnv = process.env;
 beforeAll(() => {
@@ -12,5 +17,6 @@ beforeAll(() => {
 afterAll(() => {
   process.env = originalEnv;
 });
+
 // Mock axios post request for testing
 jest.mock("axios");

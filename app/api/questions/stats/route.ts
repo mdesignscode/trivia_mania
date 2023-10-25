@@ -1,21 +1,16 @@
+import { TStatsRequest, StatsRequest } from "@/models/customRequests";
 import storage from "@/models/index";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
+export async function POST(request: StatsRequest) {
+  const body: TStatsRequest = await request.json();
+  let data: Record<string, number>;
 
-    if (
-      body.difficulty &&
-      !["easy", "hard", "medium"].includes(body.difficulty)
-    ) {
-      return NextResponse.json("Invalid difficulty");
-    }
-
-    const data = storage.questionsStats(body?.difficulty, body?.userId || "");
-
-    return NextResponse.json(data);
-  } catch (error) {
-    return NextResponse.json("Invalid body");
+  if (body.recordType === "difficulties") {
+    data = storage.questionsStats("difficulties", body.userId);
+  } else {
+    data = storage.questionsStats("categories", body.difficulty, body.userId);
   }
+
+  return NextResponse.json(data);
 }

@@ -1,29 +1,15 @@
+import { IPlayRequest, PlayRequest } from "@/models/customRequests";
 import storage from "@/models/index";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
+export async function POST(request: PlayRequest) {
+  const body: IPlayRequest = await request.json();
 
-    if (
-      body.difficulty &&
-      !["easy", "hard", "medium"].includes(body.difficulty)
-    ) {
-      return NextResponse.json("Invalid difficulty");
-    }
+  const difficulty = body.difficulty || "";
+  const categories = body.categories || [];
+  const userId = body.userId || "";
 
-    if (body.categories && !Array.isArray(body.categories)) {
-      return NextResponse.json("Invalid categories");
-    }
+  const data = storage.filterQuestions({ difficulty, categories }, userId);
 
-    const difficulty = body.difficulty || "";
-    const categories = body.categories || [];
-    const userId = body.userId || "";
-
-    const data = storage.filterQuestions({ difficulty, categories }, userId);
-
-    return NextResponse.json(data);
-  } catch (error) {
-    return NextResponse.json("Invalid body");
-  }
+  return NextResponse.json(data);
 }

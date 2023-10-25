@@ -1,9 +1,10 @@
 "use client";
 import { Button } from "@/components/styledComponents";
-import { GlobalContext } from "@/app/store";
+import { GlobalContext } from "@/context/globalContext";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import reloadPage from "./reloadPage";
+import { ANSWERED_QUESTIONS, UNSAVED_DATA, clearQuestionData } from "@/utils/localStorage_utils";
 
 export default function HandleUnsavedProgress() {
   const [hasUnsavedProgress, setHasUnsavedProgress] = useState(false);
@@ -13,8 +14,8 @@ export default function HandleUnsavedProgress() {
   } = useContext(GlobalContext);
 
   async function saveProgress() {
-    const hasUnsavedData = localStorage.getItem("unsavedData");
-    const answeredQuestions = localStorage.getItem("answeredQuestions");
+    const hasUnsavedData = localStorage.getItem(UNSAVED_DATA);
+    const answeredQuestions = localStorage.getItem(ANSWERED_QUESTIONS);
 
     if (hasUnsavedData && user && answeredQuestions) {
       const progress = JSON.parse(hasUnsavedData);
@@ -29,13 +30,7 @@ export default function HandleUnsavedProgress() {
       });
 
       if (data === "User stats updated successfully") {
-        localStorage.removeItem("unsavedData");
-        localStorage.setItem("hasUnsavedData", "false");
-        localStorage.removeItem("questionsList");
-        localStorage.removeItem("questionsPool");
-        localStorage.removeItem("poolIndex");
-        localStorage.removeItem("currentIndex");
-        localStorage.removeItem("answeredQuestions");
+        clearQuestionData()
         reloadPage()
       } else console.log(data);
     }
@@ -43,7 +38,7 @@ export default function HandleUnsavedProgress() {
 
   useEffect(() => {
     if (storageIsAvailable) {
-      const hasUnsavedData = localStorage.getItem("unsavedData");
+      const hasUnsavedData = localStorage.getItem(UNSAVED_DATA);
 
       if (hasUnsavedData) {
         setHasUnsavedProgress(true);
@@ -53,8 +48,7 @@ export default function HandleUnsavedProgress() {
 
   function discardProgress() {
     if (storageIsAvailable) {
-      localStorage.removeItem("unsavedData");
-      localStorage.setItem("hasUnsavedData", "false");
+      localStorage.removeItem(UNSAVED_DATA);
       reloadPage()
     }
   }
@@ -70,18 +64,16 @@ export default function HandleUnsavedProgress() {
 
           <div className="flex gap-4 text-xl">
             <Button
-              type="submit"
-              data-testid="save-progress-button"
+              testid="save-progress-button"
               onClick={saveProgress}
-              $primary={true}
+              primary={true}
             >
               Save progress
             </Button>
 
             <Button
-              type="submit"
               onClick={discardProgress}
-              data-testid="discard-progress-button"
+              testid="discard-progress-button"
             >
               Discard Progress
             </Button>

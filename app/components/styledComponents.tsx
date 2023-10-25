@@ -1,11 +1,15 @@
 "use client";
+import { motion } from "framer-motion";
+import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 import styled, { css } from "styled-components";
+import { classNames } from "./navigation/desktop";
+import { buttonVariants } from "./store";
 
 const color = "#ffcb74";
 const dark = "#2f2f2f";
 const light = "#f6f6f6";
 
-export const Button = styled.button<{ $primary?: boolean; $cta?: boolean }>`
+const ButtonComponent = styled.button<{ $primary?: boolean; $cta?: boolean; $play?: boolean }>`
   background: transparent;
   border-radius: 5px;
   border: 2px solid ${color};
@@ -75,8 +79,8 @@ export const Button = styled.button<{ $primary?: boolean; $cta?: boolean }>`
         color: ${dark};
 
         &:hover {
-          border-color: ${light};
-          color: ${light};
+          border-color: ${props.$play ? dark : light};
+          color: ${props.$play ? dark : light};
         }
       }
     `}
@@ -86,6 +90,53 @@ export const QuestionBox = styled.div`
   border: 2px solid ${dark};
 
   @media (prefers-color-scheme: dark) {
-    border-color: ${light}
+    border-color: ${light};
   }
 `;
+
+interface IButtonProps
+  extends DetailedHTMLProps<
+    ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {
+  cta?: boolean;
+  primary?: boolean;
+  textSize?: string;
+  testid?: string;
+  play?: boolean;
+}
+
+export function Button({
+  children,
+  cta,
+  primary,
+  textSize,
+  onClick,
+  className,
+  id,
+  testid,
+  play
+}: IButtonProps) {
+  return (
+    <motion.span
+      data-testid={testid}
+      variants={buttonVariants}
+      whileHover="hover"
+      whileTap="rest"
+      onClick={onClick}
+    >
+      <ButtonComponent
+        className={classNames(
+          className || "",
+          textSize ? `text-${textSize}` : ""
+        )}
+        id={id}
+        $cta={cta}
+        $primary={primary}
+        $play={play}
+      >
+        {children}
+      </ButtonComponent>
+    </motion.span>
+  );
+}

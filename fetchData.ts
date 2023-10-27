@@ -4,32 +4,38 @@ import { IQuestion } from "./models/interfaces";
 import Question from "./models/question";
 import storage from "./models";
 
+const triviaCategories = [
+  'Sports',
+  'Entertainment: Video Games',
+  'Geography',
+  'Entertainment: Books',
+  'History',
+  'Entertainment: Television',
+  'Entertainment: Cartoon & Animations',
+  'Entertainment: Music',
+  'Science & Nature',
+  'Celebrities',
+  'General Knowledge',
+  'Politics',
+  'Entertainment: Japanese Anime & Manga',
+  'Entertainment: Film',
+  'Entertainment: Comics',
+  'Vehicles',
+  'Mythology',
+  'Entertainment: Musicals & Theatres',
+  'Science: Mathematics',
+  'Science: Computers',
+  'Entertainment: Board Games',
+  'Art',
+  'Science: Gadgets',
+  'Animals'
+]
+
+
+
 main();
 
 const questionsList: Array<IQuestion> = [];
-
-async function fetchTheTriviaAPI() {
-  const url = "https://the-trivia-api.com/v2/questions?limit=50";
-
-  const req = await fetch(url);
-  const res = await req.json();
-
-  const sanitizedQuestions = res.map((question: Record<string, any>) => {
-    const answers = question.incorrectAnswers.concat(question.correctAnswer);
-    const newQuestion = {
-      answers,
-      question: question.question.text,
-      id: question.id,
-      difficulty: question.difficulty,
-      category: question.category,
-      correctAnswer: question.correctAnswer,
-    };
-
-    return newQuestion;
-  });
-
-  questionsList.push(...sanitizedQuestions);
-}
 
 async function fetchOpenTriviaDB(url: string) {
   const req = await fetch(url);
@@ -57,11 +63,10 @@ async function fetchOpenTriviaDB(url: string) {
 }
 
 async function main() {
-  for (let i = 0; i < 20; i++) {
-    await fetchOpenTriviaDB(
-      "https://opentdb.com/api.php?amount=50&type=multiple"
-    );
-    await fetchTheTriviaAPI();
+  for (let i = 0; i < triviaCategories.length; i++) {
+    const baseUrl = "https://opentdb.com/api.php?amount=50&type=multiple"
+    const url = baseUrl + "&category=" + i
+    await fetchOpenTriviaDB(url);
   }
 
   const noDuplicates = removeDuplicateQuestions(questionsList);
@@ -72,7 +77,7 @@ async function main() {
   })
   storage.save()
 
-  console.log('Storage populated 💾🚀');
+  console.log('Storage populated with questions💾🚀');
 
 }
 

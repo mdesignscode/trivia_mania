@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -20,18 +24,47 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/components/*": ["app/components/*"],
-      "@/styles/*": ["app/styles/*"],
-      "@/models/*": ["models/*"],
-      "@/store/*": ["app/components/store/*"],
-      "@/api/*": ["app/api/*"],
-      "@/store*": ["app/components/store*"],
-      "@/hooks/*": ["app/hooks/*"],
-      "@/app/*": ["app/*"],
-      "@/utils/*": ["utils/*"],
-      "mockData": ["tests/test_frontend/test_app/test_components/test_home/mockData"]
+      "@/components/*": [
+        "app/components/*"
+      ],
+      "@/styles/*": [
+        "app/styles/*"
+      ],
+      "@/models/*": [
+        "models/*"
+      ],
+      "@/store/*": [
+        "app/components/store/*"
+      ],
+      "@/api/*": [
+        "app/api/*"
+      ],
+      "@/store*": [
+        "app/components/store*"
+      ],
+      "@/hooks/*": [
+        "app/hooks/*"
+      ],
+      "@/app/*": [
+        "app/*"
+      ],
+      "@/utils/*": [
+        "utils/*"
+      ],
+      "@/context/*": [
+        "app/context/*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/game/components/timerCountdown.tsx", "__mocks__/mock-next-link.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/game/components/timerCountdown.tsx",
+    "__mocks__/mock-next-link.tsx",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

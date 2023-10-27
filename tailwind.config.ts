@@ -1,5 +1,4 @@
 import type { Config } from "tailwindcss";
-const formsPlugin = require('@tailwindcss/forms');
 
 const config: Config = {
   content: [
@@ -25,8 +24,5 @@ const config: Config = {
       transparent: "transparent"
     }
   },
-  plugins: [
-    formsPlugin
-  ],
 };
 export default config;

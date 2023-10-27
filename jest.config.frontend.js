@@ -20,6 +20,7 @@ const customJestConfig = {
     "^@/hooks/(.*)$": "<rootDir>/app/hooks/$1",
     "^@/app/(.*)$": "<rootDir>/app/$1",
     "^@/utils/(.*)$": "<rootDir>/utils/$1",
+    "^@/context/(.*)$": "<rootDir>/app/context/$1",
   },
   testEnvironment: "jsdom",
   preset: 'ts-jest',

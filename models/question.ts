@@ -6,7 +6,7 @@ class Question {
   // Properties
   category: string;
   answers: Array<string>;
-  private correctAnswer: string;
+  correctAnswer: string;
   id: string;
   question: string;
   difficulty: string;
@@ -31,7 +31,8 @@ class Question {
   // Method to shuffle the answer choices (randomize)
   shuffleAnswers(): void {
     for (let i = this.answers.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+      const index = Math.floor(Math.random() * (i + 1));
+      const j = index === i ? i + 1 : index;
       [this.answers[i], this.answers[j]] = [this.answers[j], this.answers[i]];
     }
   }

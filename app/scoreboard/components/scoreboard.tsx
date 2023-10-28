@@ -12,11 +12,12 @@ export default function Board({ topTenUsers }: { topTenUsers: Array<User> }) {
   return (
     <div className="p-4" data-testid="scoreboard-container">
       <h1 className="text-2xl font-semibold mb-4">Top 10 Scoreboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {topTenUsers.length?(
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {topTenUsers.map((user, index) => (
           <div
             key={user.id}
-            className="bg-secondary dark:bg-accent-200 max-h-72 overflow-y-auto p-4 rounded-lg shadow-md col gap-3"
+            className="dark:bg-accent-200 max-h-72 overflow-y-auto p-4 rounded-lg shadow-xl dark:border-transparent border-2 col gap-3"
             data-testid={`user-${index}-stat`}
           >
             <div className="flex items-center">
@@ -74,6 +75,8 @@ export default function Board({ topTenUsers }: { topTenUsers: Array<User> }) {
           </div>
         ))}
       </div>
+      ):<h1 className="text-2xl">There are currently no top ten players</h1>}
+
     </div>
   );
 }

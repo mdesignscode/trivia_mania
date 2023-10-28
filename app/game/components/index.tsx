@@ -1,13 +1,25 @@
 /* Handle question logic */
 "use client";
-import { GlobalContext } from "@/app/store";
+import { GlobalContext } from "@/app/context/globalContext";
+import { GameContext } from "@/context/gameContext";
 import { IQuestion } from "@/models/interfaces";
-import { useUser } from "@clerk/nextjs";
+import {
+  LAST_ANSWER,
+  LAST_ANSWER_INDEX,
+  QUESTION_ANSWERED,
+  UNSAVED_DATA,
+} from "@/utils/localStorage_utils";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import "animate.css";
-import { ReactNode, useContext, useEffect, useRef, useState } from "react";
+import {
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import RenderQuestion from "./question";
-import { GameContext } from "./store";
 
 export interface IQuestionProps {
   questionObj: IQuestion;
@@ -27,7 +39,6 @@ export default function Question({
   // set question state
   const [timesUp, setTimesUp] = useState(false);
   const [CTA, setCTA] = useState("Next Question");
-  const [timerHasStarted, setTimerHasStarted] = useState(true);
   const [error, setError] = useState("");
   const [_userAnswer, _setUserAnswer] = useState("");
   const userAnswer = useRef(_userAnswer);
@@ -35,6 +46,8 @@ export default function Question({
     userAnswer.current = answer;
     _setUserAnswer(answer);
   };
+
+  const [timerHasStarted, setTimerHasStarted] = useState(true);
 
   // consume game context
   const {
@@ -47,13 +60,16 @@ export default function Question({
     questionIndex,
   } = useContext(GameContext);
 
-  const { storageIsAvailable, userStatus: { user, isOnline } } = useContext(GlobalContext);
+  const {
+    storageIsAvailable,
+    userStatus: { user, isOnline },
+  } = useContext(GlobalContext);
 
   function handleUserAnswer(value: string, i: number) {
     if (storageIsAvailable) {
-      localStorage.setItem("questionAnswered", "true");
-      localStorage.setItem("lastAnswer", value);
-      localStorage.setItem("lastAnswerIndex", i.toString());
+      localStorage.setItem(QUESTION_ANSWERED, "true");
+      localStorage.setItem(LAST_ANSWER, value);
+      localStorage.setItem(LAST_ANSWER_INDEX, i.toString());
     }
 
     setUserAnswer(value);
@@ -98,7 +114,7 @@ export default function Question({
     handleTimesUp();
   }
 
-  function handleTimesUp() {
+  const handleTimesUp = useCallback(() => {
     // display correct answer if user did not click any button
     if (!userAnswer.current) {
       // animate correct answer
@@ -114,7 +130,16 @@ export default function Question({
 
     setTimesUp(true);
     setTimerHasStarted(false);
-  }
+  }, [
+    answers,
+    category,
+    correctAnswer,
+    difficulty,
+    id,
+    question,
+    setTimerHasStarted,
+    updateProgress,
+  ]);
 
   async function handleNextQuestion() {
     if (CTA === "Submit Results") {
@@ -142,8 +167,7 @@ export default function Question({
       nextQuestionsSet();
     } else {
       if (questionIndex === questionsLength && storageIsAvailable) {
-        localStorage.setItem("unsavedData", JSON.stringify(playerStats));
-        localStorage.setItem("hasUnsavedData", "true");
+        localStorage.setItem(UNSAVED_DATA, JSON.stringify(playerStats));
       }
       incrementIndex();
     }
@@ -174,10 +198,10 @@ export default function Question({
     if (storageIsAvailable && questionIndex === index) {
       // get state from local storage
       const isQuestionAnswered =
-        localStorage.getItem("questionAnswered") || "false";
-      const prevAnswer = localStorage.getItem("lastAnswer");
+        localStorage.getItem(QUESTION_ANSWERED) || "false";
+      const prevAnswer = localStorage.getItem(LAST_ANSWER);
       const prevAnswerIndex = parseInt(
-        localStorage.getItem("lastAnswerIndex") || "0"
+        localStorage.getItem(LAST_ANSWER_INDEX) || "0"
       );
 
       if (isQuestionAnswered === "true") {
@@ -203,7 +227,15 @@ export default function Question({
         );
       }
     }
-  }, []);
+  }, [
+    answers,
+    correctAnswer,
+    handleTimesUp,
+    index,
+    questionIndex,
+    questionsLength,
+    storageIsAvailable,
+  ]);
 
   return (
     <RenderQuestion
@@ -216,9 +248,9 @@ export default function Question({
           question,
           difficulty,
         },
+        timerHasStarted,
         index,
         handleTimesUp,
-        timerHasStarted,
         handleUserAnswer,
         error,
         CTA,

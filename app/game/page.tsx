@@ -1,47 +1,39 @@
 /* Fetches a list of questions based on search params */
 "use client";
+import { GameProvider } from "@/context/gameContext";
+import { GlobalContext } from "@/context/globalContext";
+import { CATEGORIES, DIFFICULTY, NEW_PARAMS } from "@/utils/localStorage_utils";
 import { useSearchParams } from "next/navigation";
-import useFetchQuestionsList from "@/hooks/fetchQuestionsList";
+import { useContext, useEffect } from "react";
 import RenderQuestions from "./components/renderQuestions";
-import { GameProvider } from "./components/store";
-import Loading from "./components/loading";
+import Start from "./components/start";
 
 export default function GamePage() {
   const params = useSearchParams();
-
-  // get search filters from search params
-  const difficultyString = params.get("difficulty");
-  const difficulty = difficultyString || "";
-  const categoriesString = params.get("categories");
-  const categories = categoriesString ? categoriesString.split(",") : [];
-
   const {
-    questionsPoolReady,
-    questionsLength,
-    questions,
-    nextQuestionsSet,
-    questionIndex,
-    incrementIndex,
-    poolIndex,
-  } = useFetchQuestionsList(difficulty, categories);
+    setPlayFilters,
+    playFilters: { categories, difficulty },
+  } = useContext(GlobalContext);
 
-  return !questionsPoolReady ? (
-    <Loading />
-  ) : (
-    <GameProvider
-      {...{
-        questionsLength,
-        questions,
-        nextQuestionsSet,
-        questionIndex,
-        incrementIndex,
-        poolIndex,
-      }}
-    >
-      <RenderQuestions
-        difficulty={difficultyString || "All difficulties"}
-        categories={categoriesString || "All categories"}
-      />
+  useEffect(() => {
+    // get search filters from search params
+    const difficultyString = params.get(DIFFICULTY) || "";
+    const categoriesString = params.get(CATEGORIES) || "";
+    if (difficultyString !== difficulty && categoriesString !== categories) {
+      setPlayFilters(() => ({
+        difficulty: difficultyString,
+        categories: categoriesString,
+      }));
+      localStorage.setItem(NEW_PARAMS, "true");
+    }
+  }, [categories, difficulty, params, setPlayFilters]);
+
+  return (
+    <GameProvider>
+      <>
+        <RenderQuestions />
+        <Start />
+      </>
     </GameProvider>
   );
 }

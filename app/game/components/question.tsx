@@ -1,10 +1,10 @@
 /* Renders a question */
 "use client";
 import { Button, QuestionBox } from "@/components/styledComponents";
+import { GameContext } from "@/context/gameContext";
 import { IQuestion } from "@/models/interfaces";
 import { Transition } from "@headlessui/react";
 import { Fragment, MouseEventHandler, ReactNode, useContext } from "react";
-import { GameContext } from "./store";
 import Timer from "./timerCountdown";
 
 export interface IRenderQuestion {
@@ -12,7 +12,6 @@ export interface IRenderQuestion {
   index: number;
   handleUserAnswer: Function;
   handleTimesUp: Function;
-  timerHasStarted: boolean;
   error: string;
   CTA: string;
   timesUp: boolean;
@@ -20,13 +19,13 @@ export interface IRenderQuestion {
   handleViewProgress: MouseEventHandler<HTMLButtonElement>;
   userAnswer: string;
   answerFeedback: ReactNode[];
+  timerHasStarted: boolean;
 }
 
 export default function RenderQuestion({
   questionObj: { category, answers, correctAnswer, question, difficulty },
   index,
   handleTimesUp,
-  timerHasStarted,
   handleUserAnswer,
   error,
   CTA,
@@ -35,6 +34,7 @@ export default function RenderQuestion({
   handleViewProgress,
   userAnswer,
   answerFeedback,
+  timerHasStarted
 }: IRenderQuestion) {
   const { questionIndex } = useContext(GameContext);
   const colorMap: { [key: string]: string } = {
@@ -47,12 +47,12 @@ export default function RenderQuestion({
     <Transition
       as={Fragment}
       show={questionIndex === index}
-      enter="transform transition duration-[400ms]"
+      enter="transform transition duration-[400ms] delay-500"
       enterFrom="opacity-0 rotate-[-120deg] scale-50"
       enterTo="opacity-100 rotate-0 scale-100"
       leave="transform duration-200 transition ease-in-out"
       leaveFrom="opacity-100 rotate-0 scale-100 "
-      leaveTo="opacity-0 scale-95 "
+      leaveTo="opacity-0 scale-95"
     >
       <QuestionBox
         className="question col gap-7 rounded-lg p-6"
@@ -80,10 +80,10 @@ export default function RenderQuestion({
 
         <div className="question_options grid grid-cols-2 grid-rows-2 gap-4">
           {answers.map((entity, i) => {
-            const answer = decodeHTMLEntities(entity)
+            const answer = decodeHTMLEntities(entity);
             return (
               <Button
-                className="flex justify-center gap-2 items-center animate__animated"
+                className="flex w-full justify-center gap-2 items-center animate__animated"
                 onClick={() => handleUserAnswer(answer, i)}
                 key={answer}
                 id={answer}
@@ -91,7 +91,7 @@ export default function RenderQuestion({
                 style={{
                   cursor: !timesUp ? "pointer" : "not-allowed",
                 }}
-                $primary={!userAnswer && timesUp && answer === correctAnswer}
+                primary={!userAnswer && timesUp && answer === correctAnswer}
               >
                 <span>{answerFeedback[i]}</span>
                 <p>{decodeHTMLEntities(answer)}</p>
@@ -102,12 +102,20 @@ export default function RenderQuestion({
 
         {timesUp && (
           <>
-            <Button onClick={handleNextQuestion} $primary={true}>
+            <Button
+              onClick={handleNextQuestion}
+              className="w-full"
+              primary={true}
+            >
               {CTA}
             </Button>
 
             {CTA === "Continue Playing" && (
-              <Button onClick={handleViewProgress} $primary={true}>
+              <Button
+                onClick={handleViewProgress}
+                className="w-full"
+                primary={true}
+              >
                 View Progress
               </Button>
             )}
@@ -128,7 +136,7 @@ export default function RenderQuestion({
 }
 
 export function decodeHTMLEntities(text: string): string {
-  const element = document.createElement('div');
+  const element = document.createElement("div");
   element.innerHTML = text;
   return element.textContent || "";
 }

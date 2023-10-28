@@ -30,7 +30,7 @@ export default function Timer({ handleTimesUp, timerHasStarted }: ITimerProps) {
 
       return () => clearInterval(timerInterval);
     }
-  }, [timeLeft, timePassed, timerHasStarted]);
+  }, [handleTimesUp, timeLeft, timePassed, timerHasStarted]);
 
   // Calculate the percentage of timeLeft
   const percentage = ((TIME_LIMIT - timeLeft) / TIME_LIMIT) * 100;

@@ -1,67 +1,56 @@
 "use client";
-import { GlobalContext } from "@/app/store";
+import { GlobalContext } from "@/app/context/globalContext";
+import { CATEGORIES, DIFFICULTY, NEW_PARAMS } from "@/utils/localStorage_utils";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useContext } from "react";
-import { buttonVariants } from "../store";
 import { Button } from "../styledComponents";
-import { HomeContext } from "./store";
 
 export default function Play() {
-  const { difficulty, categories } = useContext(HomeContext);
-  const { storageIsAvailable, setPlayFilters } = useContext(GlobalContext);
+  const {
+    storageIsAvailable,
+    setPlayFilters,
+    playFilters: { difficulty, categories },
+    playUrl,
+  } = useContext(GlobalContext);
 
   function handlePlay() {
     // update filters in local storage new filters different
     if (storageIsAvailable) {
-      const localDifficulty = localStorage.getItem("difficulty");
-      const localCategories = localStorage.getItem("categories");
+      const localDifficulty = localStorage.getItem(DIFFICULTY);
+      const localCategories = localStorage.getItem(CATEGORIES);
 
-      if (
-        localDifficulty === difficulty &&
-        localCategories === categories.join(",")
-      ) {
+      if (localDifficulty === difficulty && localCategories === categories) {
         return;
       } else {
         // new filters are different
-        localStorage.setItem("difficulty", difficulty);
-        localStorage.setItem("categories", categories.join(","));
+        localStorage.setItem(DIFFICULTY, difficulty);
+        localStorage.setItem(CATEGORIES, categories);
 
         // notify game page to fetch new questions
-        localStorage.setItem("newParams", "true");
+        localStorage.setItem(NEW_PARAMS, "true");
 
         // update filters in state
-        setPlayFilters({
+        setPlayFilters(() => ({
           difficulty,
-          categories: categories.join(","),
-        });
+          categories,
+        }));
       }
     }
   }
 
   return (
     <motion.div
-      initial={{ y: "100%", opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: "100%", opacity: 0 }}
-      transition={{ duration: 1.5 }}
+      initial={{ opacity: 0, x: -200 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ x: -100, opacity: 0 }}
+      transition={{ delay: 1.5, duration: 1.5 }}
     >
-      <motion.span
-        variants={buttonVariants}
-        whileHover="hover"
-        whileTap="hover"
-      >
-        <Link
-          href={encodeURI(
-            `/game?difficulty=${difficulty}&categories=${categories.join(",")}`
-          )}
-          data-testid="play-link"
-        >
-          <Button $cta={true} onClick={handlePlay} data-testid="play-button">
-            Start Playing
-          </Button>
-        </Link>
-      </motion.span>
+      <Link href={playUrl} data-testid="play-link">
+        <Button cta={true} onClick={handlePlay} testid="play-button">
+          Start Playing
+        </Button>
+      </Link>
     </motion.div>
   );
 }

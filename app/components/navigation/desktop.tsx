@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { NavProps } from ".";
 
-function classNames(...classes: Array<string>) {
+export function classNames(...classes: Array<string>) {
   return classes.filter(Boolean).join(" ");
 }
 

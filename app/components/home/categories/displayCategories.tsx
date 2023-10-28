@@ -1,24 +1,24 @@
 /* Render list of categories */
-import { buttonVariants } from "@/components/store";
+import { GlobalContext } from "@/app/context/globalContext";
 import { Button } from "@/components/styledComponents";
+import { HomeContext } from "@/context/homeContext";
+import useWindowWidth from "@/hooks/windowWidth";
 import { Transition } from "@headlessui/react";
-import { motion } from "framer-motion";
 import { Fragment, useContext } from "react";
-import { HomeContext } from "../store";
 import Loading from "../loading";
 
 interface DisplayCategoriesProps {
   showMore: boolean;
-  categoryChoice: Array<boolean>;
   handleCategories: (index: number, value: string) => void;
 }
 
 export default function DisplayCategories({
-  categoryChoice,
   showMore,
   handleCategories,
 }: DisplayCategoriesProps) {
   const { categoryStats, fetchingCategories } = useContext(HomeContext);
+  const { categoryChoice } = useContext(GlobalContext);
+  const categoriesRadius = Object.keys(categoryStats).length / 2;
 
   const styles = "flex gap-2 flex-wrap justify-center";
 
@@ -26,29 +26,24 @@ export default function DisplayCategories({
     <Loading length={15} />
   ) : (
     <div className="col gap-2" data-testid="display-categories-container">
-      {/* display first 15 categories */}
+      {/* display first 10 categories */}
       <div className={styles} data-testid="first-categories-set">
         {Object.keys(categoryStats)
           .sort()
-          .slice(0, 15)
+          .slice(0, categoriesRadius)
           .map((stat, i) => {
             return (
-              <motion.span
+              <Button
+                onClick={() => {
+                  const value = stat === "all categories" ? "" : stat;
+                  handleCategories(i, value);
+                }}
+                primary={categoryChoice[i]}
                 key={stat}
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="hover"
+                testid={stat}
               >
-                <Button
-                  onClick={() => {
-                    const value = stat === "all categories" ? "" : stat;
-                    handleCategories(i, value);
-                  }}
-                  $primary={categoryChoice[i]}
-                >
-                  {stat} ({categoryStats[stat]})
-                </Button>
-              </motion.span>
+                {stat} ({categoryStats[stat]})
+              </Button>
             );
           })}
       </div>
@@ -67,26 +62,20 @@ export default function DisplayCategories({
         <div className={styles} data-testid="second-categories-set">
           {Object.keys(categoryStats)
             .sort()
-            .slice(15)
+            .slice(categoriesRadius)
             .map((stat, i) => {
-              const j = i + 15;
+              const j = i + categoriesRadius;
               return (
-                <motion.span
+                <Button
+                  onClick={() => {
+                    const value = stat === "all categories" ? "" : stat;
+                    handleCategories(j, value);
+                  }}
+                  primary={categoryChoice[j]}
                   key={stat}
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="hover"
                 >
-                  <Button
-                    onClick={() => {
-                      const value = stat === "all categories" ? "" : stat;
-                      handleCategories(j, value);
-                    }}
-                    $primary={categoryChoice[j]}
-                  >
-                    {stat} ({categoryStats[stat]})
-                  </Button>
-                </motion.span>
+                  {stat} ({categoryStats[stat]})
+                </Button>
               );
             })}
         </div>

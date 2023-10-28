@@ -10,11 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { NavProps } from ".";
-import { navStyles } from "./desktop";
-
-function classNames(...classes: Array<string>) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNames, navStyles } from "./desktop";
 
 export default function MobileNav({
   navigation,

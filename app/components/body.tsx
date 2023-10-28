@@ -74,7 +74,7 @@ export default function Body({ children }: { children: React.ReactNode }) {
     }
   }, [animateText, setPageReady]);
 
-  const animatedContainerStyles = "w-full gap-3 text-2xl md:text-7xl h-full flex justify-center items-center"
+  const animatedContainerStyles = "w-full gap-3 text-4xl px-2 md:text-7xl h-full flex justify-center items-center flex-wrap"
 
   return pageReady ? (
     <>
@@ -90,7 +90,7 @@ export default function Body({ children }: { children: React.ReactNode }) {
             initial={{ opacity: 0, x: 0 }}
             animate={textTransition}
             transition={{ duration: 1 }}
-            className="w-full gap-3 text-7xl h-full flex justify-center items-center"
+            className={animatedContainerStyles}
           >
             {animatedText[0]}
           </motion.div>
@@ -99,7 +99,7 @@ export default function Body({ children }: { children: React.ReactNode }) {
             initial={{ opacity: 0, x: 0 }}
             animate={textTransition}
             transition={{ duration: 1 }}
-            className="w-full gap-3 text-7xl h-full flex justify-center items-center"
+            className={animatedContainerStyles}
           >
             {animatedText[1]}
           </motion.div>
@@ -108,7 +108,7 @@ export default function Body({ children }: { children: React.ReactNode }) {
             initial={{ opacity: 0, x: 0 }}
             animate={textTransition}
             transition={{ duration: 1 }}
-            className="w-full gap-3 text-7xl h-full flex justify-center items-center"
+            className={animatedContainerStyles}
           >
             {animatedText[2]}
           </motion.div>

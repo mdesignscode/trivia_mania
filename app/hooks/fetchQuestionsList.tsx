@@ -1,7 +1,20 @@
 /* Performs questions fetching */
 "use client";
-import { GlobalContext } from "@/app/store";
+import { GlobalContext } from "@/app/context/globalContext";
+import { IPlayRequest } from "@/models/customRequests";
 import { IQuestion } from "@/models/interfaces";
+import Question from "@/models/question";
+import {
+  CATEGORIES,
+  CURRENT_INDEX,
+  DIFFICULTY,
+  NEW_PARAMS,
+  POOL_INDEX,
+  QUESTIONS_LIST,
+  QUESTIONS_POOL,
+  QUESTION_ANSWERED,
+  clearQuestionData,
+} from "@/utils/localStorage_utils";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
@@ -16,10 +29,7 @@ interface IFetchQuestions {
   poolIndex: number;
 }
 
-export default function useFetchQuestionsList(
-  difficulty: string,
-  categories: string[]
-): IFetchQuestions {
+export default function useFetchQuestionsList(): IFetchQuestions {
   const [_questionIndex, _setQuestionIndex] = useState(1);
   const questionIndex = useRef(_questionIndex);
   function setQuestionIndex(state: number) {
@@ -35,24 +45,28 @@ export default function useFetchQuestionsList(
   }
 
   // render 5 questions at a time
-  const [questionsPool, setQuestionsPool] = useState<IQuestion[]>([]);
+  const [_questionsPool, _setQuestionsPool] = useState<IQuestion[]>([]);
+  const questionsPool = useRef(_questionsPool);
+  function setQuestionsPool(state: IQuestion[]) {
+    questionsPool.current = state;
+    _setQuestionsPool(state);
+  }
   const [_poolIndex, _setPoolIndex] = useState(0);
   const poolIndex = useRef(_poolIndex);
-  function setPoolIndex(index: number) {
+  const setPoolIndex = useCallback((index: number) => {
     poolIndex.current = index;
     _setPoolIndex(index);
-  }
+  }, []);
   const [questionsLength, setQuestionsLength] = useState(0);
 
-  const {
-    storageIsAvailable,
-    userStatus: { user },
-    setPlayFilters,
-  } = useContext(GlobalContext);
-
-  /* Fetch questions from api if previous filters don't match new filters
-  Else use questions in local storage */
   const [shouldFetchQuestions, setShouldFetchQuestions] = useState(false);
+  const [fetchQuestions, setFetchQuestions] = useState(true);
+
+  const {
+    userStatus: { user },
+    playFilters: { difficulty, categories },
+    storageIsAvailable,
+  } = useContext(GlobalContext);
 
   // query function
   async function getQuestions() {
@@ -61,16 +75,18 @@ export default function useFetchQuestionsList(
 
     const { data } = await axios.post(url, {
       difficulty,
-      categories,
-      id: user?.id,
-    });
+      categories: categories.split(","),
+      userId: user?.id,
+    } as IPlayRequest);
 
-    return data;
+    const questions = shuffleArray(data);
+
+    return questions;
   }
 
   // fetch list of questions
   const { data, isFetched } = useQuery({
-    queryKey: ["play"],
+    queryKey: ["play", user],
     queryFn: getQuestions,
     initialData: [],
     enabled: shouldFetchQuestions,
@@ -78,7 +94,7 @@ export default function useFetchQuestionsList(
 
   // create return object
   const fetchingUtils: IFetchQuestions = {
-    questions: questionsPool,
+    questions: questionsPool.current,
     questionsLength,
     nextQuestionsSet,
     questionIndex: questionIndex.current,
@@ -87,80 +103,102 @@ export default function useFetchQuestionsList(
     poolIndex: poolIndex.current,
   };
 
-  // fetch questions from api and store in local storage if given new params
+  // create initial questions pool
+  const createQuestionPool = useCallback(() => {
+    if (localStorageReady) {
+      const localQuestionsPool = localStorage.getItem(QUESTIONS_POOL),
+        localQuestionsList: Question[] = JSON.parse(
+          localStorage.getItem(QUESTIONS_LIST) || "[]"
+        ),
+        localIndex = parseInt(localStorage.getItem(CURRENT_INDEX) || "1"),
+        localPoolIndex = parseInt(localStorage.getItem(POOL_INDEX) || "0");
+
+      if (localQuestionsPool) {
+        setQuestionsPool(JSON.parse(localQuestionsPool));
+        setPoolIndex(localPoolIndex);
+      } else {
+        const newIndex = calculateNewIndex(0, localQuestionsList.length),
+          newPool = localQuestionsList.slice(0, newIndex);
+
+        setQuestionsPool(newPool);
+        localStorage.setItem(QUESTIONS_POOL, JSON.stringify(newPool));
+      }
+
+      localStorage.setItem(CURRENT_INDEX, questionIndex.current.toString());
+      localStorage.setItem(POOL_INDEX, localPoolIndex.toString());
+
+      setQuestionsLength(localQuestionsList.length);
+      setQuestionIndex(localIndex);
+      setLocalStorageReady(false);
+      setQuestionsPoolReady(true);
+    }
+  }, [localStorageReady, setPoolIndex]);
+
+  // fetch questions from api and store in local storage
   const fetchNewQuestions = useCallback(() => {
-    // get previous params
-    const prevDiff = localStorage.getItem("difficulty") || "";
-    const prevCategories = localStorage.getItem("categories") || "";
-    const prevQuestions = localStorage.getItem("questionsList") || "[]";
-    const newParams = localStorage.getItem("newParams");
+    const newParams = localStorage.getItem(NEW_PARAMS);
 
-    // check if previous params match new params
-    const parsedQuestions = JSON.parse(prevQuestions) as string[];
+    if (fetchQuestions) {
+      if (newParams) {
+        setShouldFetchQuestions(true);
+        if (isFetched) {
+          clearQuestionData();
+          localStorage.setItem(QUESTIONS_LIST, JSON.stringify(data));
+          localStorage.setItem(CATEGORIES, categories);
+          localStorage.setItem(DIFFICULTY, difficulty);
+          localStorage.removeItem(NEW_PARAMS);
+          setLocalStorageReady(true);
+        }
+      } else {
+        setLocalStorageReady(true);
+      }
 
-    if (
-      prevCategories === categories.join(",") &&
-      prevDiff === difficulty &&
-      !!parsedQuestions.length &&
-      !newParams
-    ) {
-      // storage has questions
-      setLocalStorageReady(true);
-      return;
+      setFetchQuestions(false);
     }
+  }, [categories, data, difficulty, fetchQuestions, isFetched]);
 
-    /// fetch questions and store in local storage
-    setShouldFetchQuestions(true);
-    if (isFetched) {
-      localStorage.setItem("questionsList", JSON.stringify(data));
-
-      // update search filters
-      localStorage.setItem("difficulty", difficulty);
-      localStorage.setItem("categories", categories.join(","));
-      setPlayFilters({
-        difficulty,
-        categories: categories.join(","),
-      });
-
-      // reset pool index
-      setPoolIndex(0);
-      localStorage.setItem("poolIndex", "0");
-      localStorage.setItem("currentIndex", "1");
-      // delete previous pool
-      localStorage.removeItem("questionsPool");
-      setQuestionsLength(data.length);
-
-      // has not answered any quesions yet
-      localStorage.setItem("questionAnswered", "false");
-      localStorage.removeItem("answeredQuestions");
-      localStorage.removeItem("progress");
-      localStorage.removeItem("lastAnswer");
-      localStorage.removeItem("lastAnswerIndex");
-
-      localStorage.removeItem("newParams");
-
-      // storage is now ready
-      setLocalStorageReady(true);
+  // set questions pool
+  useEffect(() => {
+    if (storageIsAvailable) {
+      fetchNewQuestions();
+      createQuestionPool();
+    } else {
+      if (fetchQuestions) {
+        setShouldFetchQuestions(true);
+        if (isFetched) {
+          setQuestionsLength(data.length);
+          setQuestionsPool(data.slice(0, 5));
+          setFetchQuestions(false);
+        }
+      }
     }
-  }, [isFetched]);
+  }, [
+    createQuestionPool,
+    data,
+    data.length,
+    fetchNewQuestions,
+    fetchQuestions,
+    isFetched,
+    storageIsAvailable,
+  ]);
 
   // fetch next set of questions from list
   function nextQuestionsSet() {
     setQuestionsPoolReady(false);
-    const newIndex =
-      poolIndex.current + 5 > questionsLength
-        ? questionsLength - poolIndex.current + poolIndex.current // last set of questions
-        : poolIndex.current + 5;
+
+    const newIndex = calculateNewIndex(poolIndex.current, questionsLength);
+    setPoolIndex(newIndex);
+
+    const endIndex =
+      newIndex + 5 > questionsLength ? questionsLength : newIndex + 5;
+
     if (storageIsAvailable) {
       // get questions list local storage
       const localQuestionsList = JSON.parse(
-        localStorage.getItem("questionsList") as string
+        localStorage.getItem(QUESTIONS_LIST) || "[]"
       ) as IQuestion[];
 
       incrementIndex();
-
-      const endIndex =
-        newIndex + 5 > questionsLength ? questionsLength : newIndex + 5;
 
       const newPool = localQuestionsList.slice(newIndex, endIndex);
 
@@ -168,15 +206,11 @@ export default function useFetchQuestionsList(
       setQuestionsPool(newPool);
 
       // increment pool index in memory and locally
-      setPoolIndex(newIndex);
-      localStorage.setItem("poolIndex", newIndex.toString());
-      localStorage.setItem("questionsPool", JSON.stringify(newPool));
-      localStorage.setItem("currentIndex", questionIndex.current.toString());
+      localStorage.setItem(POOL_INDEX, newIndex.toString());
+      localStorage.setItem(QUESTIONS_POOL, JSON.stringify(newPool));
     } else {
       incrementIndex();
-      setQuestionsPool(
-        (data as IQuestion[]).slice(poolIndex.current, newIndex)
-      );
+      setQuestionsPool((data as IQuestion[]).slice(newIndex, endIndex));
     }
     setQuestionsPoolReady(true);
   }
@@ -185,78 +219,25 @@ export default function useFetchQuestionsList(
     setQuestionIndex(questionIndex.current + 1);
 
     if (storageIsAvailable) {
-      localStorage.setItem("questionAnswered", "false");
-      localStorage.setItem("currentIndex", questionIndex.current.toString());
+      localStorage.setItem(QUESTION_ANSWERED, "false");
+      localStorage.setItem(CURRENT_INDEX, questionIndex.current.toString());
     }
   }
 
-  // set questions pool
-  useEffect(() => {
-    if (storageIsAvailable) {
-      // use local storage as pool
-
-      // first check if local storage has questions
-      fetchNewQuestions();
-
-      // then create pool
-      if (localStorageReady) {
-        /* create initial questions pool */
-
-        // get questions list and previous pool from local storage
-        const localQuestionsList = JSON.parse(
-          localStorage.getItem("questionsList") as string
-        ) as IQuestion[];
-        const localQuestionsPool = localStorage.getItem("questionsPool");
-
-        // get rendering starting indices
-        const localPoolIndex = parseInt(
-          localStorage.getItem("poolIndex") || "0"
-        );
-        const localIndex = parseInt(
-          localStorage.getItem("currentIndex") || "1"
-        );
-
-        // use pool in local storage
-        if (localQuestionsPool) {
-          setQuestionsPool(JSON.parse(localQuestionsPool));
-          setPoolIndex(localPoolIndex);
-          localStorage.setItem("poolIndex", localPoolIndex.toString());
-        } else {
-          // set initial questions pool
-          const index =
-            localQuestionsList.length < 5
-              ? localQuestionsList.length // last set of questions
-              : 5;
-
-          const initialPool = localQuestionsList.slice(0, index);
-          setQuestionsPool(initialPool);
-
-          // increment pool index in memory and locally
-          localStorage.setItem("questionsPool", JSON.stringify(initialPool));
-          localStorage.setItem("poolIndex", "0");
-          localStorage.setItem("currentIndex", "1");
-        }
-        setQuestionIndex(localIndex);
-
-        setQuestionsLength(localQuestionsList.length);
-
-        setQuestionsPoolReady(true);
-      }
-    } else {
-      // use memory as pool
-      setShouldFetchQuestions(true);
-      if (isFetched) {
-        const newIndex =
-          questionsLength < 5
-            ? questionsLength - poolIndex.current + poolIndex.current // last set of questions
-            : poolIndex.current + 5;
-        setQuestionsPool((data as IQuestion[]).slice(0, newIndex));
-        setPoolIndex(newIndex);
-        setQuestionsPoolReady(true);
-        setQuestionsLength(data.length);
-      }
-    }
-  }, [storageIsAvailable, isFetched, localStorageReady]);
-
   return fetchingUtils;
+}
+
+// shuffle questions
+function shuffleArray(array: Array<IQuestion>): Array<IQuestion> {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  }
+  return array;
+}
+
+function calculateNewIndex(poolIndex: number, questionsLength: number) {
+  return poolIndex + 5 > questionsLength
+    ? questionsLength - poolIndex + poolIndex // last set of questions
+    : poolIndex + 5;
 }

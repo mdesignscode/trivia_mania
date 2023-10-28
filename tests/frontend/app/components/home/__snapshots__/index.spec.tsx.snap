@@ -97,10 +97,10 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
           data-testid="home-container"
         >
           <div
-            class="flex justify-between items-center h-full"
+            class="justify-between items-center h-full flex"
           >
             <div
-              class="col items-center justify-center bg-accent h-full rounded-full"
+              class="col items-center justify-center bg-accent rounded-r-3xl h-full w-1/4"
             >
               <div>
                 <div
@@ -113,7 +113,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                     Choose difficulty
                   </h1>
                   <div
-                    class="flex gap-2 justify-center flex-col"
+                    class="flex gap-2 justify-center col"
                   >
                     <span
                       data-testid="easy"
@@ -184,7 +184,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
               </div>
             </div>
             <div
-              class="text-center col gap-3 flex-1 justify-center h-11/12 overflow-y-auto"
+              class="text-center col gap-3 justify-center mx-4 overflow-y-auto h-11/12 w-3/4"
               data-testid="render-categories-container"
             >
               <h1

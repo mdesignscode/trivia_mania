@@ -21,6 +21,7 @@ const customJestConfig = {
     "^@/app/(.*)$": "<rootDir>/app/$1",
     "^@/utils/(.*)$": "<rootDir>/utils/$1",
     "^@/context/(.*)$": "<rootDir>/app/context/$1",
+    "^setupTests_frontend(.*)$": "<rootDir>/setupTests_frontend$1",
   },
   testEnvironment: "jsdom",
   preset: 'ts-jest',

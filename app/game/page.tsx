@@ -16,6 +16,9 @@ export default function GamePage() {
   } = useContext(GlobalContext);
 
   useEffect(() => {
+    const localFlag = localStorage.getItem(NEW_PARAMS);
+    if (localFlag) return;
+
     // get search filters from search params
     const difficultyString = params.get(DIFFICULTY) || "";
     const categoriesString = params.get(CATEGORIES) || "";

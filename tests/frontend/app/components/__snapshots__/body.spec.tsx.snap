@@ -248,7 +248,7 @@ exports[`Body component Renders an introduction animation 1`] = `
         data-testid="intro-animation-container"
       >
         <div
-          class="w-full gap-3 text-7xl h-full flex justify-center items-center"
+          class="w-full gap-3 text-4xl px-2 md:text-7xl h-full flex justify-center items-center flex-wrap"
         >
           <span
             class="animated-letter animate__animated animate__bounceInDown"
@@ -336,7 +336,7 @@ exports[`Body component Renders an introduction animation 1`] = `
           </span>
         </div>
         <div
-          class="w-full gap-3 text-7xl h-full flex justify-center items-center"
+          class="w-full gap-3 text-4xl px-2 md:text-7xl h-full flex justify-center items-center flex-wrap"
         >
           <span
             class="animated-letter animate__animated animate__bounceInDown"
@@ -354,7 +354,7 @@ exports[`Body component Renders an introduction animation 1`] = `
           </span>
         </div>
         <div
-          class="w-full gap-3 text-7xl h-full flex justify-center items-center"
+          class="w-full gap-3 text-4xl px-2 md:text-7xl h-full flex justify-center items-center flex-wrap"
         >
           <span
             class="animated-letter animate__animated animate__bounceInDown"

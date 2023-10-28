@@ -148,12 +148,13 @@ export default function useFetchQuestionsList(): IFetchQuestions {
           localStorage.setItem(DIFFICULTY, difficulty);
           localStorage.removeItem(NEW_PARAMS);
           setLocalStorageReady(true);
+          setFetchQuestions(false);
         }
       } else {
         setLocalStorageReady(true);
+        setFetchQuestions(false);
       }
 
-      setFetchQuestions(false);
     }
   }, [categories, data, difficulty, fetchQuestions, isFetched]);
 

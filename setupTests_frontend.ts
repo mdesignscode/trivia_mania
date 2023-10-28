@@ -1,5 +1,9 @@
 import '@testing-library/jest-dom';
 
+// mock windowWidth hook to return false, desktop screen size
+export const isMobileRef = { current: false }
+jest.mock("@/hooks/windowWidth", () => () => isMobileRef.current)
+
 // clear localStorage
 beforeEach(() => {
   localStorage.clear();

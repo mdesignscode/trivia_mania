@@ -137,7 +137,9 @@ exports[`DisplayCategories component snapshot matches 1`] = `
           class="flex gap-2 flex-wrap justify-center"
           data-testid="second-categories-set"
         >
-          <span>
+          <span
+            data-testid="Category 19"
+          >
             <button
               class="sc-bcPKhP fjXGcT"
             >
@@ -147,7 +149,9 @@ exports[`DisplayCategories component snapshot matches 1`] = `
               )
             </button>
           </span>
-          <span>
+          <span
+            data-testid="Category 2"
+          >
             <button
               class="sc-bcPKhP fjXGcT"
             >
@@ -157,7 +161,9 @@ exports[`DisplayCategories component snapshot matches 1`] = `
               )
             </button>
           </span>
-          <span>
+          <span
+            data-testid="Category 20"
+          >
             <button
               class="sc-bcPKhP fjXGcT"
             >
@@ -167,7 +173,9 @@ exports[`DisplayCategories component snapshot matches 1`] = `
               )
             </button>
           </span>
-          <span>
+          <span
+            data-testid="Category 3"
+          >
             <button
               class="sc-bcPKhP fjXGcT"
             >
@@ -177,7 +185,9 @@ exports[`DisplayCategories component snapshot matches 1`] = `
               )
             </button>
           </span>
-          <span>
+          <span
+            data-testid="Category 4"
+          >
             <button
               class="sc-bcPKhP fjXGcT"
             >
@@ -187,7 +197,9 @@ exports[`DisplayCategories component snapshot matches 1`] = `
               )
             </button>
           </span>
-          <span>
+          <span
+            data-testid="Category 5"
+          >
             <button
               class="sc-bcPKhP fjXGcT"
             >
@@ -197,7 +209,9 @@ exports[`DisplayCategories component snapshot matches 1`] = `
               )
             </button>
           </span>
-          <span>
+          <span
+            data-testid="Category 6"
+          >
             <button
               class="sc-bcPKhP fjXGcT"
             >
@@ -207,7 +221,9 @@ exports[`DisplayCategories component snapshot matches 1`] = `
               )
             </button>
           </span>
-          <span>
+          <span
+            data-testid="Category 7"
+          >
             <button
               class="sc-bcPKhP fjXGcT"
             >
@@ -217,7 +233,9 @@ exports[`DisplayCategories component snapshot matches 1`] = `
               )
             </button>
           </span>
-          <span>
+          <span
+            data-testid="Category 8"
+          >
             <button
               class="sc-bcPKhP fjXGcT"
             >
@@ -227,7 +245,9 @@ exports[`DisplayCategories component snapshot matches 1`] = `
               )
             </button>
           </span>
-          <span>
+          <span
+            data-testid="Category 9"
+          >
             <button
               class="sc-bcPKhP fjXGcT"
             >

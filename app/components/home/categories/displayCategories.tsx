@@ -2,7 +2,6 @@
 import { GlobalContext } from "@/app/context/globalContext";
 import { Button } from "@/components/styledComponents";
 import { HomeContext } from "@/context/homeContext";
-import useWindowWidth from "@/hooks/windowWidth";
 import { Transition } from "@headlessui/react";
 import { Fragment, useContext } from "react";
 import Loading from "../loading";
@@ -73,6 +72,7 @@ export default function DisplayCategories({
                   }}
                   primary={categoryChoice[j]}
                   key={stat}
+                  testid={stat}
                 >
                   {stat} ({categoryStats[stat]})
                 </Button>

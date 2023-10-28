@@ -12,6 +12,8 @@ import {
 } from "@/utils/test_home_context";
 import { screen, userEvent } from "@/utils/test_utils";
 
+import _ from "lodash";
+
 // mock axios post to return different stats
 jest.mock("axios", () => ({
   post: (url: string, body: any) => {
@@ -129,6 +131,10 @@ describe("HomePage component", () => {
 
       expect(button).toBeInTheDocument();
     }
+
+    const showMoreButton = await screen.findByTestId("show-more-button");
+    expect(showMoreButton).toBeInTheDocument();
+    await user.click(showMoreButton);
 
     // a list of category buttons should be displayed
     for (const key of Object.keys(mockCategoryStats)) {

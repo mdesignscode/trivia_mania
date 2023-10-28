@@ -1,9 +1,9 @@
-import { mockUser } from "@/utils/test_global_context";
 import {
   mockCategoryStats,
   mockDifficultyStats,
   mockQuestions,
-} from "mockData";
+} from "@/utils/mockData";
+import { mockUser } from "@/utils/test_global_context";
 
 // mock QueryClient
 export class QueryClient {

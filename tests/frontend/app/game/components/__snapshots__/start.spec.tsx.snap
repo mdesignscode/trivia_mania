@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Start component snapshot matches 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        class="h-full flex w-full overflow-hidden"
+        data-testid="start-container"
+      >
+        <div
+          class="text-center m-auto rounded-full bg-light text-secondary p-10"
+          style="opacity: 0; transform: scale(0) translateZ(0);"
+        >
+          <h1>
+            Ready to Start Playing
+          </h1>
+          <h2>
+            5 Questions Per Round
+          </h2>
+          <h2>
+            30 Seconds Per Question
+          </h2>
+          <span>
+            <button
+              class="sc-bcPKhP GqKpg"
+            >
+              Start
+            </button>
+          </span>
+        </div>
+        <div
+          class="w-full h-full absolute -z-10 bg-accent"
+          style="opacity: 0; top: -100%;"
+        />
+      </div>
+    </div>
+  </div>
+</body>
+`;

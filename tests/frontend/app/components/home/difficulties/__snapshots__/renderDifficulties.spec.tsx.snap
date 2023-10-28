@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RenderDifficulties component snapshot matches 1`] = `
+<body>
+  <div>
+    <div>
+      <div>
+        <div
+          class="text-center col gap-3"
+          data-testid="render-difficulties-container"
+        >
+          <h1
+            class="text-xl"
+          >
+            Choose difficulty
+          </h1>
+          <div
+            class="flex gap-2 justify-center flex-wrap"
+          >
+            <span
+              data-testid="easy"
+              tabindex="0"
+            >
+              <button
+                class="sc-bcPKhP fjXGcT"
+              >
+                easy
+                 (
+                10
+                )
+              </button>
+            </span>
+            <span
+              data-testid="hard"
+              tabindex="0"
+            >
+              <button
+                class="sc-bcPKhP fjXGcT"
+              >
+                hard
+                 (
+                16
+                )
+              </button>
+            </span>
+            <span
+              data-testid="medium"
+              tabindex="0"
+            >
+              <button
+                class="sc-bcPKhP fjXGcT"
+              >
+                medium
+                 (
+                8
+                )
+              </button>
+            </span>
+            <span
+              data-testid="all difficulties"
+              tabindex="0"
+            >
+              <button
+                class="sc-bcPKhP fjXGcT"
+              >
+                all difficulties
+                 (
+                34
+                )
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

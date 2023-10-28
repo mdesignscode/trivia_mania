@@ -2,7 +2,7 @@ import {
   HomeContext,
   IHomeContext,
   defaultHomeContext,
-} from "@/components/home/store";
+} from "@/context/homeContext";
 import { ReactElement } from "react";
 import { renderGlobalContext } from "./test_global_context";
 
@@ -21,24 +21,28 @@ export const mockHomeContext = JSON.parse(
 ) as IHomeContext;
 
 // spy functions
-export const mockSetCategories = jest.fn();
 export const mockGetQuestionStats = jest.fn();
-export const mockSetDifficulty = jest.fn();
 export const mockSetFetchingCategories = jest.fn();
+export const mockSetCurrentUI = jest.fn()
 
 // setup mock environment
 mockHomeContext.categoryStats = mockCategoriesStats;
 mockHomeContext.fetchingCategories = false;
-mockHomeContext.setCategories = mockSetCategories;
-mockHomeContext.difficulty = "";
-mockHomeContext.setDifficulty = mockSetDifficulty;
 mockHomeContext.getQuestionStats = mockGetQuestionStats;
 mockHomeContext.setFetchingCategories = mockSetFetchingCategories;
+mockHomeContext.currentUI = {
+  welcome: true,
+  difficulties: false,
+  categories: false,
+  play: false,
+};
+mockHomeContext.setCurrentUI = mockSetCurrentUI
 
 // wrap home context inside global context
 export const renderHomeContext = (
   ui: ReactElement,
-  customData: Record<string, any> = {}
+  customData: Record<string, any> = {},
+  parentData: Record<string, any> = {}
 ) => {
   const value = {
     ...mockHomeContext,
@@ -46,6 +50,7 @@ export const renderHomeContext = (
   };
 
   return renderGlobalContext(
-    <HomeContext.Provider value={value}>{ui}</HomeContext.Provider>
+    <HomeContext.Provider value={value}>{ui}</HomeContext.Provider>,
+    parentData
   );
 };

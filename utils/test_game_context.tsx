@@ -4,7 +4,7 @@ import {
   GameContext,
   IGameContext,
   initialGameContext,
-} from "@/app/game/components/store";
+} from "@/app/context/gameContext";
 
 // setup game context
 
@@ -24,6 +24,7 @@ mockGameContext.submitProgress = mockSubmitProgress
 mockGameContext.incrementIndex = mockIncrementIndex
 mockGameContext.nextQuestionsSet = mockNextQuestionsSet
 mockGameContext.updateProgress = mockUpdateProgress
+mockGameContext.startPlaying = true
 
 // wrap game context inside global context
 export const renderGameContext = (

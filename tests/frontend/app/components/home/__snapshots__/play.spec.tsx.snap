@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Play component snapshot matches 1`] = `
+<body>
+  <div>
+    <div>
+      <div>
+        <a
+          data-testid="play-link"
+          href="/game?difficulty=hard&categories=Mock%20category%201,Mock%20category%202"
+        >
+          <span
+            data-testid="play-button"
+          >
+            <button
+              class="sc-bcPKhP dmjhkA"
+            >
+              Start Playing
+            </button>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+`;

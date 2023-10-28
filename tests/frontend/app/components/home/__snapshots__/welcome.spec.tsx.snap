@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Welcome component component snapshot matches 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        class="text-center col items-center mx-auto"
+        data-testid="welcome-container"
+      >
+        <h1
+          class="text-3xl md:text-5xl mb-3"
+        >
+          Welcome to Trivia Mania
+        </h1>
+        <p
+          class="text-xl mb-5"
+        >
+          Test your knowledge with exciting trivia questions.
+        </p>
+        <span
+          data-testid="welcome-continue-button"
+        >
+          <button
+            class="sc-bcPKhP coQATf text-2xl"
+          >
+            Continue
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+`;

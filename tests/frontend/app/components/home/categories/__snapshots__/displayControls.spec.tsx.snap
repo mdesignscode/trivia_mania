@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DisplayControls component snapshot matches 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        class="flex justify-center gap-4"
+        data-testid="display-controls-container"
+      >
+        <span
+          data-testid="show-more-button"
+        >
+          <button
+            class="sc-bcPKhP coQATf"
+          >
+            More categories
+          </button>
+        </span>
+        <span
+          data-testid="reset-categories-button"
+        >
+          <button
+            class="sc-bcPKhP fjXGcT"
+          >
+            Reset categories
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+`;

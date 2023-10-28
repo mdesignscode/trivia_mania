@@ -1,10 +1,10 @@
+import QueryProvider from "@/context/queryProvider";
 import "@/styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Navigation from "./components/navigation";
-import Providers from "./providers";
-import { GlobalProvider } from "./store";
+import Body from "./components/body";
+import { GlobalProvider } from "./context/globalContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,19 +20,17 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <Providers>
+      <QueryProvider>
         <GlobalProvider>
           <html lang="en" className="h-full">
             <body
-              className={`${inter.className} h-full bg-light dark:bg-secondary text-dark dark:text-light col`}
+              className={`${inter.className} h-full bg-light dark:bg-secondary text-dark dark:text-light col overflow-hidden`}
             >
-              <Navigation />
-
-              {children}
+              <Body>{children}</Body>
             </body>
           </html>
         </GlobalProvider>
-      </Providers>
+      </QueryProvider>
     </ClerkProvider>
   );
 }

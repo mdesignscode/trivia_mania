@@ -8,7 +8,7 @@ import { useContext, useEffect, useState } from "react";
 import Navigation from "./navigation";
 
 export default function Body({ children }: { children: React.ReactNode }) {
-  const [animatedText, setAnimatedText] = useState<JSX.Element[]>([]);
+  const [animatedText, setAnimatedText] = useState<Array<JSX.Element[]>>([]);
   const [animateText, setAnimateText] = useState(false);
   const [textTransition, setTextTransition] = useState<Record<string, any>>({
     opacity: 1,
@@ -22,15 +22,18 @@ export default function Body({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // create a list of letters to animate
-    const letters = "Trivia Mania".split("").map((letter, i) => (
-      <span
-        key={`${letter}_${i}`}
-        className="animated-letter animate__animated"
-      >
-        {letter}
-      </span>
-    ));
-    setAnimatedText(letters);
+    "Trivia Mania\nby\nMarlon Baatjes".split("\n").forEach((word) => {
+      const animatedLetters = word.split("").map((letter, i) => (
+        <span
+          key={`${letter}_${i}`}
+          className="animated-letter animate__animated"
+          data-testid={`${letter}_${i}`}
+        >
+          {letter}
+        </span>
+      ));
+      setAnimatedText((state) => [...state, animatedLetters]);
+    });
 
     setTimeout(() => {
       setAnimateText(true);
@@ -71,6 +74,8 @@ export default function Body({ children }: { children: React.ReactNode }) {
     }
   }, [animateText, setPageReady]);
 
+  const animatedContainerStyles = "w-full gap-3 text-2xl md:text-7xl h-full flex justify-center items-center"
+
   return pageReady ? (
     <>
       <Navigation />
@@ -78,17 +83,38 @@ export default function Body({ children }: { children: React.ReactNode }) {
       <div className="flex-1 overflow-y-auto">{children}</div>
     </>
   ) : (
-    <>
+    <div className="col gap-4 my-auto" data-testid="intro-animation-container">
       {animateText && (
-        <motion.div
-          initial={{ opacity: 0, x: 0 }}
-          animate={textTransition}
-          transition={{ duration: 1 }}
-          className="w-full gap-3 text-7xl h-full flex justify-center items-center"
-        >
-          {animatedText}
-        </motion.div>
+        <>
+          <motion.div
+            initial={{ opacity: 0, x: 0 }}
+            animate={textTransition}
+            transition={{ duration: 1 }}
+            className="w-full gap-3 text-7xl h-full flex justify-center items-center"
+          >
+            {animatedText[0]}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 0 }}
+            animate={textTransition}
+            transition={{ duration: 1 }}
+            className="w-full gap-3 text-7xl h-full flex justify-center items-center"
+          >
+            {animatedText[1]}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 0 }}
+            animate={textTransition}
+            transition={{ duration: 1 }}
+            className="w-full gap-3 text-7xl h-full flex justify-center items-center"
+          >
+            {animatedText[2]}
+          </motion.div>
+        </>
       )}
+
       <motion.div
         id="page-ready-animation"
         initial={{ opacity: 0, bottom: 0, right: 0, scale: 10 }}
@@ -96,6 +122,6 @@ export default function Body({ children }: { children: React.ReactNode }) {
         transition={{ duration: 2.5 }}
         className="bg-accent absolute -z-10 rounded-full w-64 h-64"
       />
-    </>
+    </div>
   );
 }

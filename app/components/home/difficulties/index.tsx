@@ -1,55 +1,52 @@
 "use client";
-import useInitialStats from "@/hooks/inititialStats";
-import { useContext, useEffect, useState } from "react";
-import { HomeContext } from "../store";
+import { GlobalContext } from "@/app/context/globalContext";
+import { HomeContext } from "@/context/homeContext";
+import {
+  useContext
+} from "react";
 import RenderDifficulties from "./renderDifficulties";
 
-export type TDifficultyChoice = { [key: string]: boolean };
-
-function Difficulties() {
+export default function Difficulties() {
   // get context
-  const { difficulty, setDifficulty, getQuestionStats } =
-    useContext(HomeContext);
-  const { previousDifficulty } = useInitialStats();
-
-  // set local state
-  const [difficultyChoice, setDifficultyChoice] = useState<TDifficultyChoice>({
-    easy: false,
-    medium: false,
-    hard: false,
-    "all difficulties": false,
-  });
+  const {
+    getQuestionStats,
+    setCurrentUI,
+    currentUI: { difficulties },
+  } = useContext(HomeContext);
+  const {
+    playFilters: { difficulty },
+    setPlayFilters,
+    setDifficultyChoice,
+  } = useContext(GlobalContext);
 
   function handleDifficulty(value: string) {
+    // fetch questions based on clicked difficulty
+    const seek = difficulty ? (difficulty === value ? "" : value) : value;
+
     setDifficultyChoice((state) => {
-      const newState: TDifficultyChoice = {};
-      Object.keys(state).forEach((difficulty) => {
-        if (difficulty === value) {
-          newState[difficulty] = !state[difficulty];
-        } else {
-          newState[difficulty] = false;
-        }
-      });
+      const newState: Record<string, boolean> = {};
+      for (const diffKey of Object.keys(state)) {
+        newState[diffKey] = diffKey === value ? !state[diffKey] : false;
+      }
       return newState;
     });
 
-    const seek = difficulty ? (difficulty === value ? "" : value) : value;
-    setDifficulty(seek);
+    // update difficulty
+    setPlayFilters((state) => ({
+      ...state,
+      difficulty: seek,
+    }));
+
+    // display categories UI
+    setCurrentUI((state) => ({
+      ...state,
+      categories: true,
+    }));
 
     getQuestionStats(seek);
   }
 
-  useEffect(() => {
-    if (previousDifficulty) {
-      setDifficultyChoice((state) => ({
-        ...state,
-        [previousDifficulty]: true,
-      }));
-      setDifficulty(previousDifficulty)
-    }
-  }, [previousDifficulty]);
-
-  return <RenderDifficulties {...{ difficultyChoice, handleDifficulty }} />;
+  return (
+    difficulties && <RenderDifficulties handleDifficulty={handleDifficulty} />
+  );
 }
-
-export default Difficulties;

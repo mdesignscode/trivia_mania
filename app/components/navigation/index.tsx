@@ -1,5 +1,5 @@
 "use client";
-import { GlobalContext } from "@/app/store";
+import { GlobalContext } from "@/context/globalContext";
 import User from "@/models/user";
 import {
   HomeIcon,
@@ -28,16 +28,13 @@ export interface NavProps {
 
 export default function Navigation() {
   const path = usePathname();
-  const {
-    userStatus,
-    playFilters: { difficulty, categories },
-  } = useContext(GlobalContext);
+  const { userStatus, playUrl } = useContext(GlobalContext);
 
   const navigation = [
     { name: "Home", href: "/", icon: <HomeIcon height={25} width={25} /> },
     {
       name: "Play",
-      href: `/game?difficulty=${difficulty}&categories=${categories}`,
+      href: playUrl,
       icon: <PuzzlePieceIcon height={25} width={25} />,
     },
     {

@@ -5,7 +5,7 @@ exports[`HomePage component Renders <Difficulties /> 1`] = `
   <div>
     <div>
       <div
-        class="h-full w-full overflow-hidden"
+        class="h-full w-full relative overflow-hidden"
       >
         <div
           class="col w-full h-full"
@@ -90,7 +90,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
   <div>
     <div>
       <div
-        class="h-full w-full overflow-hidden"
+        class="h-full w-full relative overflow-hidden"
       >
         <div
           class="col w-full h-full"
@@ -366,7 +366,7 @@ exports[`HomePage component Renders <Welcome /> 1`] = `
   <div>
     <div>
       <div
-        class="h-full w-full overflow-hidden"
+        class="h-full w-full relative overflow-hidden"
       >
         <div
           class="col w-full h-full"

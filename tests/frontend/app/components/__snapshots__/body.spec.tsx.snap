@@ -229,11 +229,7 @@ exports[`Body component Renders <Navigation /> and current page content 1`] = `
           </div>
         </div>
       </nav>
-      <div
-        class="flex-1 overflow-y-auto"
-      >
-        Mock child
-      </div>
+      Mock child
     </div>
   </div>
 </body>

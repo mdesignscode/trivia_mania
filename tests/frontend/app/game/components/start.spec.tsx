@@ -4,7 +4,7 @@ import { screen } from "@/utils/test_utils";
 
 describe("Start component", () => {
   it("Renders a start playing animation", async () => {
-    renderGameContext(<Start />);
+    renderGameContext(<Start />, { startPlaying: false });
 
     const container = await screen.findByTestId("start-container");
     expect(container).toBeInTheDocument();

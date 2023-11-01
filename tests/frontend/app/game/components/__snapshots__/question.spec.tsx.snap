@@ -49,58 +49,75 @@ exports[`RenderQuestion component snapshot matches 1`] = `
           class="question_options grid grid-cols-2 grid-rows-2 gap-4"
         >
           <span
-            tabindex="0"
+            data-testid="Mocha & Chai"
           >
             <button
               class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
               id="Mocha & Chai"
             >
-              <span />
+              <span
+                data-testid="feedback-incorrect-0"
+              />
               <p>
                 Mocha & Chai
               </p>
             </button>
           </span>
           <span
-            tabindex="0"
+            data-testid="React | Vue | Angular"
           >
             <button
               class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
               id="React | Vue | Angular"
             >
-              <span />
+              <span
+                data-testid="feedback-incorrect-1"
+              />
               <p>
                 React | Vue | Angular
               </p>
             </button>
           </span>
           <span
-            tabindex="0"
+            data-testid="Mock Aswer 3"
           >
             <button
               class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
               id="Mock Aswer 3"
             >
-              <span />
+              <span
+                data-testid="feedback-incorrect-2"
+              />
               <p>
                 Mock Aswer 3
               </p>
             </button>
           </span>
           <span
-            tabindex="0"
+            data-testid="Mock Correct Answer"
           >
             <button
               class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
               id="Mock Correct Answer"
             >
-              <span />
+              <span
+                data-testid="feedback-correct-3"
+              />
               <p>
                 Mock Correct Answer
               </p>
             </button>
           </span>
         </div>
+        <span
+          data-testid="continue-later-button"
+        >
+          <button
+            class="sc-bcPKhP fjXGcT w-full"
+          >
+            Continue Later
+          </button>
+        </span>
         <audio
           id="success"
         >

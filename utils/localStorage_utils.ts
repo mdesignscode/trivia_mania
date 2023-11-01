@@ -22,6 +22,7 @@ export function clearQuestionData() {
   localStorage.removeItem(ANSWERED_QUESTIONS);
   localStorage.removeItem(LAST_ANSWER);
   localStorage.removeItem(LAST_ANSWER_INDEX);
-  localStorage.removeItem(ANSWERED_QUESTIONS);
   localStorage.removeItem(NEW_PARAMS);
+
+  localStorage.setItem(QUESTION_ANSWERED, "false")
 }

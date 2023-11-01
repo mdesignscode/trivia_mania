@@ -32,8 +32,6 @@ jest.mock("@tanstack/react-query");
 
 jest.mock("@clerk/nextjs");
 
-jest.mock("@/components/localStorageDetection", () => true);
-
 // spy functions
 export const mockSetPlayFilters = jest.fn(),
   mockSetPageReady = jest.fn(),

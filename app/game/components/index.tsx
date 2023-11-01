@@ -6,8 +6,10 @@ import { IQuestion } from "@/models/interfaces";
 import {
   LAST_ANSWER,
   LAST_ANSWER_INDEX,
+  QUESTIONS_LIST,
+  QUESTIONS_POOL,
   QUESTION_ANSWERED,
-  UNSAVED_DATA,
+  clearQuestionData,
 } from "@/utils/localStorage_utils";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import "animate.css";
@@ -20,6 +22,7 @@ import {
   useState,
 } from "react";
 import RenderQuestion from "./question";
+import { calculateNewIndex } from "@/hooks/fetchQuestionsList";
 
 export interface IQuestionProps {
   questionObj: IQuestion;
@@ -39,7 +42,6 @@ export default function Question({
   // set question state
   const [timesUp, setTimesUp] = useState(false);
   const [CTA, setCTA] = useState("Next Question");
-  const [error, setError] = useState("");
   const [_userAnswer, _setUserAnswer] = useState("");
   const userAnswer = useRef(_userAnswer);
   const setUserAnswer = (answer: string) => {
@@ -54,15 +56,15 @@ export default function Question({
     updateProgress,
     submitProgress,
     nextQuestionsSet,
-    playerStats,
     questionsLength,
     incrementIndex,
     questionIndex,
+    setQuestionsPool,
   } = useContext(GameContext);
 
   const {
     storageIsAvailable,
-    userStatus: { user, isOnline },
+    userStatus: { user },
   } = useContext(GlobalContext);
 
   function handleUserAnswer(value: string, i: number) {
@@ -141,47 +143,53 @@ export default function Question({
     updateProgress,
   ]);
 
-  async function handleNextQuestion() {
-    if (CTA === "Submit Results") {
-      if (user && isOnline) {
-        const res = await submitProgress(user.id);
-        if (res === "User stats updated successfully") {
-          window.location.href = "/users/" + user.id;
-        } else setError(res);
-      } else {
-        // check for unsaved data
-        const unsavedData = localStorage.getItem("unsavedData");
-        if (unsavedData) {
-          const parsedData = JSON.parse(unsavedData);
-          // merge previous unsaved data
-          localStorage.setItem(
-            "unsavedData",
-            JSON.stringify({ ...playerStats, ...parsedData })
-          );
+  function handleNextQuestion() {
+    switch (CTA) {
+      case "Submit Results":
+        if (user) {
+          submitProgress();
+        } else {
+          // redirect to sign in
+          window.location.href = "/sign-in";
         }
+        break;
 
-        // redirect to sign in
-        window.location.href = "/sign-in";
-      }
-    } else if (CTA === "Continue Playing") {
-      nextQuestionsSet();
-    } else {
-      if (questionIndex === questionsLength && storageIsAvailable) {
-        localStorage.setItem(UNSAVED_DATA, JSON.stringify(playerStats));
-      }
-      incrementIndex();
+      case "Continue Playing":
+        nextQuestionsSet();
+        break;
+
+      default:
+        incrementIndex();
+        break;
     }
   }
 
-  async function handleViewProgress() {
-    if (user && isOnline) {
-      const res = await submitProgress(user.id);
-      if (res === "User stats updated successfully") {
-        window.location.href = "/users/" + user.id;
-      } else setError(res);
+  function handleViewProgress() {
+    if (user) {
+      submitProgress();
     } else {
       window.location.href = "/sign-in";
     }
+  }
+
+  function handleContinueLater() {
+    if (storageIsAvailable) {
+      const newIndex = calculateNewIndex(questionIndex, questionsLength),
+        localQuestionsList = JSON.parse(
+          localStorage.getItem(QUESTIONS_LIST) || "[]"
+        );
+      clearQuestionData();
+
+      // create new question pool
+      const newPool = localQuestionsList.slice(questionIndex, newIndex);
+      localStorage.setItem(QUESTIONS_POOL, JSON.stringify(newPool));
+      localStorage.setItem(QUESTIONS_LIST, JSON.stringify(localQuestionsList));
+
+      setQuestionsPool(newPool);
+    }
+
+    // submit current progress
+    submitProgress();
   }
 
   useEffect(() => {
@@ -197,8 +205,7 @@ export default function Question({
     // check if current question has already been answered
     if (storageIsAvailable && questionIndex === index) {
       // get state from local storage
-      const isQuestionAnswered =
-        localStorage.getItem(QUESTION_ANSWERED) || "false";
+      const isQuestionAnswered = localStorage.getItem(QUESTION_ANSWERED);
       const prevAnswer = localStorage.getItem(LAST_ANSWER);
       const prevAnswerIndex = parseInt(
         localStorage.getItem(LAST_ANSWER_INDEX) || "0"
@@ -252,13 +259,13 @@ export default function Question({
         index,
         handleTimesUp,
         handleUserAnswer,
-        error,
         CTA,
         timesUp,
         handleNextQuestion,
         handleViewProgress,
         userAnswer: userAnswer.current,
         answerFeedback,
+        handleContinueLater,
       }}
     />
   );

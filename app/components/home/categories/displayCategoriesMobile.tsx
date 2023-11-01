@@ -22,7 +22,7 @@ export default function DisplayCategoriesMobile({
   const styles = "flex gap-2 flex-wrap justify-center";
 
   return fetchingCategories ? (
-    <Loading length={15} />
+    <Loading length={8  } />
   ) : (
     <div data-testid="display-categories-mobile-container" className="px-4">
       {!showMore && (

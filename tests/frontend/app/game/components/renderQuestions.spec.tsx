@@ -1,7 +1,11 @@
 import RenderQuestions from "@/app/game/components/renderQuestions";
-import { mockInitialProgress, mockQuestion } from "@/utils/mockData";
+import {
+  mockInitialProgress,
+  mockQuestion
+} from "@/utils/mockData";
 import { renderGameContext } from "@/utils/test_game_context";
 import { screen } from "@/utils/test_utils";
+
 
 // mock context
 const mockAdditionalContext = {

@@ -4,7 +4,7 @@ import {
   GameContext,
   IGameContext,
   initialGameContext,
-} from "@/app/context/gameContext";
+} from "@/context/gameContext";
 
 // setup game context
 

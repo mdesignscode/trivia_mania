@@ -12,7 +12,6 @@ export interface IRenderQuestion {
   index: number;
   handleUserAnswer: Function;
   handleTimesUp: Function;
-  error: string;
   CTA: string;
   timesUp: boolean;
   handleNextQuestion: MouseEventHandler<HTMLButtonElement>;
@@ -20,6 +19,7 @@ export interface IRenderQuestion {
   userAnswer: string;
   answerFeedback: ReactNode[];
   timerHasStarted: boolean;
+  handleContinueLater: MouseEventHandler<HTMLButtonElement>;
 }
 
 export default function RenderQuestion({
@@ -27,16 +27,16 @@ export default function RenderQuestion({
   index,
   handleTimesUp,
   handleUserAnswer,
-  error,
   CTA,
   timesUp,
   handleNextQuestion,
   handleViewProgress,
   userAnswer,
   answerFeedback,
-  timerHasStarted
+  timerHasStarted,
+  handleContinueLater
 }: IRenderQuestion) {
-  const { questionIndex } = useContext(GameContext);
+  const { questionIndex, error } = useContext(GameContext);
   const colorMap: { [key: string]: string } = {
     easy: "green",
     medium: "gold",
@@ -92,13 +92,24 @@ export default function RenderQuestion({
                   cursor: !timesUp ? "pointer" : "not-allowed",
                 }}
                 primary={!userAnswer && timesUp && answer === correctAnswer}
+                testid={answer}
               >
-                <span>{answerFeedback[i]}</span>
+                <span
+                  data-testid={`feedback-${
+                    answer === correctAnswer ? "correct" : "incorrect"
+                  }-${i}`}
+                >
+                  {answerFeedback[i]}
+                </span>
                 <p>{decodeHTMLEntities(answer)}</p>
               </Button>
             );
           })}
         </div>
+
+        <Button testid="continue-later-button" onClick={handleContinueLater} className="w-full">
+          Continue Later
+        </Button>
 
         {timesUp && (
           <>
@@ -121,7 +132,7 @@ export default function RenderQuestion({
             )}
           </>
         )}
-        {error && <div>{error as string}</div>}
+        {error && <div>{error}</div>}
         <audio id="success">
           <source src="/success.mp3" type="audio/mpeg" />
           Your browser does not support the audio element.

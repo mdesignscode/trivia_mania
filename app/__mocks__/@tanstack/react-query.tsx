@@ -1,6 +1,7 @@
 import {
   mockCategoryStats,
   mockDifficultyStats,
+  mockInitialProgress,
   mockQuestions,
 } from "@/utils/mockData";
 import { mockUser } from "@/utils/test_global_context";
@@ -28,6 +29,7 @@ type TQueryResponse = {
 
 // mock useQuery
 export function useQuery(options: IUseQueryProps): TQueryResponse {
+
   const response: TQueryResponse = {
     data: {},
     isFetched: true,
@@ -49,6 +51,12 @@ export function useQuery(options: IUseQueryProps): TQueryResponse {
 
     case "getUser":
       response.data = mockUser;
+      break;
+
+    case "submitProgress":
+      mockUser.stats = mockInitialProgress
+      mockUser.answeredQuestions = ["Mock Answer"]
+      response.data = "User stats updated"
       break;
 
     default:

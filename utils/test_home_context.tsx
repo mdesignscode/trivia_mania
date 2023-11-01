@@ -28,7 +28,7 @@ export const mockSetCurrentUI = jest.fn()
 // setup mock environment
 mockHomeContext.categoryStats = mockCategoriesStats;
 mockHomeContext.fetchingCategories = false;
-mockHomeContext.getQuestionStats = mockGetQuestionStats;
+mockHomeContext.getDifficultyCategoriesStats = mockGetQuestionStats;
 mockHomeContext.setFetchingCategories = mockSetFetchingCategories;
 mockHomeContext.currentUI = {
   welcome: true,

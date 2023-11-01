@@ -119,6 +119,17 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
   }
 
   const { user, isLoaded, isSignedIn } = useUser();
+  const [fetchUser, setFetchUser] = useState(true);
+
+  // detect user online
+  const [userOnline, setUserOnline] = useState(false);
+  useEffect(() => {
+    if (!userOnline && userStatus.user) {
+      // user status has changed and online user should be set
+      setFetchUser(true);
+      setUserOnline(true);
+    }
+  }, [userStatus.user, userOnline]);
 
   useEffect(() => {
     // detect storage feature
@@ -147,48 +158,60 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
-    if (isLoaded) {
-      if (isSignedIn && storageIsAvailable) {
-        // fetch user
-        setUserId(user.id);
-        setShouldFetchUser(true);
+    if (fetchUser) {
+      if (isLoaded) {
+        if (isSignedIn && storageIsAvailable) {
+          // fetch user
+          setUserId(user.id);
+          setShouldFetchUser(true);
 
-        if (isFetched) {
-          // set online user
-          const triviaUser = data;
-          setUserStatus({ user: triviaUser, isLoaded: true, isOnline: true });
+          if (isFetched) {
+            setFetchUser(false);
+            // set online user
+            const triviaUser = data;
+            setUserStatus({ user: triviaUser, isLoaded: true, isOnline: true });
+            // check if current user is previous user
+            const prevUserName = localStorage.getItem(USERNAME);
 
-          // check if current user is previous user
-          const prevUserName = localStorage.getItem(USERNAME);
-
-          if (prevUserName) {
-            if (prevUserName !== triviaUser.username) {
-              // if not previous user, clear localStorage
-              clearQuestionData();
+            if (prevUserName) {
+              if (prevUserName !== triviaUser.username) {
+                // if not previous user, clear localStorage
+                clearQuestionData();
+                localStorage.setItem(USERNAME, triviaUser.username);
+                localStorage.removeItem(PROGRESS);
+                localStorage.removeItem(DIFFICULTY);
+                localStorage.removeItem(CATEGORIES);
+              }
+            } else {
               localStorage.setItem(USERNAME, triviaUser.username);
-              localStorage.removeItem(PROGRESS);
-              localStorage.removeItem(DIFFICULTY);
-              localStorage.removeItem(CATEGORIES);
             }
-          } else {
-            localStorage.setItem(USERNAME, triviaUser.username);
           }
-        }
-      } else if (!storageIsAvailable && isSignedIn) {
-        // fetch user
-        setUserId(user.id);
-        setShouldFetchUser(true);
+        } else if (!storageIsAvailable && isSignedIn) {
+          // fetch user
+          setUserId(user.id);
+          setShouldFetchUser(true);
 
-        if (isFetched) {
-          // set online user
-          const triviaUser = data;
-          setUserStatus({ user: triviaUser, isLoaded: true, isOnline: true });
+          if (isFetched) {
+            // set online user
+            const triviaUser = data;
+            setUserStatus({ user: triviaUser, isLoaded: true, isOnline: true });
+            setFetchUser(false);
+          }
+        } else {
+          setUserStatus({ user: null, isLoaded: true, isOnline: false });
+          setFetchUser(false);
         }
-      } else {
-        setUserStatus({ user: null, isLoaded: true, isOnline: false });
       }
     }
-  }, [isLoaded, isSignedIn, storageIsAvailable, isFetched, user, data]);
+  }, [
+    isLoaded,
+    isSignedIn,
+    storageIsAvailable,
+    isFetched,
+    user,
+    data,
+    fetchUser,
+  ]);
 
   // get last set filters from local storage and put it in state
   useEffect(() => {

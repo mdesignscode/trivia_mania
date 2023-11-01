@@ -33,7 +33,7 @@ export default function HomePage() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="h-full w-full overflow-hidden"
+      className="h-full w-full relative overflow-hidden"
     >
       <div className="col w-full h-full" data-testid="home-container">
         <Welcome />

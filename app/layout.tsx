@@ -22,9 +22,9 @@ export default function RootLayout({
     <ClerkProvider>
       <QueryProvider>
         <GlobalProvider>
-          <html lang="en" className="h-full">
+          <html lang="en" className="h-full overflow-hidden">
             <body
-              className={`${inter.className} h-full bg-light dark:bg-secondary text-dark dark:text-light col overflow-hidden`}
+              className={`${inter.className} h-full bg-light dark:bg-secondary text-dark dark:text-light col`}
             >
               <Body>{children}</Body>
             </body>

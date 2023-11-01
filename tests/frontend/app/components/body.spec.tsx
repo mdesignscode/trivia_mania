@@ -1,12 +1,16 @@
 import Body from "@/components/body";
 import { renderGlobalContext } from "@/utils/test_global_context";
-import { screen } from "@/utils/test_utils";
+import { act, screen } from "@/utils/test_utils";
+
+jest.useFakeTimers()
 
 describe("Body component", () => {
   it("Renders an introduction animation", async () => {
     const { baseElement } = renderGlobalContext(<Body>Mock child</Body>, {
       pageReady: false,
     });
+
+    act(() => jest.advanceTimersByTime(1000))
 
     const container = await screen.findByTestId("intro-animation-container");
     expect(container).toBeInTheDocument();
@@ -31,6 +35,8 @@ describe("Body component", () => {
 
   it("Renders <Navigation /> and current page content", async () => {
     const { baseElement } = renderGlobalContext(<Body>Mock child</Body>);
+
+    act(() => jest.advanceTimersByTime(1000))
 
     const container = await screen.findByTestId("desktop-nav-container"),
       text = await screen.findByText("Mock child");

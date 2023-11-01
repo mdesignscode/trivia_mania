@@ -14,6 +14,7 @@ const originalEnv = process.env;
 beforeAll(() => {
   process.env = {
     ...process.env,
+    testEnv: "true",
     NEXT_PUBLIC_API_BASE_URL: "mockhost/api",
   };
 });

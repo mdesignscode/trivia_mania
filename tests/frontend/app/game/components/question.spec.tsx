@@ -1,16 +1,24 @@
+import { GameProvider } from "@/app/context/gameContext";
+import { GlobalProvider } from "@/app/context/globalContext";
 import RenderQuestion, {
   IRenderQuestion,
   decodeHTMLEntities,
 } from "@/app/game/components/question";
+import useFetchQuestionsList from "@/hooks/fetchQuestionsList";
+import { QUESTION_ANSWERED } from "@/utils/localStorage_utils";
 import { mockQuestion } from "@/utils/mockData";
-import { renderGameContext } from "@/utils/test_game_context";
-import { screen, userEvent } from "@/utils/test_utils";
+import {
+  mockSubmitProgress,
+  renderGameContext,
+} from "@/utils/test_game_context";
+import { screen, userEvent, render, renderHook } from "@/utils/test_utils";
 
 // spy functions
 const mockHandleNextQuestion = jest.fn(),
   mockHandleTimesUp = jest.fn(),
   mockHandleViewProgress = jest.fn(),
-  mockHandleUserAnswer = jest.fn();
+  mockHandleUserAnswer = jest.fn(),
+  mockContinueLater = jest.fn();
 
 // mock props
 const mockProps: IRenderQuestion = {
@@ -20,12 +28,12 @@ const mockProps: IRenderQuestion = {
   index: 1,
   CTA: "Next Question",
   answerFeedback: [false, false, false, false],
-  error: "",
   handleNextQuestion: mockHandleNextQuestion,
   handleTimesUp: mockHandleTimesUp,
   handleUserAnswer: mockHandleUserAnswer,
   handleViewProgress: mockHandleViewProgress,
   questionObj: mockQuestion,
+  handleContinueLater: mockContinueLater,
 };
 
 describe("RenderQuestion component", () => {
@@ -124,6 +132,30 @@ describe("RenderQuestion component", () => {
     await user.click(sumbitResultsButton);
 
     expect(mockHandleNextQuestion).toBeCalled();
+  });
+
+  it("Shifts the questions pool to the right and saves a user's progress on clicking `Continue Later`", async () => {
+    // setup user interaction
+    const user = userEvent.setup();
+
+    // renderGameContext(<RenderQuestion {...mockProps} />);
+
+    render(
+      <GlobalProvider>
+        <GameProvider>
+          <RenderQuestion {...mockProps} />
+        </GameProvider>
+      </GlobalProvider>
+    );
+
+    const continueLaterButton = await screen.findByTestId(
+      "continue-later-button"
+    );
+    expect(continueLaterButton).toBeInTheDocument();
+
+    await user.click(continueLaterButton);
+
+    expect(mockContinueLater).toBeCalled();
   });
 
   it("snapshot matches", () => {

@@ -80,7 +80,7 @@ export default function Body({ children }: { children: React.ReactNode }) {
     <>
       <Navigation />
 
-      <div className="flex-1 overflow-y-auto">{children}</div>
+      {children}
     </>
   ) : (
     <div className="col gap-4 my-auto" data-testid="intro-animation-container">

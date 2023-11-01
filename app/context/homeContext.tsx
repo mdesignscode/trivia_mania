@@ -1,7 +1,8 @@
 /* Handles all logic for home page */
 "use client";
-import { GlobalContext } from "@/app/context/globalContext";
+import { GlobalContext } from "@/context/globalContext";
 import useInitialStats from "@/hooks/initialStats";
+import { TStatsRequest } from "@/models/customRequests";
 import axios from "axios";
 import {
   Dispatch,
@@ -22,7 +23,7 @@ interface ICurrentUI {
 export interface IHomeContext {
   categoryStats: Record<string, number>;
   fetchingCategories: boolean;
-  getQuestionStats: Function;
+  getDifficultyCategoriesStats: (difficulty: string) => Promise<void>;
   setFetchingCategories: Dispatch<SetStateAction<boolean>>;
   currentUI: ICurrentUI;
   setCurrentUI: Dispatch<SetStateAction<ICurrentUI>>;
@@ -32,7 +33,7 @@ export interface IHomeContext {
 export const defaultHomeContext: IHomeContext = {
   categoryStats: {},
   fetchingCategories: true,
-  getQuestionStats: () => {},
+  getDifficultyCategoriesStats: () => Promise.resolve(),
   setFetchingCategories: () => {},
   currentUI: {
     welcome: true,
@@ -74,8 +75,8 @@ export function HomeProvider({ children }: { children: React.ReactNode }) {
     setCategoryStats(initialCategoryStats);
   }, [categoriesLoading, initialCategoryStats]);
 
-  // fetch questions based on difficulty
-  async function getQuestionStats(difficulty: string) {
+  // fetch category stats based on difficulty
+  async function getDifficultyCategoriesStats(difficulty: string) {
     try {
       // load categories
       setFetchingCategories(true);
@@ -84,9 +85,10 @@ export function HomeProvider({ children }: { children: React.ReactNode }) {
       const url = baseUrl + "questions/stats";
 
       const { data } = await axios.post(url, {
+        recordType: "categories",
         difficulty,
-        userId: user?.id || "",
-      });
+        userId: user?.id,
+      } as TStatsRequest);
       setCategoryStats(data);
 
       // display categories
@@ -101,7 +103,7 @@ export function HomeProvider({ children }: { children: React.ReactNode }) {
     showCategories,
     categoryStats,
     fetchingCategories,
-    getQuestionStats,
+    getDifficultyCategoriesStats,
     setFetchingCategories,
     setCurrentUI,
     currentUI,

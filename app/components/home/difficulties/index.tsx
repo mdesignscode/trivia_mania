@@ -9,7 +9,7 @@ import RenderDifficulties from "./renderDifficulties";
 export default function Difficulties() {
   // get context
   const {
-    getQuestionStats,
+    getDifficultyCategoriesStats,
     setCurrentUI,
     currentUI: { difficulties },
   } = useContext(HomeContext);
@@ -43,7 +43,7 @@ export default function Difficulties() {
       categories: true,
     }));
 
-    getQuestionStats(seek);
+    getDifficultyCategoriesStats(seek);
   }
 
   return (

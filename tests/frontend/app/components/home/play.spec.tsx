@@ -18,8 +18,8 @@ describe("Play component", () => {
 
   it("Should render a play button", () => {
     // render component
-    renderWithNoNavigationError(false, async () => {
-      const container = await screen.findByTestId("play-link");
+    renderWithNoNavigationError(false, () => {
+      const container = screen.getByTestId("play-link");
       expect(container).toBeInTheDocument();
     });
   });
@@ -31,7 +31,7 @@ describe("Play component", () => {
     // render component
     renderWithNoNavigationError(true, async () => {
       // get button from DOM
-      const playButton = await screen.findByTestId("play-button");
+      const playButton = screen.getByTestId("play-button");
 
       // click button
       await user.click(playButton);
@@ -47,14 +47,13 @@ describe("Play component", () => {
   });
 
   it("Should redirect to the game page with filters as query params", () => {
-    // prepare user interaction
-    const user = userEvent.setup();
-
     // render component
     renderWithNoNavigationError(true, async () => {
+      // prepare user interaction
+      const user = userEvent.setup();
       // get button from DOM
-      const playButton = await screen.findByTestId("play-button");
-      const link = await screen.findByTestId("play-link");
+      const playButton = screen.getByTestId("play-button");
+      const link = screen.getByTestId("play-link");
 
       // simulate click event using userEvent
       await user.click(playButton);

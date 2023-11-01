@@ -115,7 +115,8 @@ export function Button({
   className,
   id,
   testid,
-  play
+  play,
+  disabled
 }: IButtonProps) {
   return (
     <motion.span
@@ -134,6 +135,7 @@ export function Button({
         $cta={cta}
         $primary={primary}
         $play={play}
+        disabled={disabled}
       >
         {children}
       </ButtonComponent>

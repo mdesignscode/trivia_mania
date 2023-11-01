@@ -27,6 +27,7 @@ interface IFetchQuestions {
   incrementIndex: () => void;
   questionsPoolReady: boolean;
   poolIndex: number;
+  setQuestionsPool: (state: IQuestion[]) => void;
 }
 
 export default function useFetchQuestionsList(): IFetchQuestions {
@@ -101,6 +102,7 @@ export default function useFetchQuestionsList(): IFetchQuestions {
     incrementIndex,
     questionsPoolReady: questionsPoolReady.current,
     poolIndex: poolIndex.current,
+    setQuestionsPool
   };
 
   // create initial questions pool
@@ -154,7 +156,6 @@ export default function useFetchQuestionsList(): IFetchQuestions {
         setLocalStorageReady(true);
         setFetchQuestions(false);
       }
-
     }
   }, [categories, data, difficulty, fetchQuestions, isFetched]);
 
@@ -190,8 +191,7 @@ export default function useFetchQuestionsList(): IFetchQuestions {
     const newIndex = calculateNewIndex(poolIndex.current, questionsLength);
     setPoolIndex(newIndex);
 
-    const endIndex =
-      newIndex + 5 > questionsLength ? questionsLength : newIndex + 5;
+    const endIndex = calculateEndIndex(newIndex, questionsLength);
 
     if (storageIsAvailable) {
       // get questions list local storage
@@ -237,8 +237,12 @@ function shuffleArray(array: Array<IQuestion>): Array<IQuestion> {
   return array;
 }
 
-function calculateNewIndex(poolIndex: number, questionsLength: number) {
+export function calculateNewIndex(poolIndex: number, questionsLength: number) {
   return poolIndex + 5 > questionsLength
     ? questionsLength - poolIndex + poolIndex // last set of questions
     : poolIndex + 5;
+}
+
+export function calculateEndIndex(newIndex: number, questionsLength: number) {
+  return newIndex + 5 > questionsLength ? questionsLength : newIndex + 5;
 }

@@ -40,9 +40,13 @@ describe("RenderQuestions component", () => {
     // get elements from DOM
     const container = await screen.findByTestId(
       "all-questions-answered-container"
-    );
+    ),
+    finishedDifficulty = await screen.findByTestId("finished-difficulty"),
+    finishedCategories = await screen.findByTestId("finished-categories")
 
     expect(container).toBeInTheDocument();
+    expect(finishedDifficulty).toHaveTextContent("Difficulty: all difficulties")
+    expect(finishedCategories).toHaveTextContent("Categories: all categories")
   });
 
   it("Render <HandleUnsaveProgress /> if user has unsaved data", async () => {

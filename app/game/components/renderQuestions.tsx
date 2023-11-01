@@ -30,19 +30,19 @@ export default function RenderQuestions() {
       >
         {isNaN(questionIndex) || questionIndex > questionsLength ? (
           <div
-            className="col gap-2 mt-6 text-2xl"
+            className="col gap-2 mt-6 px-4 text-2xl"
             data-testid="all-questions-answered-container"
           >
             <h1 className="text-3xl">You have finished all questions for</h1>
 
-            <div className="flex gap-3">
-              <p>Difficulty:</p>
-              <p>{difficulty}</p>
+            <div className="flex gap-3" data-testid="finished-difficulty">
+              <p>Difficulty:{" "}</p>
+              <p>{difficulty || "all difficulties"}</p>
             </div>
 
-            <div className="flex gap-3">
-              <p>Categories:</p>
-              <p>{categories}</p>
+            <div className="flex gap-3" data-testid="finished-categories">
+              <p>Categories:{" "}</p>
+              <p>{categories || "all categories"}</p>
             </div>
 
             <HandleUnsavedProgress />

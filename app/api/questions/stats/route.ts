@@ -1,6 +1,21 @@
 import { TStatsRequest, StatsRequest } from "@/models/customRequests";
 import storage from "@/models/index";
 
+export function OPTIONS() {
+  const headers = {
+    'Allow': 'POST',
+    'Access-Control-Allow-Methods': 'POST',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  };
+
+  const response = new Response(null, {
+    status: 200,
+    headers: headers
+  });
+
+  return response;
+}
+
 export async function POST(request: StatsRequest) {
   const body: TStatsRequest = await request.json();
   let data: Record<string, number>;
@@ -12,11 +27,6 @@ export async function POST(request: StatsRequest) {
   }
 
   return new Response(JSON.stringify(data), {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
+    status: 200
   })
 }

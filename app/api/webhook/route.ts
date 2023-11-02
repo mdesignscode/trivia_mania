@@ -5,6 +5,21 @@ import storage from "@/models/index";
 import User from "@/models/user";
 import { initialStat } from "@/models/interfaces";
 
+export function OPTIONS() {
+  const headers = {
+    'Allow': 'POST',
+    'Access-Control-Allow-Methods': 'POST',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  };
+
+  const response = new Response(null, {
+    status: 200,
+    headers: headers
+  });
+
+  return response;
+}
+
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
@@ -89,10 +104,5 @@ export async function POST(req: Request) {
 
   return new Response(response, {
     status: response === "An error occured" ? 500 : 201,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
   })
 }

@@ -5,6 +5,7 @@ import User from "@/models/user";
 import {
   CATEGORIES,
   DIFFICULTY,
+  NEW_PARAMS,
   PROGRESS,
   USERNAME,
   clearQuestionData,
@@ -218,6 +219,11 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
     if (storageIsAvailable) {
       const previousDifficulty = localStorage.getItem(DIFFICULTY);
       const previousCategories = localStorage.getItem(CATEGORIES);
+
+      // first run on client
+      if (!previousDifficulty && !previousCategories) {
+        localStorage.setItem(NEW_PARAMS, "true");
+      }
 
       if (previousDifficulty) {
         setPlayFilters((state) => ({

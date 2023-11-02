@@ -21,7 +21,7 @@ const defaultQuestions: TQuestionsRecord = {
 
 export class BaseModel {
   protected filePath: string = "file.json";
-  protected objects: IStorageObjects = {
+  objects: IStorageObjects = {
     Questions: defaultQuestions,
     Users: {},
   };

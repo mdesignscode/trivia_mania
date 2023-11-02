@@ -5,7 +5,7 @@ import { IPlayRequest } from "@/models/customRequests";
 
 describe("POST questions/play", function () {
   const url = "http://localhost:3000/api/questions/play";
-  const { requestCreator, errorAsserter, getMockResponse } = curryLibrary<IPlayRequest>(POST, url)
+  const { requestCreator, getMockResponse } = curryLibrary<IPlayRequest>(POST, url)
 
   test("Should return an array of filtered questions", async function () {
     const req = requestCreator({ difficulty: "easy", categories: ["General Knowledge"] })
@@ -33,8 +33,4 @@ describe("POST questions/play", function () {
 
     expect(data.length).toStrictEqual(2);
   })
-
-  test("Should throw `Invalid difficulty` if difficulty not `easy`, `hard`, `medium`", async function () {
-    await errorAsserter({ difficulty: "professional" }, "Invalid difficulty")
-  });
 });

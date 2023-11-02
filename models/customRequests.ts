@@ -1,7 +1,9 @@
 import { IUserStats } from "./interfaces";
 
+export type TDifficulties = "easy" | "medium" | "hard" | ""
+
 export interface IPlayRequest {
-  difficulty?: "easy" | "medium" | "hard";
+  difficulty?: TDifficulties;
   categories?: string[];
   userId?: string;
 }
@@ -19,7 +21,7 @@ export type TStatsRequest =
   }
   | {
     recordType: 'categories';
-    difficulty?: 'easy' | 'medium' | 'hard';
+    difficulty: TDifficulties;
     userId?: string;
   };
 

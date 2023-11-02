@@ -1,4 +1,5 @@
 /* Handles the storing and retrieving Questions */
+import { TDifficulties } from "@/models/customRequests";
 import { QuestionsRecord } from ".";
 import Question from "../../question";
 import UserStorage from "./user";
@@ -156,16 +157,6 @@ export default class QuestionStorage extends UserStorage {
   }
 
   /**
-   * counts all question filters, or counts all categories by difficulty
-   * @date 29/09/2023 - 15:05:49
-   *
-   * @param {("categories" | "difficulties")} recordType
-   * @param {string} [difficulty]
-   * @param {string} [userId=""] - counts stats unique to a user
-   * @returns {Record<string, number>}
-   */
-
-  /**
    * counts all difficulties
    * @date 19/10/2023 - 20:14:04
    *
@@ -177,15 +168,16 @@ export default class QuestionStorage extends UserStorage {
 
   /**
    * counts all categories based on a difficulty
-   * @date 19/10/2023 - 20:14:50
+   * @date 02/11/2023 - 10:34:57
    *
    * @param {'categories'} recordType
-   * @param {?('easy' | 'medium' | 'hard')} [difficulty]
+   * @param {TDifficulties} difficulty
    * @param {?string} [userId]
    * @returns {Record<string, number>}
    */
-  questionsStats(recordType: 'categories', difficulty?: 'easy' | 'medium' | 'hard', userId?: string): Record<string, number>;
-  questionsStats(recordType: 'difficulties' | 'categories', difficulty?: 'easy' | 'medium' | 'hard', userId?: string): Record<string, number> {
+  questionsStats(recordType: 'categories', difficulty: TDifficulties, userId?: string): Record<string, number>;
+
+  questionsStats(recordType: 'difficulties' | 'categories', difficulty?: TDifficulties, userId?: string): Record<string, number> {
     const stats: Record<string, number> = {};
     const user = this.getUser(userId || "")
 

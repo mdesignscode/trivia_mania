@@ -11,5 +11,12 @@ export async function POST(request: PlayRequest) {
 
   const data = storage.filterQuestions({ difficulty, categories }, userId);
 
-  return NextResponse.json(data);
+  return new Response(JSON.stringify(data), {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  })
 }

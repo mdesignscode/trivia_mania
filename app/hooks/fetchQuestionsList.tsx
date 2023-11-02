@@ -148,7 +148,6 @@ export default function useFetchQuestionsList(): IFetchQuestions {
           localStorage.setItem(QUESTIONS_LIST, JSON.stringify(data));
           localStorage.setItem(CATEGORIES, categories);
           localStorage.setItem(DIFFICULTY, difficulty);
-          localStorage.removeItem(NEW_PARAMS);
           setLocalStorageReady(true);
           setFetchQuestions(false);
         }

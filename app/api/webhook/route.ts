@@ -89,5 +89,10 @@ export async function POST(req: Request) {
 
   return new Response(response, {
     status: response === "An error occured" ? 500 : 201,
-  });
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  })
 }

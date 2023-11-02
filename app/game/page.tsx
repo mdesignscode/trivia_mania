@@ -16,17 +16,18 @@ export default function GamePage() {
   } = useContext(GlobalContext);
 
   useEffect(() => {
-    const localFlag = localStorage.getItem(NEW_PARAMS);
-    if (localFlag) return;
-
     // get search filters from search params
     const difficultyString = params.get(DIFFICULTY) || "";
     const categoriesString = params.get(CATEGORIES) || "";
+
+    // search filters should be new play filters
+    setPlayFilters(() => ({
+      difficulty: difficultyString,
+      categories: categoriesString,
+    }));
+
+    // set new params flag if play filters different from search params
     if (difficultyString !== difficulty && categoriesString !== categories) {
-      setPlayFilters(() => ({
-        difficulty: difficultyString,
-        categories: categoriesString,
-      }));
       localStorage.setItem(NEW_PARAMS, "true");
     }
   }, [categories, difficulty, params, setPlayFilters]);

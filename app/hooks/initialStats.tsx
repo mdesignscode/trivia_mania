@@ -43,6 +43,7 @@ export default function useInitialStats(): IInitialStats {
     queryKey: ["categoryStats", user],
     queryFn: async () => {
       try {
+        console.log(url);
         const { data } = await axios.post(url, {
           recordType: "categories",
           difficulty: difficulty,
@@ -64,6 +65,7 @@ export default function useInitialStats(): IInitialStats {
     queryKey: ["difficultyStats", user],
     queryFn: async () => {
       try {
+        console.log(url);
         const { data } = await axios.post(url, {
           recordType: "difficulties",
           userId: user?.id,

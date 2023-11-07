@@ -7,7 +7,7 @@ beforeEach(() => {
   storage.clearMemory()
 
   // clear file storage
-  writeFileSync("file.json", JSON.stringify("{}"));
+  writeFileSync("file.json", JSON.stringify({}));
 
   // create a new user
   const mockUser = new User("mock user", "mockId")

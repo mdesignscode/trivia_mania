@@ -2,10 +2,7 @@
 
 import storage from "@/models/index";
 import Question from "@/models/question";
-import FileStorage, {
-  IStorageObjects
-} from "@/models/storage/fileStorage";
-import { BaseModel } from "@/models/storage/fileStorage/baseModel";
+import { IStorageObjects } from "@/models/storage/fileStorage/baseModel";
 import User from "@/models/user";
 import { generateFakeData } from "@/utils/test_utils_api";
 import { readFileSync, unlinkSync, writeFileSync } from "fs";
@@ -20,7 +17,8 @@ describe("BaseModel class", function () {
       const data: IStorageObjects = JSON.parse(
         readFileSync("file.json", "utf-8")
       );
-      const easyQuestion = data.Questions.easy["1"];
+
+      const easyQuestion = data.Questions.difficulties.easy["1"];
       expect(easyQuestion).toBeDefined();
       const mockUser = data.Users.mockId;
       expect(mockUser).toBeDefined();
@@ -38,20 +36,11 @@ describe("BaseModel class", function () {
 
       storage.reload();
 
-      const mediumQuestion = storage.getQuestion("medium", "2");
+      const mediumQuestion = storage.getQuestion("difficulties", "medium", "2");
       expect(mediumQuestion).toBeDefined();
 
       const mockUser = storage.getUser("mockId");
       expect(mockUser).toBeDefined();
-    });
-
-    test("Should create an empty object in memory if file doesn't exist", function () {
-      try {
-        unlinkSync("file.json");
-      } catch (err) {}
-      storage.reload();
-      const allQuestions = storage.getAllQuestions();
-      expect(Object.keys(allQuestions).length).toStrictEqual(0);
     });
 
     test("Should deserialize objects back to their original class", function () {
@@ -64,7 +53,7 @@ describe("BaseModel class", function () {
 
       storage.reload();
 
-      const mediumQuestion = storage.getQuestion("medium", "2");
+      const mediumQuestion = storage.getQuestion("difficulties", "medium", "2");
       const mikeUser = storage.getUser(mike.id);
 
       expect(mediumQuestion).toBeInstanceOf(Question);

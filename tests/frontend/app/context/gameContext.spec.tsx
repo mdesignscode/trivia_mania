@@ -1,23 +1,39 @@
 import { GameContext, GameProvider } from "@/app/context/gameContext";
-import { GlobalContext, GlobalProvider } from "@/app/context/globalContext";
-import { CategoryStat, initialStat } from "@/models/interfaces";
-import { ANSWERED_QUESTIONS, PROGRESS } from "@/utils/localStorage_utils";
+import { GlobalProvider } from "@/app/context/globalContext";
+import { initialStat } from "@/models/interfaces";
+import {
+  ANSWERED_QUESTIONS,
+  PROGRESS,
+  UNSAVED_DATA,
+} from "@/utils/localStorage_utils";
 import { mockInitialProgress, mockQuestion } from "@/utils/mockData";
-import { mockUser } from "@/utils/test_global_context";
-import { render } from "@/utils/test_utils";
+import { act, renderHook } from "@/utils/test_utils";
 import { renderProvider } from "@/utils/test_utils_contextProviders";
-import { useContext, useEffect, useState } from "react";
-
-jest.useFakeTimers();
+import axios from "axios";
+import { useContext } from "react";
 
 jest.mock("@tanstack/react-query");
 
 describe("GameContext provider", () => {
-  const renderer = renderProvider("game");
+  const mockStats = {
+    total: { answered: 1, correctAnswered: 0 },
+    easy: { answered: 1, correctAnswered: 0 },
+    "Mock Category": { easy: { answered: 1, correctAnswered: 0 } },
+  };
+
+  const Wrapper = ({ children }: { children: React.ReactElement }) => {
+    return (
+      <GlobalProvider>
+        <GameProvider>{children}</GameProvider>
+      </GlobalProvider>
+    );
+  };
+
   it("Deserializes previous progress into state", async () => {
+    const renderer = renderProvider("game");
     // store progress in local storage
     localStorage.setItem(PROGRESS, JSON.stringify(mockInitialProgress));
-    localStorage.setItem(ANSWERED_QUESTIONS, ["Mock answer"].join(","));
+    localStorage.setItem(ANSWERED_QUESTIONS, "Mock answer");
 
     const { getByTestId } = renderer((value) => {
       return (
@@ -33,70 +49,52 @@ describe("GameContext provider", () => {
     expect(progressCount).toHaveTextContent("total: 1");
   });
 
-  it("Updates and submits a user's progress", () => {
-    // create a component to test event handlers
-    function TestProgressHandlers() {
-      const [render, setRender] = useState(false);
+  it("Updates a user's progress and adds it to local storage", async () => {
+    // render hook to get `updateProgress`
+    const state = renderHook(() => useContext(GameContext), {
+      wrapper: Wrapper,
+    });
 
-      const {
-        userStatus: { user },
-      } = useContext(GlobalContext);
-      const { updateProgress, submitProgress, playerStats } =
-        useContext(GameContext);
+    // assert initial progress
+    const initialPlayerStats = state.result.current.playerStats;
+    expect(initialPlayerStats).toEqual(initialStat);
 
-      useEffect(() => {
-        // give global provider some time to process localStorage
-        jest.advanceTimersByTime(1500);
-        setTimeout(() => {
-          // fire progress update and submit
-          updateProgress(mockQuestion, "");
-          submitProgress();
-          setRender(true);
-        }, 1500);
-      }, [submitProgress, updateProgress]);
+    // update progress
+    act(() => state.result.current.updateProgress(mockQuestion, ""));
 
-      // render data to assert
-      return (
-        render && (
-          <div>
-            <p data-testid="easy-count">
-              {playerStats.easy?.answered as number}
-            </p>
-            <p data-testid="category-count">
-              {
-                (playerStats["Mock Category"] as CategoryStat)?.easy
-                  ?.answered as number
-              }
-            </p>
+    // assert new progress
+    const newPlayerStats = state.result.current.playerStats;
+    expect(newPlayerStats).toEqual(mockStats);
+    expect(state.result.current.answeredQuestions.join(",")).toBe("mockId");
 
-            <p data-testid="user-progress">{user?.stats.total.answered}</p>
-            <p data-testid="answered-questions">{user?.answeredQuestions}</p>
-          </div>
-        )
-      );
-    }
+    const localAnsweredQuestions = localStorage.getItem(ANSWERED_QUESTIONS),
+      localProgress = localStorage.getItem(PROGRESS),
+      localUnsavedProgress = localStorage.getItem(UNSAVED_DATA),
+      statsString = JSON.stringify(mockStats);
 
-    // <TestProgressHandlers />
-    const { getByTestId } = render(
-      <GlobalProvider>
-        <GameProvider>
-          <TestProgressHandlers />
-        </GameProvider>
-      </GlobalProvider>
-    );
+    // assert local storage data
+    expect(localAnsweredQuestions).toBe("mockId");
+    expect(localProgress).toBe(statsString);
+    expect(localUnsavedProgress).toBe(statsString);
+  });
 
-    const easyCount = getByTestId("easy-count"),
-      categoryCount = getByTestId("category-count"),
-      progressCount = getByTestId("user-progress"),
-      answerdedQuestions = getByTestId("answered-questions");
+  it("Submits a user's progress to server", async () => {
+    // render hook to get `submitProgress`
+    const state = renderHook(() => useContext(GameContext), {
+      wrapper: Wrapper,
+    });
 
-    // assert handlers behaviour
-    expect(easyCount).toHaveTextContent("1");
-    expect(categoryCount).toHaveTextContent("1");
-    expect(progressCount).toHaveTextContent("1");
-    expect(answerdedQuestions).toHaveTextContent("Mock Answer");
+    // update progress and submit
+    act(() => {
+      state.result.current.updateProgress(mockQuestion, "");
+      state.result.current.submitProgress();
+    });
 
-    mockUser.stats = initialStat;
-    mockUser.answeredQuestions = [];
+    // assert api call was made with correct data
+    expect(axios.post).toBeCalledWith("mockhost/apiusers/updateStats", {
+      stats: mockStats,
+      id: "mockId",
+      answeredQuestions: ["mockId"],
+    });
   });
 });

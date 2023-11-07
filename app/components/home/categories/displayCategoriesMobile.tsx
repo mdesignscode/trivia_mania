@@ -22,65 +22,70 @@ export default function DisplayCategoriesMobile({
   const styles = "flex gap-2 flex-wrap justify-center";
 
   return fetchingCategories ? (
-    <Loading length={8  } />
+    <Loading length={8} />
   ) : (
-    <div data-testid="display-categories-mobile-container" className="px-4">
+    <div
+      data-testid="display-categories-mobile-container"
+      className="px-4 overflow-y-auto"
+    >
       {!showMore && (
         <motion.div
-        initial={{ opacity: 0, x: -100 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className={styles} data-testid="first-categories-set">
-          {Object.keys(categoryStats)
-            .sort()
-            .slice(0, categoriesRadius)
-            .map((stat, i) => {
-              return (
-                <Button
-                  onClick={() => {
-                    const value = stat === "all categories" ? "" : stat;
-                    handleCategories(i, value);
-                  }}
-                  primary={categoryChoice[i]}
-                  key={stat}
-                  testid={stat}
-                >
-                  {stat} ({categoryStats[stat]})
-                </Button>
-              );
-            })}
-        </div>
-      </motion.div>
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <div className={styles} data-testid="first-categories-set">
+            {Object.keys(categoryStats)
+              .sort()
+              .slice(0, categoriesRadius)
+              .map((stat, i) => {
+                return (
+                  <Button
+                    onClick={() => {
+                      const value = stat === "all categories" ? "" : stat;
+                      handleCategories(i, value);
+                    }}
+                    primary={categoryChoice[i]}
+                    key={stat}
+                    testid={stat}
+                  >
+                    {stat} ({categoryStats[stat]})
+                  </Button>
+                );
+              })}
+          </div>
+        </motion.div>
       )}
 
       {/* user has option to show more */}
-      {showMore && (<motion.div
-        initial={{ opacity: 0, x: 100 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className={styles} data-testid="second-categories-set">
-          {Object.keys(categoryStats)
-            .sort()
-            .slice(categoriesRadius)
-            .map((stat, i) => {
-              return (
-                <Button
-                  onClick={() => {
-                    const value = stat === "all categories" ? "" : stat;
-                    handleCategories(i, value);
-                  }}
-                  primary={categoryChoice[i]}
-                  key={stat}
-                  testid={stat}
-                >
-                  {stat} ({categoryStats[stat]})
-                </Button>
-              );
-            })}
-        </div>
-      </motion.div>)}
+      {showMore && (
+        <motion.div
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <div className={styles} data-testid="second-categories-set">
+            {Object.keys(categoryStats)
+              .sort()
+              .slice(categoriesRadius)
+              .map((stat, i) => {
+                return (
+                  <Button
+                    onClick={() => {
+                      const value = stat === "all categories" ? "" : stat;
+                      handleCategories(i, value);
+                    }}
+                    primary={categoryChoice[i]}
+                    key={stat}
+                    testid={stat}
+                  >
+                    {stat} ({categoryStats[stat]})
+                  </Button>
+                );
+              })}
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }

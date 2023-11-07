@@ -14,12 +14,17 @@ export function SignInButton() {
   return <h1>Sign in</h1>;
 }
 
+export const isOnlineUser = { current: true };
 export function useUser() {
-  return {
-    user: {
-      id: "mockId",
-    },
-    isLoaded: true,
-    isSignedIn: true,
-  };
+  return isOnlineUser.current
+    ? {
+        user: {
+          id: "mockId",
+        },
+        isLoaded: true,
+        isSignedIn: true,
+      }
+    : {
+        user: null,
+      };
 }

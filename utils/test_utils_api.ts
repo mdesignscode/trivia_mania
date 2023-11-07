@@ -1,8 +1,8 @@
-import Question from "@/models/question";
-import User from "@/models/user";
 import { stub } from "sinon";
 import storage from "../models";
-import FileStorage from "@/models/storage/fileStorage";
+import Question from "../models/question";
+import FileStorage from "../models/storage/fileStorage";
+import User from "../models/user";
 
 export function curryLibrary<RequestType>(POST: Function, url: string) {
   function createMockRequest() {

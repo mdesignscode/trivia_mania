@@ -26,7 +26,7 @@ export default function Start() {
 
           <h2>30 Seconds Per Question</h2>
 
-          <Button play={true} cta={true} onClick={() => setStartPlaying(true)}>
+          <Button testid="start-game-button" play={true} cta={true} onClick={() => setStartPlaying(true)}>
             Start
           </Button>
         </motion.div>

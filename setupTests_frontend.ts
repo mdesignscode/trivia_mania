@@ -1,12 +1,30 @@
 import '@testing-library/jest-dom';
+import { mockUser } from './utils/test_global_context';
+import { initialStat } from './models/interfaces';
 
 // mock windowWidth hook to return false, desktop screen size
 export const isMobileRef = { current: false }
 jest.mock("@/hooks/windowWidth", () => () => isMobileRef.current)
 
+export const mockRouterPush = jest.fn();
+
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: mockRouterPush,
+  }),
+  useSearchParams: () => ({
+    get: (query: string) => {
+      return query === "difficulty" ? "easy" : "Mock Category";
+    },
+  }),
+  usePathname: () => "/"
+}));
+
 // clear localStorage
 beforeEach(() => {
   localStorage.clear();
+  mockUser.stats = initialStat
+  mockUser.answeredQuestions = []
 });
 
 // Mock process.env

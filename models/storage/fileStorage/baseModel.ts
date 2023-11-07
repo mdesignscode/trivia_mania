@@ -21,7 +21,7 @@ const defaultQuestions: TQuestionsRecord = {
 
 export class BaseModel {
   protected filePath: string = "file.json";
-  objects: IStorageObjects = {
+  protected objects: IStorageObjects = {
     Questions: defaultQuestions,
     Users: {},
   };
@@ -46,6 +46,7 @@ export class BaseModel {
       Users: {},
       Questions: defaultQuestions
     };
+
     try {
       const parsedData: IStorageObjects = JSON.parse(
         readFileSync(this.filePath, "utf-8")
@@ -80,7 +81,7 @@ export class BaseModel {
         data.Users[key] = user;
       }
     } catch (error) { }
-    Object.assign(this.objects, data);
+    this.objects = data
 
     function reCreateQuestions(parsedData: IStorageObjects) {
       return (recordType: "difficulties" | "categories") => {

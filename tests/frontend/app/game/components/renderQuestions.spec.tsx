@@ -1,11 +1,9 @@
+import { GameProvider } from "@/app/context/gameContext";
+import { GlobalProvider } from "@/app/context/globalContext";
 import RenderQuestions from "@/app/game/components/renderQuestions";
-import {
-  mockInitialProgress,
-  mockQuestion
-} from "@/utils/mockData";
+import { mockInitialProgress, mockQuestion } from "@/utils/mockData";
 import { renderGameContext } from "@/utils/test_game_context";
-import { screen } from "@/utils/test_utils";
-
+import { screen, userEvent, render } from "@/utils/test_utils";
 
 // mock context
 const mockAdditionalContext = {
@@ -39,14 +37,16 @@ describe("RenderQuestions component", () => {
 
     // get elements from DOM
     const container = await screen.findByTestId(
-      "all-questions-answered-container"
-    ),
-    finishedDifficulty = await screen.findByTestId("finished-difficulty"),
-    finishedCategories = await screen.findByTestId("finished-categories")
+        "all-questions-answered-container"
+      ),
+      finishedDifficulty = await screen.findByTestId("finished-difficulty"),
+      finishedCategories = await screen.findByTestId("finished-categories");
 
     expect(container).toBeInTheDocument();
-    expect(finishedDifficulty).toHaveTextContent("Difficulty: all difficulties")
-    expect(finishedCategories).toHaveTextContent("Categories: all categories")
+    expect(finishedDifficulty).toHaveTextContent(
+      "Difficulty: all difficulties"
+    );
+    expect(finishedCategories).toHaveTextContent("Categories: all categories");
   });
 
   it("Render <HandleUnsaveProgress /> if user has unsaved data", async () => {

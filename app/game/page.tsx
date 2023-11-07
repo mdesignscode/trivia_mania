@@ -20,15 +20,15 @@ export default function GamePage() {
     const difficultyString = params.get(DIFFICULTY) || "";
     const categoriesString = params.get(CATEGORIES) || "";
 
-    // search filters should be new play filters
-    setPlayFilters(() => ({
-      difficulty: difficultyString,
-      categories: categoriesString,
-    }));
-
     // set new params flag if play filters different from search params
     if (difficultyString !== difficulty && categoriesString !== categories) {
       localStorage.setItem(NEW_PARAMS, "true");
+
+      // search filters should be new play filters
+      setPlayFilters(() => ({
+        difficulty: difficultyString,
+        categories: categoriesString,
+      }));
     }
   }, [categories, difficulty, params, setPlayFilters]);
 

@@ -36,18 +36,15 @@ jest.mock("@clerk/nextjs");
 export const mockSetPlayFilters = jest.fn(),
   mockSetPageReady = jest.fn(),
   mockSetDifficultyChoice = jest.fn(),
-  mockSetCategoryChoice = jest.fn();
+  mockSetCategoryChoice = jest.fn(),
+  mockSetPlayerMode = jest.fn()
 
 // create mock user
 export const mockUser = new User("mock user", "mockId");
 
 // setup context values
 export const mockGlobalContext: IGlobalContext = {
-  userStatus: {
-    user: mockUser,
-    isOnline: true,
-    isLoaded: true,
-  },
+  triviaUser: mockUser,
   storageIsAvailable: true,
   playFilters: {
     difficulty: "",
@@ -66,6 +63,8 @@ export const mockGlobalContext: IGlobalContext = {
     medium: false,
     "all difficulties": false,
   },
+  playerMode: "Guest",
+  setPlayerMode: mockSetPlayerMode
 };
 
 // wrapper for rendering custom hooks

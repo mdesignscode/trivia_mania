@@ -29,7 +29,6 @@ exports[`HandleUnsavedProgress component snapshot matches with unsaved progress 
           >
             <span
               data-testid="save-progress-button"
-              tabindex="0"
             >
               <button
                 class="sc-bcPKhP coQATf"
@@ -39,7 +38,6 @@ exports[`HandleUnsavedProgress component snapshot matches with unsaved progress 
             </span>
             <span
               data-testid="discard-progress-button"
-              tabindex="0"
             >
               <button
                 class="sc-bcPKhP fjXGcT"

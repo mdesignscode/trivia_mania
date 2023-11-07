@@ -3,9 +3,7 @@
 exports[`Header component snapshot matches 1`] = `
 <body>
   <div>
-    <div
-      style="opacity: 0; transform: translateY(-200px) rotate(20deg) translateZ(0);"
-    >
+    <div>
       <div
         class="flex items-center gap-5"
         data-testid="user-header-container"

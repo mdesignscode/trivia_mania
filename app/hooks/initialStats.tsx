@@ -24,7 +24,7 @@ export default function useInitialStats(): IInitialStats {
   });
   const {
     storageIsAvailable,
-    userStatus: { user },
+    triviaUser,
     setCategoryChoice,
     playFilters: { difficulty }
   } = useContext(GlobalContext);
@@ -40,13 +40,13 @@ export default function useInitialStats(): IInitialStats {
   const { data: categoryStats, isFetched: fetchedCategories } = useQuery<
     Record<string, number>
   >({
-    queryKey: ["categoryStats", user],
+    queryKey: ["categoryStats", triviaUser],
     queryFn: async () => {
       try {
         const { data } = await axios.post(url, {
           recordType: "categories",
           difficulty: difficulty,
-          userId: user?.id,
+          userId: triviaUser?.id,
         } as TStatsRequest);
         return data;
       } catch (error) {
@@ -61,12 +61,12 @@ export default function useInitialStats(): IInitialStats {
   const { data: difficultyStats, isFetched: fetchedDifficulties } = useQuery<
     Record<string, number>
   >({
-    queryKey: ["difficultyStats", user],
+    queryKey: ["difficultyStats", triviaUser],
     queryFn: async () => {
       try {
         const { data } = await axios.post(url, {
           recordType: "difficulties",
-          userId: user?.id,
+          userId: triviaUser?.id,
         } as TStatsRequest);
         return data;
       } catch (error) {

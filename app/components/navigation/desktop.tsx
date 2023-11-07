@@ -1,10 +1,18 @@
 /* Render desktop navbar */
 "use client";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { GlobalContext } from "@/context/globalContext";
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
 import { ChartBarIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { CircularProgress } from "@mui/material";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useContext } from "react";
 import { NavProps } from ".";
 
 export function classNames(...classes: Array<string>) {
@@ -20,11 +28,10 @@ export const navStyles = {
   ],
 };
 
-export default function DesktopNav({
-  navigation,
-  path,
-  userStatus: { user, isOnline, isLoaded },
-}: NavProps) {
+export default function DesktopNav({ navigation, path }: NavProps) {
+  const { triviaUser } = useContext(GlobalContext);
+  const { isLoaded } = useUser();
+
   return (
     <div className="hidden md:block mx-auto w-full px-2 md:px-6 lg:px-8 bg-secondary text-light z-10 sticky top-0">
       <div className="relative flex h-16 items-center justify-between">
@@ -45,6 +52,7 @@ export default function DesktopNav({
             <div className="flex space-x-4">
               {navigation.map((item) => (
                 <Link
+                  data-testid={item.name}
                   key={item.name}
                   href={item.href}
                   className={classNames(
@@ -70,17 +78,20 @@ export default function DesktopNav({
               >
                 {isLoaded ? (
                   <>
-                    {user && isOnline && (
+                    {triviaUser && (
                       <Link
-                        href={`/users/${user.id}`}
+                        data-testid="your-stats-button"
+                        href={`/users/${triviaUser.id}`}
                         className={classNames(
-                          `/users/${user.id}` === path
+                          `/users/${triviaUser.id}` === path
                             ? navStyles.active
                             : navStyles.inActive[0],
                           navStyles.inActive[1]
                         )}
                         aria-current={
-                          `/users/${user.id}` === path ? "page" : undefined
+                          `/users/${triviaUser.id}` === path
+                            ? "page"
+                            : undefined
                         }
                       >
                         <ChartBarIcon height={25} width={25} />
@@ -95,6 +106,7 @@ export default function DesktopNav({
                           : navStyles.inActive[0],
                         navStyles.inActive[1]
                       )}
+                      data-testid="user-button"
                     >
                       <SignedIn>
                         {/* Mount the UserButton component */}

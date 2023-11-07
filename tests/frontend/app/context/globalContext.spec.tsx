@@ -1,3 +1,4 @@
+import { isOnlineUser } from "@/app/__mocks__/@clerk/nextjs";
 import storageAvailable from "@/components/localStorageDetection";
 import { CATEGORIES, DIFFICULTY, USERNAME } from "@/utils/localStorage_utils";
 import { Matcher, MatcherOptions } from "@/utils/test_utils";
@@ -5,26 +6,6 @@ import { renderProvider } from "@/utils/test_utils_contextProviders";
 import _ from "lodash";
 
 jest.mock("@tanstack/react-query");
-
-// mock clerk user state
-let isOnlineUser = true;
-jest.mock("@clerk/nextjs", () => ({
-  useUser() {
-    return isOnlineUser
-      ? {
-          user: {
-            id: "mockId",
-          },
-          isLoaded: true,
-          isSignedIn: true,
-        }
-      : {
-          user: null,
-          isLoaded: true,
-          isSignedIn: false,
-        };
-  },
-}));
 
 jest.mock("@/components/localStorageDetection");
 
@@ -45,8 +26,7 @@ describe("GlobalContext provider", () => {
       const { getByTestId } = renderer((value) => (
         <div>
           <p data-testid="user-status">
-            {value.userStatus.user?.id} {value.userStatus.user?.username}{" "}
-            {`${value.userStatus.isOnline}`}
+            {value.triviaUser?.id} {value.triviaUser?.username}{" "}
           </p>
           <p data-testid="difficulty">{value.playFilters.difficulty}</p>
           <p data-testid="categories">{value.playFilters.categories}</p>
@@ -66,7 +46,7 @@ describe("GlobalContext provider", () => {
       const difficulty = getByTestId("difficulty"),
         categories = getByTestId("categories");
 
-      assertUserStatus(getByTestId, "true");
+      assertUserStatus(getByTestId);
       expect(difficulty).toHaveTextContent("easy");
       expect(categories).toHaveTextContent(mockCategories);
 
@@ -107,46 +87,46 @@ describe("GlobalContext provider", () => {
       const { getByTestId } = renderer((value) => (
         <div>
           <p data-testid="user-status">
-            {value.userStatus.user?.id} {value.userStatus.user?.username}{" "}
-            {`${value.userStatus.isOnline}`}
+            {value.triviaUser?.id} {value.triviaUser?.username}{" "}
           </p>
         </div>
       ));
 
       // Perform assertions to test the provided context values
-      assertUserStatus(getByTestId, "true");
+      assertUserStatus(getByTestId);
     });
 
     it("Sets offline user", () => testOfflineUser(false));
   });
 
   function testOfflineUser(storageState: boolean) {
-    // set storage is unavailable and offline user
+    // set storage state and offline user
     mockStorageState(storageState);
-    isOnlineUser = false;
+    isOnlineUser.current = false
 
-    const { getByTestId } = renderer((value) => (
-      <div>
-        <p data-testid="user-status">{`${value.userStatus.isOnline}`}</p>
-      </div>
-    ));
+    const { getByTestId } = renderer((value) => {
+      return (
+        <div>
+          <p data-testid="user-status">{`${!!value.triviaUser}`}</p>
+        </div>
+      );
+    });
 
     const userStatus = getByTestId("user-status");
 
     expect(userStatus).toHaveTextContent("false");
 
-    isOnlineUser = true;
+    isOnlineUser.current = true
   }
 
   function assertUserStatus(
     getByTestId: (
       id: Matcher,
       options?: MatcherOptions | undefined
-    ) => HTMLElement,
-    isOnline: string
+    ) => HTMLElement
   ) {
     const userStatus = getByTestId("user-status");
-    expect(userStatus).toHaveTextContent(`mockId mock user ${isOnline}`);
+    expect(userStatus).toHaveTextContent(`mockId mock user`);
   }
 });
 

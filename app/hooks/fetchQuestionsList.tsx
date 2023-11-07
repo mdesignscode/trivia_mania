@@ -64,7 +64,7 @@ export default function useFetchQuestionsList(): IFetchQuestions {
   const [fetchQuestions, setFetchQuestions] = useState(true);
 
   const {
-    userStatus: { user },
+    triviaUser,
     playFilters: { difficulty, categories },
     storageIsAvailable,
   } = useContext(GlobalContext);
@@ -76,8 +76,8 @@ export default function useFetchQuestionsList(): IFetchQuestions {
 
     const { data } = await axios.post(url, {
       difficulty,
-      categories: categories.split(","),
-      userId: user?.id,
+      categories: categories.split(",").filter(Boolean),
+      userId: triviaUser?.id,
     } as IPlayRequest);
 
     const questions = shuffleArray(data);
@@ -87,7 +87,7 @@ export default function useFetchQuestionsList(): IFetchQuestions {
 
   // fetch list of questions
   const { data, isFetched } = useQuery({
-    queryKey: ["play", user],
+    queryKey: ["play", triviaUser],
     queryFn: getQuestions,
     initialData: [],
     enabled: shouldFetchQuestions,
@@ -102,7 +102,7 @@ export default function useFetchQuestionsList(): IFetchQuestions {
     incrementIndex,
     questionsPoolReady: questionsPoolReady.current,
     poolIndex: poolIndex.current,
-    setQuestionsPool
+    setQuestionsPool,
   };
 
   // create initial questions pool

@@ -5,6 +5,7 @@ import {
   mockQuestions,
 } from "@/utils/mockData";
 import { mockUser } from "@/utils/test_global_context";
+import axios from "axios";
 
 // mock QueryClient
 export class QueryClient {
@@ -17,7 +18,7 @@ export class QueryClient {
 
 interface IUseQueryProps {
   queryKey: string[];
-  queryFn?: Function;
+  queryFn: Function;
   initialData?: any;
   enabled?: boolean;
 }
@@ -29,7 +30,6 @@ type TQueryResponse = {
 
 // mock useQuery
 export function useQuery(options: IUseQueryProps): TQueryResponse {
-
   const response: TQueryResponse = {
     data: {},
     isFetched: true,
@@ -54,9 +54,11 @@ export function useQuery(options: IUseQueryProps): TQueryResponse {
       break;
 
     case "submitProgress":
-      mockUser.stats = mockInitialProgress
-      mockUser.answeredQuestions = ["Mock Answer"]
-      response.data = "User stats updated"
+      (axios.post as jest.Mock<any, any, any>).mockReturnValue(
+        "User stats updated"
+      );
+      options.queryFn()
+      response.data = "User stats updated";
       break;
 
     default:

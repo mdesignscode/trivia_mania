@@ -1,5 +1,6 @@
 import { TStatsRequest, StatsRequest } from "@/models/customRequests";
 import storage from "@/models/index";
+import { NextResponse } from "next/server";
 
 export function OPTIONS() {
   const headers = new Headers();
@@ -27,7 +28,5 @@ export async function POST(request: StatsRequest) {
     data = storage.questionsStats("categories", body.difficulty, body.userId);
   }
 
-  return new Response(JSON.stringify(data), {
-    status: 200
-  })
+  return NextResponse.json(data)
 }

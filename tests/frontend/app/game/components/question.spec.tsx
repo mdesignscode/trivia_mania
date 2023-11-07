@@ -1,17 +1,14 @@
-import { GameProvider } from "@/app/context/gameContext";
-import { GlobalProvider } from "@/app/context/globalContext";
 import RenderQuestion, {
   IRenderQuestion,
   decodeHTMLEntities,
 } from "@/app/game/components/question";
-import useFetchQuestionsList from "@/hooks/fetchQuestionsList";
-import { QUESTION_ANSWERED } from "@/utils/localStorage_utils";
+import { GameProvider } from "@/context/gameContext";
+import { GlobalProvider } from "@/context/globalContext";
 import { mockQuestion } from "@/utils/mockData";
 import {
-  mockSubmitProgress,
-  renderGameContext,
+  renderGameContext
 } from "@/utils/test_game_context";
-import { screen, userEvent, render, renderHook } from "@/utils/test_utils";
+import { render, screen, userEvent } from "@/utils/test_utils";
 
 // spy functions
 const mockHandleNextQuestion = jest.fn(),
@@ -137,8 +134,6 @@ describe("RenderQuestion component", () => {
   it("Shifts the questions pool to the right and saves a user's progress on clicking `Continue Later`", async () => {
     // setup user interaction
     const user = userEvent.setup();
-
-    // renderGameContext(<RenderQuestion {...mockProps} />);
 
     render(
       <GlobalProvider>

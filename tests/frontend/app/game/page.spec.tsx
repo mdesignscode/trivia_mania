@@ -5,16 +5,7 @@ import {
 } from "@/utils/test_global_context";
 import { NEW_PARAMS } from "@/utils/localStorage_utils";
 
-// mock `useSearchParams` hook
-jest.mock("next/navigation", () => ({
-  useSearchParams: () => ({
-    get: (query: string) => {
-      return query === "difficulty" ? "easy" : "Mock Category";
-    },
-  }),
-}));
-
-jest.mock("@/context/gameContext");
+// jest.mock("@/context/gameContext");
 
 describe("GamePage component", () => {
   it("Sets new params flag if search params are different from state filters", async () => {

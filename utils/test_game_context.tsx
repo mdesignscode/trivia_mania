@@ -14,17 +14,17 @@ export const mockGameContext = JSON.parse(
 ) as IGameContext;
 
 // spy functions
-export const mockSubmitProgress = jest.fn()
-export const mockUpdateProgress = jest.fn()
-export const mockNextQuestionsSet = jest.fn()
-export const mockIncrementIndex = jest.fn()
+export const mockSubmitProgress = jest.fn();
+export const mockUpdateProgress = jest.fn();
+export const mockNextQuestionsSet = jest.fn();
+export const mockIncrementIndex = jest.fn();
 
 // setup mock environment
-mockGameContext.submitProgress = mockSubmitProgress
-mockGameContext.incrementIndex = mockIncrementIndex
-mockGameContext.nextQuestionsSet = mockNextQuestionsSet
-mockGameContext.updateProgress = mockUpdateProgress
-mockGameContext.startPlaying = true
+mockGameContext.submitProgress = mockSubmitProgress;
+mockGameContext.incrementIndex = mockIncrementIndex;
+mockGameContext.nextQuestionsSet = mockNextQuestionsSet;
+mockGameContext.updateProgress = mockUpdateProgress;
+mockGameContext.startPlaying = true;
 
 // wrap game context inside global context
 export const renderGameContext = (

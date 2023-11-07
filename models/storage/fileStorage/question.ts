@@ -1,8 +1,8 @@
 /* Handles the storing and retrieving Questions */
-import { TDifficulties } from "@/models/customRequests";
-import { QuestionsRecord } from ".";
+import { TDifficulties } from "../../../models/customRequests";
 import Question from "../../question";
 import UserStorage from "./user";
+import { QuestionsRecord } from "./baseModel";
 
 interface IPlayFilters {
   difficulty?: string,
@@ -101,7 +101,7 @@ export default class QuestionStorage extends UserStorage {
   getAllQuestions(
     singleRecord: boolean = false,
     userId: string = ""
-  ): Record<string, Question> | QuestionsRecord {
+  ): Record<string, Record<string, Question>> | QuestionsRecord {
     const allQuestions: Record<string, Record<string, Question>> = {};
     const uniqueQuestions: Record<string, Question> = {};
     const user = this.getUser(userId)
@@ -179,7 +179,8 @@ export default class QuestionStorage extends UserStorage {
 
   questionsStats(recordType: 'difficulties' | 'categories', difficulty?: TDifficulties, userId?: string): Record<string, number> {
     const stats: Record<string, number> = {};
-    const user = this.getUser(userId || "")
+    const id = recordType === "categories" ? userId : difficulty
+    const user = this.getUser(id || "")
 
     if (recordType === "difficulties") {
       const difficultiesRecord = this.objects.Questions.difficulties

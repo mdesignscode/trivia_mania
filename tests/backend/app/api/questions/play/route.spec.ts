@@ -1,7 +1,20 @@
-import { POST } from "@/app/api/questions/play/route";
+import { OPTIONS, POST } from "@/app/api/questions/play/route";
 import { curryLibrary, saveMockQuestions, setMockUserAttribute } from "@/utils/test_utils_api";
 import { ANSWERED_QUESTIONS } from "@/utils/localStorage_utils";
 import { IPlayRequest } from "@/models/customRequests";
+
+describe("OPTIONS /questions/play", () => {
+  it("Returns the options available for play route", async () => {
+    const headers = OPTIONS().headers,
+      allowOrigin = headers.get("Access-Control-Allow-Origin"),
+      allowMethods = headers.get("Access-Control-Allow-Methods"),
+      allowHeader = headers.get("Access-Control-Allow-Headers")
+
+    expect(allowOrigin).toBe("*")
+    expect(allowMethods).toBe("POST")
+    expect(allowHeader).toBe("Content-Type")
+  })
+});
 
 describe("POST questions/play", function () {
   const url = "http://localhost:3000/api/questions/play";

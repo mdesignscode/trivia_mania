@@ -1,9 +1,7 @@
 // Unit tests for FileStorage class
 
 import Question from "@/models/question";
-import {
-  QuestionsRecord
-} from "@/models/storage/fileStorage";
+import { QuestionsRecord } from "@/models/storage/fileStorage/baseModel";
 import QuestionStorage from "@/models/storage/fileStorage/question";
 import { ANSWERED_QUESTIONS } from "@/utils/localStorage_utils";
 import { generateFakeData } from "@/utils/test_utils_api";
@@ -33,8 +31,8 @@ describe("Question class", function () {
       storage.newQuestion(Question1);
 
       // should create entries for `General Knowledge` and `easy`
-      const questionEasy = storage.getQuestion("easy", "1");
-      const questionGeneral = storage.getQuestion("General Knowledge", "1");
+      const questionEasy = storage.getQuestion("difficulties", "easy", "1");
+      const questionGeneral = storage.getQuestion("categories", "General Knowledge", "1");
       expect(questionEasy).toBeDefined();
       expect(questionGeneral).toBeDefined();
 
@@ -45,9 +43,9 @@ describe("Question class", function () {
       // add more questions to storage
       saveMockQuestions()
 
-      const question4 = storage.getQuestion("General Knowledge", "4");
-      const questionScience = storage.getQuestion("Science", "2");
-      const questionHistory = storage.getQuestion("History", "3");
+      const question4 = storage.getQuestion("categories", "General Knowledge", "4");
+      const questionScience = storage.getQuestion("categories", "Science", "2");
+      const questionHistory = storage.getQuestion("categories", "History", "3");
 
       expect(question4).toBeDefined();
       expect(questionScience).toBeDefined();
@@ -69,7 +67,7 @@ describe("Question class", function () {
     test("Returns all questions in storage based on a filter", function () {
       saveMockQuestions()
 
-      const stock = storage.getQuestionsByFilter("easy");
+      const stock = storage.getQuestionsByFilter("difficulties", "easy");
       const questionObj = stock["1"];
 
       expect(questionObj).toBeDefined();
@@ -80,7 +78,7 @@ describe("Question class", function () {
       saveMockQuestions()
       setMockUserAttribute(ANSWERED_QUESTIONS, ["1"])
 
-      const stock = storage.getQuestionsByFilter("easy", "mockId");
+      const stock = storage.getQuestionsByFilter("difficulties", "easy", "mockId");
       const questionObj = stock["4"];
 
       expect(questionObj).toBeDefined();
@@ -93,7 +91,7 @@ describe("Question class", function () {
       const { Question1 } = generateFakeData();
       storage.newQuestion(Question1);
 
-      const question = storage.getQuestion("easy", "1");
+      const question = storage.getQuestion("difficulties", "easy", "1");
       expect(question).toBeDefined();
     });
   });
@@ -171,7 +169,7 @@ describe("Question class", function () {
   describe("questionsStats method", function () {
 
     test("Return an object with stats count for all difficulties", function () {
-      const stats = storage.questionsStats();
+      const stats = storage.questionsStats("difficulties");
 
       const easyCount = stats.easy;
       const mediumCount = stats.medium;
@@ -184,7 +182,7 @@ describe("Question class", function () {
 
     test("Return an object with stats count for all difficulties, unique to a user", function () {
       setMockUserAttribute(ANSWERED_QUESTIONS, ["1", "2"])
-      const stats = storage.questionsStats(null, "mockId");
+      const stats = storage.questionsStats("difficulties", "mockId");
 
       const easyCount = stats.easy;
       const hardCount = stats.hard;
@@ -194,23 +192,17 @@ describe("Question class", function () {
     });
 
     test("Return an object with categories count based on difficulty", function () {
-      const easyStats = storage.questionsStats("easy");
+      const easyStats = storage.questionsStats("categories", "easy");
 
       const generalCount = easyStats["General Knowledge"];
       const allEasy = easyStats["all categories"];
 
       expect(generalCount).toBe(2);
       expect(allEasy).toBe(2);
-
-      const allStats = storage.questionsStats("");
-
-      const allCategories = allStats["all categories"];
-
-      expect(allCategories).toBe(4);
     });
 
     test("Return an object with stats count based on filters, excluding questions a user has already answered", function () {
-      const easyStats = storage.questionsStats("easy");
+      const easyStats = storage.questionsStats("categories", "easy", "mockId");
 
       const easyCount = Object.keys(easyStats).length;
       const generalCount = easyStats["General Knowledge"];

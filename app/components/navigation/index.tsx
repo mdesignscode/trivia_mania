@@ -1,6 +1,5 @@
 "use client";
 import { GlobalContext } from "@/context/globalContext";
-import User from "@/models/user";
 import {
   HomeIcon,
   PuzzlePieceIcon,
@@ -19,16 +18,11 @@ type TNavigation = {
 export interface NavProps {
   navigation: TNavigation;
   path: string;
-  userStatus: {
-    user: User | null;
-    isLoaded: boolean;
-    isOnline: boolean;
-  };
 }
 
 export default function Navigation() {
   const path = usePathname();
-  const { userStatus, playUrl } = useContext(GlobalContext);
+  const { playUrl } = useContext(GlobalContext);
 
   const navigation = [
     { name: "Home", href: "/", icon: <HomeIcon height={25} width={25} /> },
@@ -51,12 +45,11 @@ export default function Navigation() {
         {...{
           path,
           navigation,
-          userStatus,
         }}
       />
 
       {/* Mobile Navigation */}
-      <MobileNav {...{ path, navigation, userStatus }} />
+      <MobileNav {...{ path, navigation }} />
     </>
   );
 }

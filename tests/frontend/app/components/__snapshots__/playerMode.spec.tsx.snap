@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PlayerMode component Prompts a signed in user to continue 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        class="col text-center w-52 mx-auto gap-4"
+        data-testid="player-mode-container"
+      >
+        <h1
+          class="text-3xl"
+        >
+          Play as
+        </h1>
+        <span
+          data-testid="continue-button"
+        >
+          <button
+            class="sc-bcPKhP fjXGcT"
+          >
+            Continue as 
+            <strong>
+              mock user
+            </strong>
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`PlayerMode component Prompts a signed out user to choose a playing mode 1`] = `
+<body>
+  <div>
+    <div>
+      <div
+        class="col text-center w-52 mx-auto gap-4"
+        data-testid="player-mode-container"
+      >
+        <h1
+          class="text-3xl"
+        >
+          Play as
+        </h1>
+        <span
+          data-testid="guest-user-button"
+        >
+          <button
+            class="sc-bcPKhP fjXGcT"
+          >
+            Guest User
+          </button>
+        </span>
+        <span
+          data-testid="signin-button"
+        >
+          <button
+            class="sc-bcPKhP fjXGcT"
+          >
+            Sign In
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+`;

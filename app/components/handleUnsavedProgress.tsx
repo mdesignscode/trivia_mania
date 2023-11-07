@@ -5,29 +5,32 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import reloadPage from "./reloadPage";
 import { ANSWERED_QUESTIONS, UNSAVED_DATA, clearQuestionData } from "@/utils/localStorage_utils";
+import { IUpdateUserStatsRequest } from "@/models/customRequests";
 
 export default function HandleUnsavedProgress() {
   const [hasUnsavedProgress, setHasUnsavedProgress] = useState(false);
+
   const {
     storageIsAvailable,
-    userStatus: { user },
+    triviaUser
   } = useContext(GlobalContext);
+
 
   async function saveProgress() {
     const hasUnsavedData = localStorage.getItem(UNSAVED_DATA);
     const answeredQuestions = localStorage.getItem(ANSWERED_QUESTIONS);
 
-    if (hasUnsavedData && user && answeredQuestions) {
+    if (hasUnsavedData && triviaUser && answeredQuestions) {
       const progress = JSON.parse(hasUnsavedData);
       const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       const url = `${baseUrl}/users/updateStats`;
-      const id = user.id;
+      const id = triviaUser.id;
 
       const { data } = await axios.post(url, {
         stats: progress,
         id,
         answeredQuestions: answeredQuestions.split(","),
-      });
+      } as IUpdateUserStatsRequest);
 
       if (data === "User stats updated successfully") {
         clearQuestionData()

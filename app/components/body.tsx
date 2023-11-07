@@ -6,6 +6,7 @@ import "animate.css";
 import { motion } from "framer-motion";
 import { useContext, useEffect, useState } from "react";
 import Navigation from "./navigation";
+import PlayerMode from "./playerMode";
 
 export default function Body({ children }: { children: React.ReactNode }) {
   const [animatedText, setAnimatedText] = useState<Array<JSX.Element[]>>([]);
@@ -19,6 +20,7 @@ export default function Body({ children }: { children: React.ReactNode }) {
     right: "100%",
   });
   const { pageReady, setPageReady } = useContext(GlobalContext);
+  const [chooseMode, setChooseMode] = useState(false);
 
   useEffect(() => {
     // create a list of letters to animate
@@ -68,13 +70,14 @@ export default function Body({ children }: { children: React.ReactNode }) {
             x: 200,
           });
           setTimeout(() => {
-            setPageReady(true);
+            setChooseMode(true);
           }, 1000);
         });
     }
   }, [animateText, setPageReady]);
 
-  const animatedContainerStyles = "w-full gap-3 text-4xl px-2 md:text-7xl h-full flex justify-center items-center flex-wrap"
+  const animatedContainerStyles =
+    "w-full gap-3 text-4xl px-2 md:text-7xl h-full flex justify-center items-center flex-wrap";
 
   return pageReady ? (
     <>
@@ -84,7 +87,7 @@ export default function Body({ children }: { children: React.ReactNode }) {
     </>
   ) : (
     <div className="col gap-4 my-auto" data-testid="intro-animation-container">
-      {animateText && (
+      {animateText && !chooseMode && (
         <>
           <motion.div
             initial={{ opacity: 0, x: 0 }}
@@ -114,6 +117,8 @@ export default function Body({ children }: { children: React.ReactNode }) {
           </motion.div>
         </>
       )}
+
+      <PlayerMode shouldRender={chooseMode} />
 
       <motion.div
         id="page-ready-animation"

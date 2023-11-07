@@ -1,9 +1,22 @@
 import storage from "@/models/index";
-import { POST } from "@/app/api/users/updateStats/route";
+import { OPTIONS, POST } from "@/app/api/users/updateStats/route";
 import { spy } from "sinon";
 import { IUpdateUserStatsRequest } from "@/models/customRequests";
 import { curryLibrary } from "@/utils/test_utils_api";
 import { mockInitialProgress } from "@/utils/mockData";
+
+describe("OPTIONS /users/updateStats", () => {
+  it("Returns the options available for updateStats route", async () => {
+    const headers = OPTIONS().headers,
+      allowOrigin = headers.get("Access-Control-Allow-Origin"),
+      allowMethods = headers.get("Access-Control-Allow-Methods"),
+      allowHeader = headers.get("Access-Control-Allow-Headers")
+
+    expect(allowOrigin).toBe("*")
+    expect(allowMethods).toBe("POST")
+    expect(allowHeader).toBe("Content-Type")
+  })
+});
 
 describe("POST users/updateStats", function () {
   const url = "http://localhost:3000/api/users/updateStats";

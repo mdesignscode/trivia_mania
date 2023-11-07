@@ -3,9 +3,7 @@
 exports[`DisplayStats component snapshot matches 1`] = `
 <body>
   <div>
-    <div
-      style="opacity: 0; transform: translateY(-200px) rotate(20deg) translateZ(0);"
-    >
+    <div>
       <h2
         class="my-3"
       >

@@ -39,7 +39,9 @@ exports[`Body component Renders <Navigation /> and current page content 1`] = `
                 class="flex space-x-4"
               >
                 <a
-                  class="hover:bg-accent-100 hover:text-secondary rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"
+                  aria-current="page"
+                  class="bg-accent text-dark flex gap-2 content-center items-center hover:border-light border-2 border-accent hover:text-light hover:bg-accent-200 rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"
+                  data-testid="Home"
                   href="/"
                 >
                   <svg
@@ -62,6 +64,7 @@ exports[`Body component Renders <Navigation /> and current page content 1`] = `
                 </a>
                 <a
                   class="hover:bg-accent-100 hover:text-secondary rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"
+                  data-testid="Play"
                   href="/game?difficulty=&categories="
                 >
                   <svg
@@ -84,6 +87,7 @@ exports[`Body component Renders <Navigation /> and current page content 1`] = `
                 </a>
                 <a
                   class="hover:bg-accent-100 hover:text-secondary rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"
+                  data-testid="Score Board"
                   href="/scoreboard"
                 >
                   <svg
@@ -109,6 +113,7 @@ exports[`Body component Renders <Navigation /> and current page content 1`] = `
                 >
                   <a
                     class="hover:bg-accent-100 hover:text-secondary rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"
+                    data-testid="your-stats-button"
                     href="/users/mockId"
                   >
                     <svg
@@ -131,6 +136,7 @@ exports[`Body component Renders <Navigation /> and current page content 1`] = `
                   </a>
                   <div
                     class="hover:bg-accent-100 hover:text-secondary rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center"
+                    data-testid="user-button"
                   >
                     <h1>
                       Mock user button

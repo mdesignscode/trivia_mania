@@ -1,6 +1,7 @@
 "use client";
 
 import storageAvailable from "@/components/localStorageDetection";
+import { IGetUserRequest } from "@/models/customRequests";
 import User from "@/models/user";
 import {
   CATEGORIES,
@@ -34,7 +35,7 @@ type TFilters = {
 };
 
 export interface IGlobalContext {
-  userStatus: IUserStatus;
+  triviaUser: User | null;
   storageIsAvailable: boolean;
   setPlayFilters: (
     cb: (state: { difficulty: string; categories: string }) => {
@@ -44,20 +45,18 @@ export interface IGlobalContext {
   ) => void;
   playFilters: TFilters;
   playUrl: string;
-  setPageReady: (state: boolean) => void;
+  setPageReady: Dispatch<SetStateAction<boolean>>;
   pageReady: boolean;
   difficultyChoice: Record<string, boolean>;
   setDifficultyChoice: Dispatch<SetStateAction<Record<string, boolean>>>;
   categoryChoice: boolean[];
   setCategoryChoice: Dispatch<SetStateAction<boolean[]>>;
+  playerMode: "Guest" | "Signed In";
+  setPlayerMode: Dispatch<SetStateAction<"Guest" | "Signed In">>;
 }
 
 export const initialGlobalContext: IGlobalContext = {
-  userStatus: {
-    user: null as User | null,
-    isOnline: false,
-    isLoaded: false,
-  },
+  triviaUser: null,
   storageIsAvailable: false,
   playFilters: {
     difficulty: "",
@@ -71,6 +70,8 @@ export const initialGlobalContext: IGlobalContext = {
   setDifficultyChoice: () => {},
   categoryChoice: [],
   setCategoryChoice: () => {},
+  playerMode: "Guest",
+  setPlayerMode: () => {},
 };
 
 export const GlobalContext =
@@ -80,11 +81,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
   // global state
   // app uses localStorage
   const [storageIsAvailable, setStorageIsAvailable] = useState(false);
-  const [userStatus, setUserStatus] = useState({
-    user: null as User | null,
-    isOnline: false,
-    isLoaded: false,
-  });
+  const [triviaUser, setTriviaUser] = useState<User | null>(null);
 
   const [difficultyChoice, setDifficultyChoice] = useState<
     Record<string, boolean>
@@ -112,107 +109,63 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
     `/game?difficulty=${playFilters.current.difficulty}&categories=${playFilters.current.categories}`
   );
 
-  const [_pageReady, _setPageReady] = useState(false);
-  const pageReady = useRef(_pageReady);
-  function setPageReady(state: boolean) {
-    pageReady.current = state;
-    _setPageReady(state);
-  }
+  const [pageReady, setPageReady] = useState(false);
 
-  const { user, isLoaded, isSignedIn } = useUser();
-  const [fetchUser, setFetchUser] = useState(true);
+  const { user } = useUser();
 
-  // detect user online
-  const [userOnline, setUserOnline] = useState(false);
-  useEffect(() => {
-    if (!userOnline && userStatus.user) {
-      // user status has changed and online user should be set
-      setFetchUser(true);
-      setUserOnline(true);
-    }
-  }, [userStatus.user, userOnline]);
+  const [playerMode, setPlayerMode] = useState<"Guest" | "Signed In">("Guest");
 
   useEffect(() => {
     // detect storage feature
     setStorageIsAvailable(storageAvailable());
   }, []);
 
-  // fetch user from backend
-  const [shouldFetchUser, setShouldFetchUser] = useState(false);
-  const [userId, setUserId] = useState("");
-
   const { data, isFetched } = useQuery({
     queryKey: ["getUser"],
     queryFn: async () => {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const url = baseUrl + "users/getUser";
+        const url = baseUrl + "users/get";
 
-        const { data } = await axios.post(url, { id: userId });
+        const { data } = await axios.post(url, {
+          id: user?.id,
+        } as IGetUserRequest);
+
         return data;
       } catch (error) {
         console.log(error);
       }
     },
     initialData: {},
-    enabled: shouldFetchUser,
+    enabled: !!user,
   });
 
+  // set online user
   useEffect(() => {
-    if (fetchUser) {
-      if (isLoaded) {
-        if (isSignedIn && storageIsAvailable) {
-          // fetch user
-          setUserId(user.id);
-          setShouldFetchUser(true);
+    if (isFetched && user) {
+      // set online user
+      const triviaUser = data;
+      setTriviaUser(triviaUser);
 
-          if (isFetched) {
-            setFetchUser(false);
-            // set online user
-            const triviaUser = data;
-            setUserStatus({ user: triviaUser, isLoaded: true, isOnline: true });
-            // check if current user is previous user
-            const prevUserName = localStorage.getItem(USERNAME);
+      if (storageIsAvailable) {
+        // check if current user is previous user
+        const prevUserName = localStorage.getItem(USERNAME);
 
-            if (prevUserName) {
-              if (prevUserName !== triviaUser.username) {
-                // if not previous user, clear localStorage
-                clearQuestionData();
-                localStorage.setItem(USERNAME, triviaUser.username);
-                localStorage.removeItem(PROGRESS);
-                localStorage.removeItem(DIFFICULTY);
-                localStorage.removeItem(CATEGORIES);
-              }
-            } else {
-              localStorage.setItem(USERNAME, triviaUser.username);
-            }
-          }
-        } else if (!storageIsAvailable && isSignedIn) {
-          // fetch user
-          setUserId(user.id);
-          setShouldFetchUser(true);
-
-          if (isFetched) {
-            // set online user
-            const triviaUser = data;
-            setUserStatus({ user: triviaUser, isLoaded: true, isOnline: true });
-            setFetchUser(false);
+        if (prevUserName) {
+          if (prevUserName !== triviaUser.username) {
+            // if not previous user, clear localStorage
+            clearQuestionData();
+            localStorage.setItem(USERNAME, triviaUser.username);
+            localStorage.removeItem(PROGRESS);
+            localStorage.removeItem(DIFFICULTY);
+            localStorage.removeItem(CATEGORIES);
           }
         } else {
-          setUserStatus({ user: null, isLoaded: true, isOnline: false });
-          setFetchUser(false);
+          localStorage.setItem(USERNAME, triviaUser.username);
         }
       }
     }
-  }, [
-    isLoaded,
-    isSignedIn,
-    storageIsAvailable,
-    isFetched,
-    user,
-    data,
-    fetchUser,
-  ]);
+  }, [data, isFetched, storageIsAvailable, user]);
 
   // get last set filters from local storage and put it in state
   useEffect(() => {
@@ -248,17 +201,19 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
 
   // store object
   const store: IGlobalContext = {
-    userStatus,
+    triviaUser,
     storageIsAvailable: storageIsAvailable,
     playFilters: playFilters.current,
     setPlayFilters: setPlayFilters,
     playUrl,
-    pageReady: pageReady.current,
+    pageReady,
     setPageReady,
     setDifficultyChoice,
     difficultyChoice,
     setCategoryChoice,
     categoryChoice,
+    playerMode,
+    setPlayerMode,
   };
 
   return (

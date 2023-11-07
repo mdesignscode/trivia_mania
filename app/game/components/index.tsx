@@ -2,6 +2,7 @@
 "use client";
 import { GlobalContext } from "@/app/context/globalContext";
 import { GameContext } from "@/context/gameContext";
+import { calculateNewIndex } from "@/hooks/fetchQuestionsList";
 import { IQuestion } from "@/models/interfaces";
 import {
   LAST_ANSWER,
@@ -22,7 +23,7 @@ import {
   useState,
 } from "react";
 import RenderQuestion from "./question";
-import { calculateNewIndex } from "@/hooks/fetchQuestionsList";
+import { useRouter } from "next/navigation";
 
 export interface IQuestionProps {
   questionObj: IQuestion;
@@ -49,6 +50,8 @@ export default function Question({
     _setUserAnswer(answer);
   };
 
+  const router = useRouter()
+
   const [timerHasStarted, setTimerHasStarted] = useState(true);
 
   // consume game context
@@ -62,10 +65,7 @@ export default function Question({
     setQuestionsPool,
   } = useContext(GameContext);
 
-  const {
-    storageIsAvailable,
-    userStatus: { user },
-  } = useContext(GlobalContext);
+  const { storageIsAvailable, triviaUser } = useContext(GlobalContext);
 
   function handleUserAnswer(value: string, i: number) {
     if (storageIsAvailable) {
@@ -146,11 +146,11 @@ export default function Question({
   function handleNextQuestion() {
     switch (CTA) {
       case "Submit Results":
-        if (user) {
+        if (triviaUser) {
           submitProgress();
         } else {
           // redirect to sign in
-          window.location.href = "/sign-in";
+          router.push("/sign-in")
         }
         break;
 
@@ -165,10 +165,10 @@ export default function Question({
   }
 
   function handleViewProgress() {
-    if (user) {
+    if (triviaUser) {
       submitProgress();
     } else {
-      window.location.href = "/sign-in";
+      router.push("/sign-in")
     }
   }
 

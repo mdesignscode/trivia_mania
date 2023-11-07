@@ -3,9 +3,7 @@
 exports[`Hero component snapshot matches not in top ten 1`] = `
 <body>
   <div>
-    <div
-      style="opacity: 0; transform: translateY(-200px) rotate(20deg) translateZ(0);"
-    >
+    <div>
       <h2>
         This is your progress
       </h2>
@@ -25,9 +23,7 @@ exports[`Hero component snapshot matches not in top ten 1`] = `
 exports[`Hero component snapshot matches user's progress 1`] = `
 <body>
   <div>
-    <div
-      style="opacity: 0; transform: translateY(-200px) rotate(20deg) translateZ(0);"
-    >
+    <div>
       <h2>
         This is your progress
       </h2>

@@ -34,9 +34,9 @@ export default function RenderQuestion({
   userAnswer,
   answerFeedback,
   timerHasStarted,
-  handleContinueLater
+  handleContinueLater,
 }: IRenderQuestion) {
-  const { questionIndex, error } = useContext(GameContext);
+  const { questionIndex, error, hasSubmit } = useContext(GameContext);
   const colorMap: { [key: string]: string } = {
     easy: "green",
     medium: "gold",
@@ -107,7 +107,12 @@ export default function RenderQuestion({
           })}
         </div>
 
-        <Button testid="continue-later-button" onClick={handleContinueLater} className="w-full">
+        <Button
+          testid="continue-later-button"
+          onClick={handleContinueLater}
+          className="w-full"
+          disabled={hasSubmit}
+        >
           Continue Later
         </Button>
 
@@ -117,6 +122,7 @@ export default function RenderQuestion({
               onClick={handleNextQuestion}
               className="w-full"
               primary={true}
+              disabled={hasSubmit}
             >
               {CTA}
             </Button>
@@ -126,6 +132,7 @@ export default function RenderQuestion({
                 onClick={handleViewProgress}
                 className="w-full"
                 primary={true}
+                disabled={hasSubmit}
               >
                 View Progress
               </Button>

@@ -1,5 +1,6 @@
 /* Render mobile navbar */
 "use client";
+import { GlobalContext } from "@/context/globalContext";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Disclosure } from "@headlessui/react";
 import {
@@ -9,14 +10,12 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useContext } from "react";
 import { NavProps } from ".";
 import { classNames, navStyles } from "./desktop";
 
-export default function MobileNav({
-  navigation,
-  path,
-  userStatus: { user, isOnline },
-}: NavProps) {
+export default function MobileNav({ navigation, path }: NavProps) {
+  const { triviaUser } = useContext(GlobalContext);
   return (
     <Disclosure
       as="nav"
@@ -60,6 +59,7 @@ export default function MobileNav({
                 <Disclosure.Button
                   key={item.name}
                   as="a"
+                  data-testid={item.name}
                   href={item.href}
                   className={classNames(
                     item.href.split("?")[0] === path
@@ -76,17 +76,18 @@ export default function MobileNav({
 
               {/* User stats and Clerk.js User button */}
               <div className="col gap-2">
-                {user && isOnline && (
+                {triviaUser && (
                   <Link
-                    href={`/users/${user.id}`}
+                    data-testid="your-stats-button"
+                    href={`/users/${triviaUser.id}`}
                     className={classNames(
-                      `/users/${user.id}` === path
+                      `/users/${triviaUser.id}` === path
                         ? navStyles.active
                         : navStyles.inActive[0],
                       navStyles.inActive[1]
                     )}
                     aria-current={
-                      `/users/${user.id}` === path ? "page" : undefined
+                      `/users/${triviaUser.id}` === path ? "page" : undefined
                     }
                   >
                     <ChartBarIcon height={25} width={25} />
@@ -101,6 +102,7 @@ export default function MobileNav({
                       : navStyles.inActive[0],
                     navStyles.inActive[1]
                   )}
+                  data-testid="user-button"
                 >
                   <SignedIn>
                     {/* Mount the UserButton component */}

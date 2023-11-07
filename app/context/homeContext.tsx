@@ -67,7 +67,7 @@ export function HomeProvider({ children }: { children: React.ReactNode }) {
 
   const [fetchingCategories, setFetchingCategories] = useState(true);
   const {
-    userStatus: { user },
+    triviaUser,
   } = useContext(GlobalContext);
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export function HomeProvider({ children }: { children: React.ReactNode }) {
       const { data } = await axios.post(url, {
         recordType: "categories",
         difficulty,
-        userId: user?.id,
+        userId: triviaUser?.id,
       } as TStatsRequest);
       setCategoryStats(data);
 

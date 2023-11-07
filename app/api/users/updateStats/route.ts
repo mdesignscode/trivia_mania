@@ -1,5 +1,6 @@
 import { IUpdateUserStatsRequest, UpdateUserStatsRequest } from "@/models/customRequests";
 import storage from "@/models/index";
+import { NextResponse } from "next/server";
 
 export function OPTIONS() {
   const headers = new Headers();
@@ -23,9 +24,7 @@ export async function POST(request: UpdateUserStatsRequest) {
   try {
     storage.updateUserProgress(id, stats, answeredQuestions);
 
-    return new Response("User stats updated successfully", {
-      status: 200,
-    })
+    return NextResponse.json("User stats updated successfully")
   } catch (error: any) {
     throw new Error("An error hass occured", error.message)
   }

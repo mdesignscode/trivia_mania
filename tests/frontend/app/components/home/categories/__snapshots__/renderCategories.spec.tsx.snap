@@ -193,7 +193,7 @@ exports[`RenderCategories component Should render the \`DisplayCategoriesMobile\
           class="col gap-3"
         >
           <div
-            class="px-4"
+            class="px-4 overflow-y-auto"
             data-testid="display-categories-mobile-container"
           >
             <div>

@@ -11,7 +11,7 @@ export default function Board({ topTenUsers }: { topTenUsers: Array<User> }) {
   };
 
   return (
-    <div className="p-4" data-testid="scoreboard-container">
+    <div className="p-4 overflow-y-auto" data-testid="scoreboard-container">
       <h1 className="text-2xl font-semibold mb-4">Top 10 Scoreboard</h1>
       {topTenUsers.length ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

@@ -49,7 +49,7 @@ export default function RenderQuestions() {
           </div>
         ) : (
           <div
-            className="col justify-center items-center gap-4 max-w-3xl mx-8 h-full"
+            className="col justify-center items-center gap-4 max-w-3xl mx-8 h-full overflow-y-auto"
             data-testid="render-questions-container"
           >
             <h1 className="text-2xl">

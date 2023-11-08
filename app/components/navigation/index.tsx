@@ -6,7 +6,7 @@ import {
   StarIcon,
 } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import DesktopNav from "./desktop";
 import MobileNav from "./mobile";
 
@@ -22,7 +22,13 @@ export interface NavProps {
 
 export default function Navigation() {
   const path = usePathname();
-  const { playUrl } = useContext(GlobalContext);
+  const { playUrl, setPageReady } = useContext(GlobalContext);
+
+  useEffect(() => {
+    if (/sso-callback/.test(path)) {
+      setPageReady(true)
+    }
+  }, [path, setPageReady])
 
   const navigation = [
     { name: "Home", href: "/", icon: <HomeIcon height={25} width={25} /> },

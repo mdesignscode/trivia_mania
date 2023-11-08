@@ -50,7 +50,7 @@ export default function DisplayUserProgress({
 
   return (
     <div
-      className="text-xl text-gray-800 w-11/12 col gap-4 mx-auto py-4"
+      className="text-xl text-gray-800 w-11/12 col gap-4 mx-auto py-4 overflow-y-auto"
       data-testid="display-user-progress-container"
     >
       {/* Header */}

@@ -77,8 +77,6 @@ export async function POST(req: Request) {
     case "user.created":
       // create new user
       const newUser = new User(username, id, initialStat, imageUrl);
-      console.log(newUser);
-      
 
       storage.newUser(newUser);
       response = `${id} created`;

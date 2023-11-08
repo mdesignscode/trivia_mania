@@ -14,6 +14,7 @@ import {
 import { useUser } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { usePathname } from "next/navigation";
 import {
   Dispatch,
   SetStateAction,
@@ -115,6 +116,8 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
 
   const [playerMode, setPlayerMode] = useState<"Guest" | "Signed In">("Guest");
 
+  const path = usePathname();
+
   useEffect(() => {
     // detect storage feature
     setStorageIsAvailable(storageAvailable());
@@ -139,6 +142,12 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
     initialData: {},
     enabled: !!user,
   });
+
+  useEffect(() => {
+    if (/sso-callback/.test(path)) {
+      setPageReady(true)
+    }
+  }, [path])
 
   // set online user
   useEffect(() => {

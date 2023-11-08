@@ -79,7 +79,7 @@ export default function RenderQuestion({
         />
 
         <div className="question_options grid grid-cols-2 grid-rows-2 gap-4">
-          {answers.filter(Boolean).map((entity, i) => {
+          {answers.map((entity, i) => {
             const answer = decodeHTMLEntities(entity);
             return (
               <Button

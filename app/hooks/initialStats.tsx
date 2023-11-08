@@ -2,7 +2,7 @@
 
 import { GlobalContext } from "@/app/context/globalContext";
 import { TStatsRequest } from "@/models/customRequests";
-import { CATEGORIES, DIFFICULTY } from "@/utils/localStorage_utils";
+import { CATEGORIES } from "@/utils/localStorage_utils";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useCallback, useContext, useEffect, useState } from "react";

@@ -250,7 +250,7 @@ export default function Question({
         questionObj: {
           id,
           category,
-          answers: answers.filter(Boolean),
+          answers,
           correctAnswer,
           question,
           difficulty,

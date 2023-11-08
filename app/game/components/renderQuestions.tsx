@@ -56,6 +56,7 @@ export default function RenderQuestions() {
               Question {questionIndex} of {questionsLength}
             </h1>
             {questions.map((question, i) => {
+              question.answers = question.answers.filter(Boolean)
               return (
                 <Question
                   index={i + poolIndex + 1}

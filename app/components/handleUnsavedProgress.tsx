@@ -3,12 +3,32 @@ import { Button } from "@/components/styledComponents";
 import { GlobalContext } from "@/context/globalContext";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import reloadPage from "./reloadPage";
 import { ANSWERED_QUESTIONS, UNSAVED_DATA, clearQuestionData } from "@/utils/localStorage_utils";
 import { IUpdateUserStatsRequest } from "@/models/customRequests";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import User from "@/models/user";
 
 export default function HandleUnsavedProgress() {
   const [hasUnsavedProgress, setHasUnsavedProgress] = useState(false);
+  const router = useRouter()
+  const [error, setError] = useState("")
+
+  const mutation = useMutation(() => {
+    const hasUnsavedData = localStorage.getItem(UNSAVED_DATA) as string;
+    const answeredQuestions = localStorage.getItem(ANSWERED_QUESTIONS) as string;
+
+      const progress = JSON.parse(hasUnsavedData);
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const url = `${baseUrl}/users/updateStats`;
+      const { id } = triviaUser as User;
+
+      return axios.post(url, {
+        stats: progress,
+        id,
+        answeredQuestions: answeredQuestions.split(","),
+      } as IUpdateUserStatsRequest);
+  })
 
   const {
     storageIsAvailable,
@@ -16,28 +36,23 @@ export default function HandleUnsavedProgress() {
   } = useContext(GlobalContext);
 
 
-  async function saveProgress() {
+  function saveProgress() {
     const hasUnsavedData = localStorage.getItem(UNSAVED_DATA);
     const answeredQuestions = localStorage.getItem(ANSWERED_QUESTIONS);
 
     if (hasUnsavedData && triviaUser && answeredQuestions) {
-      const progress = JSON.parse(hasUnsavedData);
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-      const url = `${baseUrl}/users/updateStats`;
-      const id = triviaUser.id;
-
-      const { data } = await axios.post(url, {
-        stats: progress,
-        id,
-        answeredQuestions: answeredQuestions.split(","),
-      } as IUpdateUserStatsRequest);
-
-      if (data === "User stats updated successfully") {
-        clearQuestionData()
-        reloadPage()
-      } else console.log(data);
+      mutation.mutate()
     }
   }
+
+  useEffect(() => {
+    if (mutation.data && triviaUser) {
+      clearQuestionData()
+      router.push("/users/" + triviaUser.id)
+    } else if (mutation.error) {
+      setError((mutation.error as any).message)
+    }
+  }, [mutation, router, triviaUser])
 
   useEffect(() => {
     if (storageIsAvailable) {
@@ -52,7 +67,10 @@ export default function HandleUnsavedProgress() {
   function discardProgress() {
     if (storageIsAvailable) {
       localStorage.removeItem(UNSAVED_DATA);
-      reloadPage()
+    }
+
+    if (triviaUser) {
+      router.push("/users/" + triviaUser.id)
     }
   }
 
@@ -81,6 +99,8 @@ export default function HandleUnsavedProgress() {
               Discard Progress
             </Button>
           </div>
+
+          {error && <div className="text-2xl">{error}</div>}
         </div>
       </div>
     )

@@ -95,19 +95,12 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
   const [categoryChoice, setCategoryChoice] = useState<boolean[]>([]);
 
   // play navigation link will have current play filters
-  const [_playFilters, _setPlayFilters] = useState({
+  const [playFilters, setPlayFilters] = useState({
     difficulty: "",
     categories: "",
   });
-  const playFilters = useRef(_playFilters);
-  function setPlayFilters(
-    cb: (state: typeof playFilters.current) => typeof playFilters.current
-  ) {
-    playFilters.current = cb(playFilters.current);
-    _setPlayFilters(cb(playFilters.current));
-  }
   const playUrl = encodeURI(
-    `/game?difficulty=${playFilters.current.difficulty}&categories=${playFilters.current.categories}`
+    `/game?difficulty=${playFilters.difficulty}&categories=${playFilters.categories}`
   );
 
   const [pageReady, setPageReady] = useState(false);
@@ -212,7 +205,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
   const store: IGlobalContext = {
     triviaUser,
     storageIsAvailable: storageIsAvailable,
-    playFilters: playFilters.current,
+    playFilters,
     setPlayFilters: setPlayFilters,
     playUrl,
     pageReady,

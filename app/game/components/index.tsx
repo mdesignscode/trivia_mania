@@ -43,12 +43,7 @@ export default function Question({
   // set question state
   const [timesUp, setTimesUp] = useState(false);
   const [CTA, setCTA] = useState("Next Question");
-  const [_userAnswer, _setUserAnswer] = useState("");
-  const userAnswer = useRef(_userAnswer);
-  const setUserAnswer = (answer: string) => {
-    userAnswer.current = answer;
-    _setUserAnswer(answer);
-  };
+  const [userAnswer, setUserAnswer] = useState("");
 
   const router = useRouter()
 
@@ -118,7 +113,7 @@ export default function Question({
 
   const handleTimesUp = useCallback(() => {
     // display correct answer if user did not click any button
-    if (!userAnswer.current) {
+    if (!userAnswer) {
       // animate correct answer
       const el = document.getElementById(correctAnswer);
       el?.style.setProperty("--animate-duration", "1s");
@@ -132,16 +127,7 @@ export default function Question({
 
     setTimesUp(true);
     setTimerHasStarted(false);
-  }, [
-    answers,
-    category,
-    correctAnswer,
-    difficulty,
-    id,
-    question,
-    setTimerHasStarted,
-    updateProgress,
-  ]);
+  }, [answers, category, correctAnswer, difficulty, id, question, updateProgress, userAnswer]);
 
   function handleNextQuestion() {
     switch (CTA) {
@@ -263,7 +249,7 @@ export default function Question({
         timesUp,
         handleNextQuestion,
         handleViewProgress,
-        userAnswer: userAnswer.current,
+        userAnswer,
         answerFeedback,
         handleContinueLater,
       }}

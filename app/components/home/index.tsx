@@ -22,7 +22,7 @@ export default function HomePage() {
   const transitionUI = showCategories
       ? { opacity: 0, top: 0, right: isMobile ? 0 : "200%", scale: 2 }
       : { opacity: 1, top: "90%", right: 0, scale: 2 },
-    transititionUIStyles = classNames(
+    transitionUIStyles = classNames(
       "bg-accent absolute -z-10 rounded-full",
       showCategories ? " w-10/12 h-full" : "w-64 h-64"
     );
@@ -70,7 +70,7 @@ export default function HomePage() {
           initial={{ opacity: 0, top: 0, right: "100%", scale: 10 }}
           animate={transitionUI}
           transition={{ duration: 2.5 }}
-          className={transititionUIStyles}
+          className={transitionUIStyles}
         />
       </div>
     </motion.div>

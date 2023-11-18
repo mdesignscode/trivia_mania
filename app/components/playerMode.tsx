@@ -19,8 +19,6 @@ export default function PlayerMode({
       setPageReady(true);
       if (!triviaUser) {
         router.push("/sign-in");
-      } else {
-        router.push("/");
       }
     } else {
       setPageReady(true);

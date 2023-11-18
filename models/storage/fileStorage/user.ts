@@ -66,6 +66,7 @@ export default class UserStorage extends BaseModel {
     const user = this.getUser(id);
     if (user) {
       user.submitRound(stats, questionsAnswered);
+      this.save()
     }
   }
 

@@ -73,6 +73,7 @@ export const GameContext = createContext<IGameContext>(initialGameContext);
 export function GameProvider({ children }: { children: ReactElement }) {
   const [playerStats, setPlayerStats] = useState<IUserStats>(initialStat);
   const [hasSubmit, setHasSubmit] = useState(false);
+  const [makeRequest, setMakeRequest] = useState(true)
 
   const [answeredQuestions, setAnsweredQuestions] = useState<string[]>([]);
 
@@ -126,6 +127,21 @@ export function GameProvider({ children }: { children: ReactElement }) {
       setAnsweredQuestions(() => localAnsweredQuestions.split(","));
     }
   }, [storageIsAvailable]);
+
+  useEffect(() => {
+    if (isError) {
+      setErrorMessage((error as any).message);
+      return;
+    }
+
+    if (isFetched && triviaUser) {
+      if (storageIsAvailable) {
+        clearQuestionData();
+      }
+      setHasSubmit(true)
+      router.push("/users/" + triviaUser.id);
+    }
+  }, [error, isError, isFetched, router, storageIsAvailable, triviaUser]);
 
   const updateProgress = (question: IQuestion, answer: string) => {
     setAnsweredQuestions((state) => {
@@ -205,33 +221,11 @@ export function GameProvider({ children }: { children: ReactElement }) {
     });
   }
 
-  const submitProgress = useCallback(() => {
+  const submitProgress = () => {
     if (triviaUser) {
       setShouldSubmit(true);
-
-      if (isError) {
-        setErrorMessage((error as any).message);
-        setShouldSubmit(false);
-        return;
-      }
-
-      if (isFetched) {
-        if (storageIsAvailable) {
-          clearQuestionData();
-        }
-        setHasSubmit(true)
-        setShouldSubmit(false);
-        router.push("/users/" + triviaUser.id);
-      }
     }
-  }, [
-    triviaUser,
-    isError,
-    isFetched,
-    error,
-    storageIsAvailable,
-    router,
-  ]);
+  };
 
   const store: IGameContext = {
     submitProgress,

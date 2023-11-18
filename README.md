@@ -65,7 +65,7 @@
 
 <h2>🚀 Demo</h2>
 
-[placeholder-url](placeholder-url)
+[Live Demo](https://lnkd.in/e5rEwWfE)
 
 
 

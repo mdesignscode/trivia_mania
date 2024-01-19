@@ -25,7 +25,7 @@ export default function RenderCategories({
   const categoriesProps = { showMore, handleCategories };
 
   const containerStyles = classNames(
-    "text-center col gap-3 justify-center mx-4 overflow-y-auto",
+    "text-center col gap-3 justify-center mx-4",
     isMobile ? "w-full h-3/4 py-4" : "h-11/12 w-3/4"
   );
 

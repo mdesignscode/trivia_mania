@@ -26,7 +26,7 @@ export default function DisplayCategoriesMobile({
   ) : (
     <div
       data-testid="display-categories-mobile-container"
-      className="px-4 overflow-y-auto"
+🔧🔨🖼📱 fix gome page responsiveness 🔧🔨🖼📱      className="px-4"
     >
       {!showMore && (
         <motion.div

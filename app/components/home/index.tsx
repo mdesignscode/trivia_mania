@@ -15,8 +15,8 @@ export default function HomePage() {
   const isMobile = useWindowWidth();
 
   const showingCategoriesStyles = classNames(
-    "justify-between items-center h-full",
-    isMobile ? "col" : "flex"
+    "justify-between items-center gap-4",
+    isMobile ? "col" : "flex h-full"
   );
 
   const transitionUI = showCategories
@@ -24,7 +24,7 @@ export default function HomePage() {
       : { opacity: 1, top: "90%", right: 0, scale: 2 },
     transitionUIStyles = classNames(
       "bg-accent absolute -z-10 rounded-full",
-      showCategories ? " w-10/12 h-full" : "w-64 h-64"
+      showCategories ? "w-10/12 h-full" : "w-64 h-64"
     );
 
   return (
@@ -35,7 +35,10 @@ export default function HomePage() {
       transition={{ duration: 0.5 }}
       className="h-full w-full relative overflow-hidden"
     >
-      <div className="col w-full h-full" data-testid="home-container">
+      <div
+        className="col h-full overflow-y-auto"
+        data-testid="home-container"
+      >
         <Welcome />
 
         {showCategories ? (
@@ -48,7 +51,7 @@ export default function HomePage() {
               className={classNames(
                 "col items-center justify-center bg-accent",
                 isMobile
-                  ? "rounded-b-3xl w-full h-2/5 py-4 overflow-y-auto"
+                  ? "rounded-b-3xl w-full h-2/5 py-4"
                   : "rounded-r-3xl h-full w-1/4"
               )}
             >
@@ -65,14 +68,14 @@ export default function HomePage() {
             <Categories />
           </>
         )}
-
-        <motion.div
-          initial={{ opacity: 0, top: 0, right: "100%", scale: 10 }}
-          animate={transitionUI}
-          transition={{ duration: 2.5 }}
-          className={transitionUIStyles}
-        />
       </div>
+
+      <motion.div
+        initial={{ opacity: 0, top: 0, right: "100%", scale: 10 }}
+        animate={transitionUI}
+        transition={{ duration: 2.5 }}
+        className={transitionUIStyles}
+      />
     </motion.div>
   );
 }

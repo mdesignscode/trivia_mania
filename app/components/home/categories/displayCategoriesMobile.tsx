@@ -25,8 +25,7 @@ export default function DisplayCategoriesMobile({
     <Loading length={8} />
   ) : (
     <div
-      data-testid="display-categories-mobile-container"
-🔧🔨🖼📱 fix gome page responsiveness 🔧🔨🖼📱      className="px-4"
+      data-testid="display-categories-mobile-container" className="px-4"
     >
       {!showMore && (
         <motion.div

@@ -63,6 +63,7 @@ export default function RenderDifficulties({
                   testid={stat}
                   primary={difficultyChoice[stat]}
                   key={stat}
+                  showCategories={showCategories}
                 >
                   {stat} ({difficultyStats[stat]})
                 </Button>

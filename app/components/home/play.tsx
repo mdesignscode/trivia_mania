@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useContext } from "react";
 import { Button } from "../styledComponents";
+import { HomeContext } from "@/app/context/homeContext";
 
 export default function Play() {
   const {
@@ -13,6 +14,7 @@ export default function Play() {
     playFilters: { difficulty, categories },
     playUrl,
   } = useContext(GlobalContext);
+  const { showCategories } = useContext(HomeContext);
 
   function handlePlay() {
     // update filters in local storage new filters different
@@ -47,7 +49,12 @@ export default function Play() {
       transition={{ delay: 1.5, duration: 1.5 }}
     >
       <Link href={playUrl} data-testid="play-link">
-        <Button cta={true} onClick={handlePlay} testid="play-button">
+        <Button
+          showCategories={showCategories}
+          cta={true}
+          onClick={handlePlay}
+          testid="play-button"
+        >
           Start Playing
         </Button>
       </Link>

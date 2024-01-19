@@ -9,7 +9,12 @@ const color = "#ffcb74";
 const dark = "#2f2f2f";
 const light = "#f6f6f6";
 
-const ButtonComponent = styled.button<{ $primary?: boolean; $cta?: boolean; $play?: boolean }>`
+const ButtonComponent = styled.button<{
+  $primary?: boolean;
+  $cta?: boolean;
+  $play?: boolean;
+  $showCategories?: boolean;
+}>`
   background: transparent;
   border-radius: 5px;
   border: 2px solid ${color};
@@ -53,10 +58,20 @@ const ButtonComponent = styled.button<{ $primary?: boolean; $cta?: boolean; $pla
     `}
 
   ${(props) =>
+    props.$showCategories &&
+    css`
+      border-color: ${props.$primary ? light : dark};
+
+      &:hover {
+        border-color: ${!props.$primary ? light : dark};
+      }
+    `}
+
+  ${(props) =>
     props.$cta &&
     css`
       color: ${light};
-      border: 2px solid ${color};
+      border: 2px solid ${props.$showCategories ? light : color};
       padding: 0.75rem;
       letter-spacing: 2px;
       min-width: 160px;
@@ -104,6 +119,7 @@ interface IButtonProps
   textSize?: string;
   testid?: string;
   play?: boolean;
+  showCategories?: boolean;
 }
 
 export function Button({
@@ -116,7 +132,8 @@ export function Button({
   id,
   testid,
   play,
-  disabled
+  disabled,
+  showCategories,
 }: IButtonProps) {
   return (
     <motion.span
@@ -136,6 +153,7 @@ export function Button({
         $primary={primary}
         $play={play}
         disabled={disabled}
+        $showCategories={showCategories}
       >
         {children}
       </ButtonComponent>

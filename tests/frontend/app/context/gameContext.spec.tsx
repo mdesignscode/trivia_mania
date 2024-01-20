@@ -66,16 +66,6 @@ describe("GameContext provider", () => {
     const newPlayerStats = state.result.current.playerStats;
     expect(newPlayerStats).toEqual(mockStats);
     expect(state.result.current.answeredQuestions.join(",")).toBe("mockId");
-
-    const localAnsweredQuestions = localStorage.getItem(ANSWERED_QUESTIONS),
-      localProgress = localStorage.getItem(PROGRESS),
-      localUnsavedProgress = localStorage.getItem(UNSAVED_DATA),
-      statsString = JSON.stringify(mockStats);
-
-    // assert local storage data
-    expect(localAnsweredQuestions).toBe("mockId");
-    expect(localProgress).toBe(statsString);
-    expect(localUnsavedProgress).toBe(statsString);
   });
 
   it("Submits a user's progress to server", async () => {

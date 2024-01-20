@@ -52,7 +52,7 @@ exports[`Question component Answer buttons is not disabled if current question h
             data-testid="Mocha & Chai"
           >
             <button
-              class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
               id="Mocha & Chai"
             >
               <span
@@ -67,7 +67,7 @@ exports[`Question component Answer buttons is not disabled if current question h
             data-testid="React | Vue | Angular"
           >
             <button
-              class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
               id="React | Vue | Angular"
             >
               <span
@@ -82,7 +82,7 @@ exports[`Question component Answer buttons is not disabled if current question h
             data-testid="Mock Aswer 3"
           >
             <button
-              class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
               id="Mock Aswer 3"
             >
               <span
@@ -97,7 +97,7 @@ exports[`Question component Answer buttons is not disabled if current question h
             data-testid="Mock Correct Answer"
           >
             <button
-              class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
               id="Mock Correct Answer"
             >
               <span
@@ -113,7 +113,7 @@ exports[`Question component Answer buttons is not disabled if current question h
           data-testid="continue-later-button"
         >
           <button
-            class="sc-bcPKhP fjXGcT w-full"
+            class="sc-bcPKhP fVQoNj w-full"
           >
             Continue Later
           </button>
@@ -194,7 +194,7 @@ exports[`Question component Disables answer buttons if current question has alre
             data-testid="Mocha & Chai"
           >
             <button
-              class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
               disabled=""
               id="Mocha & Chai"
             >
@@ -226,7 +226,7 @@ exports[`Question component Disables answer buttons if current question has alre
             data-testid="React | Vue | Angular"
           >
             <button
-              class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
               disabled=""
               id="React | Vue | Angular"
             >
@@ -242,7 +242,7 @@ exports[`Question component Disables answer buttons if current question has alre
             data-testid="Mock Aswer 3"
           >
             <button
-              class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
               disabled=""
               id="Mock Aswer 3"
             >
@@ -258,7 +258,7 @@ exports[`Question component Disables answer buttons if current question has alre
             data-testid="Mock Correct Answer"
           >
             <button
-              class="sc-bcPKhP coQATf flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP jLmHOz flex w-full justify-center gap-2 items-center animate__animated"
               disabled=""
               id="Mock Correct Answer"
               style="--animate-duration: 1s;"
@@ -292,14 +292,14 @@ exports[`Question component Disables answer buttons if current question has alre
           data-testid="continue-later-button"
         >
           <button
-            class="sc-bcPKhP fjXGcT w-full"
+            class="sc-bcPKhP fVQoNj w-full"
           >
             Continue Later
           </button>
         </span>
         <span>
           <button
-            class="sc-bcPKhP coQATf w-full"
+            class="sc-bcPKhP jLmHOz w-full"
           >
             Next Question
           </button>
@@ -380,7 +380,7 @@ exports[`Question component snapshot matches 1`] = `
             data-testid="Mocha & Chai"
           >
             <button
-              class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
               id="Mocha & Chai"
             >
               <span
@@ -395,7 +395,7 @@ exports[`Question component snapshot matches 1`] = `
             data-testid="React | Vue | Angular"
           >
             <button
-              class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
               id="React | Vue | Angular"
             >
               <span
@@ -410,7 +410,7 @@ exports[`Question component snapshot matches 1`] = `
             data-testid="Mock Aswer 3"
           >
             <button
-              class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
               id="Mock Aswer 3"
             >
               <span
@@ -425,7 +425,7 @@ exports[`Question component snapshot matches 1`] = `
             data-testid="Mock Correct Answer"
           >
             <button
-              class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
               id="Mock Correct Answer"
             >
               <span
@@ -441,7 +441,7 @@ exports[`Question component snapshot matches 1`] = `
           data-testid="continue-later-button"
         >
           <button
-            class="sc-bcPKhP fjXGcT w-full"
+            class="sc-bcPKhP fVQoNj w-full"
           >
             Continue Later
           </button>

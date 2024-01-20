@@ -67,15 +67,14 @@ describe("useFetchQuestionsList hook", () => {
       expect(updatedPoolIndex).toBe(5);
     });
 
-    it("Fetches new questions if `newParams` flag set in localStorage", async () => {
+    it("Fetches new questions if newFilters state true", async () => {
       const Wrapper = GlobalWrapper({
         playFilters: {
           difficulty: "hard",
           categories: "Entertainment: Music",
         },
+        newFilters: true
       });
-
-      localStorage.setItem(NEW_PARAMS, "true");
 
       // call custom hook with provider to provide storage unavailability
       const { result: initialState } = renderHook(

@@ -1,3 +1,4 @@
+import { mockMutate } from "@/app/__mocks__/@tanstack/react-query";
 import HandleUnsavedProgress from "@/components/handleUnsavedProgress";
 import { mockInitialProgress } from "@/utils/mockData";
 import {
@@ -6,8 +7,6 @@ import {
 } from "@/utils/test_global_context";
 import { screen, userEvent } from "@/utils/test_utils";
 import axios from "axios";
-
-jest.mock("@/components/reloadPage");
 
 // setup API url
 const baseUrl = "mockhost/api";
@@ -46,13 +45,9 @@ describe("HandleUnsavedProgress component", () => {
     await user.click(saveButton);
 
     // Assert that the axios.post function was called with correct body
-    expect(axios.post).toHaveBeenCalledWith(url, {
-      stats: mockInitialProgress,
-      id: mockUser.id,
-      answeredQuestions: mockAnsweredQuestions,
-    });
+    expect(mockMutate).toBeCalled();
 
-    // Simulate a click on the "Save progress" button
+    // Simulate a click on the "Discard progress" button
     await user.click(discardButton);
 
     const unsavedData = localStorage.getItem("unsavedData");

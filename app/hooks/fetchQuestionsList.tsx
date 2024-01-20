@@ -89,7 +89,7 @@ export default function useFetchQuestionsList(): IFetchQuestions {
 
   // fetch list of questions
   const { data, isFetched } = useQuery({
-    queryKey: ["play", triviaUser, newFilters],
+    queryKey: ["play", triviaUser, difficulty, categories],
     queryFn: getQuestions,
     initialData: [],
     enabled: shouldFetchQuestions,

@@ -1,32 +1,20 @@
 import GamePage from "@/app/game/page";
 import {
+  mockSetNewFilters,
   mockSetPlayFilters,
   renderGlobalContext,
 } from "@/utils/test_global_context";
-import { NEW_PARAMS } from "@/utils/localStorage_utils";
-
-// jest.mock("@/context/gameContext");
 
 describe("GamePage component", () => {
-  it("Sets new params flag if search params are different from state filters", async () => {
-    renderGlobalContext(<GamePage />);
-
-    const localFlag = localStorage.getItem(NEW_PARAMS);
-
-    expect(localFlag).toBe("true");
-    expect(mockSetPlayFilters).toBeCalled();
-  });
-
-  it("Does not set new params filter if search params are same as state filters", async () => {
+  it("Sets new filters state if search params are different from state filters", async () => {
     renderGlobalContext(<GamePage />, {
       playFilters: {
-        difficulty: "easy",
-        categories: "Mock Category",
+        difficulty: "hard",
+        categories: "Mock Category 2",
       },
     });
 
-    const localFlag = localStorage.getItem(NEW_PARAMS);
-
-    expect(localFlag).toBeNull();
+    expect(mockSetNewFilters).toBeCalledWith(true);
+    expect(mockSetPlayFilters).toBeCalled();
   });
 });

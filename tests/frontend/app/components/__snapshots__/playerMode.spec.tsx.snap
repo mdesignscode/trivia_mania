@@ -17,7 +17,7 @@ exports[`PlayerMode component Prompts a signed in user to continue 1`] = `
           data-testid="continue-button"
         >
           <button
-            class="sc-bcPKhP fjXGcT"
+            class="sc-bcPKhP fVQoNj"
           >
             Continue as 
             <strong>
@@ -48,7 +48,7 @@ exports[`PlayerMode component Prompts a signed out user to choose a playing mode
           data-testid="guest-user-button"
         >
           <button
-            class="sc-bcPKhP fjXGcT"
+            class="sc-bcPKhP fVQoNj"
           >
             Guest User
           </button>
@@ -57,7 +57,7 @@ exports[`PlayerMode component Prompts a signed out user to choose a playing mode
           data-testid="signin-button"
         >
           <button
-            class="sc-bcPKhP fjXGcT"
+            class="sc-bcPKhP fVQoNj"
           >
             Sign In
           </button>

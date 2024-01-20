@@ -31,7 +31,7 @@ exports[`HandleUnsavedProgress component snapshot matches with unsaved progress 
               data-testid="save-progress-button"
             >
               <button
-                class="sc-bcPKhP coQATf"
+                class="sc-bcPKhP jLmHOz"
               >
                 Save progress
               </button>
@@ -40,7 +40,7 @@ exports[`HandleUnsavedProgress component snapshot matches with unsaved progress 
               data-testid="discard-progress-button"
             >
               <button
-                class="sc-bcPKhP fjXGcT"
+                class="sc-bcPKhP fVQoNj"
               >
                 Discard Progress
               </button>

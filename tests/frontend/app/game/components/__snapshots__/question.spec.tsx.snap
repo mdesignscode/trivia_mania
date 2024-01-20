@@ -52,7 +52,7 @@ exports[`RenderQuestion component snapshot matches 1`] = `
             data-testid="Mocha & Chai"
           >
             <button
-              class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
               id="Mocha & Chai"
             >
               <span
@@ -67,7 +67,7 @@ exports[`RenderQuestion component snapshot matches 1`] = `
             data-testid="React | Vue | Angular"
           >
             <button
-              class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
               id="React | Vue | Angular"
             >
               <span
@@ -82,7 +82,7 @@ exports[`RenderQuestion component snapshot matches 1`] = `
             data-testid="Mock Aswer 3"
           >
             <button
-              class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
               id="Mock Aswer 3"
             >
               <span
@@ -97,7 +97,7 @@ exports[`RenderQuestion component snapshot matches 1`] = `
             data-testid="Mock Correct Answer"
           >
             <button
-              class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+              class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
               id="Mock Correct Answer"
             >
               <span
@@ -113,7 +113,7 @@ exports[`RenderQuestion component snapshot matches 1`] = `
           data-testid="continue-later-button"
         >
           <button
-            class="sc-bcPKhP fjXGcT w-full"
+            class="sc-bcPKhP fVQoNj w-full"
           >
             Continue Later
           </button>

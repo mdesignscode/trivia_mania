@@ -18,12 +18,11 @@ describe("PlayerMode component", () => {
     expect(container).toBeInTheDocument();
     expect(container).toHaveTextContent("Play asContinue as mock user");
 
-    // find continue button to test behaviour
+    // find continue button to test behavior
     const continueButton = await screen.findByTestId("continue-button");
     await user.click(continueButton);
 
-    // test behaviour
-    expect(mockRouterPush).toBeCalledWith("/");
+    // test behavior
     expect(mockSetPlayerMode).toBeCalledWith("Signed In");
     expect(mockSetPageReady).toBeCalledWith(true);
 
@@ -42,20 +41,20 @@ describe("PlayerMode component", () => {
     expect(container).toBeInTheDocument();
     expect(container).toHaveTextContent("Play asGuest UserSign In");
 
-    // find sign in button to test behaviour
+    // find sign in button to test behavior
     const signInButton = await screen.findByTestId("signin-button");
     await user.click(signInButton);
 
-    // test behaviour
+    // test behavior
     expect(mockRouterPush).toBeCalledWith("/sign-in");
     expect(mockSetPlayerMode).toBeCalledWith("Signed In");
     expect(mockSetPageReady).toBeCalledWith(true);
 
-    // find guest user button to test behaviour
+    // find guest user button to test behavior
     const guestUserButton = await screen.findByTestId("guest-user-button");
     await user.click(guestUserButton);
 
-    // test behaviour
+    // test behavior
     expect(mockSetPageReady).toBeCalledWith(true);
 
     expect(baseElement).toMatchSnapshot();

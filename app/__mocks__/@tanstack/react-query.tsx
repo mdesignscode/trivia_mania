@@ -1,11 +1,10 @@
 import {
   mockCategoryStats,
   mockDifficultyStats,
-  mockInitialProgress,
   mockQuestions,
 } from "@/utils/mockData";
 import { mockUser } from "@/utils/test_global_context";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 // mock QueryClient
 export class QueryClient {
@@ -77,4 +76,13 @@ export function QueryClientProvider({
   children: React.ReactNode;
 }) {
   return <div>{children}</div>;
+}
+
+export const mockMutate = jest.fn();
+
+// mock useMutation
+export function useMutation(cb: () => Promise<AxiosResponse<any, any>>) {
+  return {
+    mutate: mockMutate,
+  };
 }

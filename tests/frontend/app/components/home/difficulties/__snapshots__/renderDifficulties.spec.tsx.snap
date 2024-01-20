@@ -21,7 +21,7 @@ exports[`RenderDifficulties component snapshot matches 1`] = `
               data-testid="easy"
             >
               <button
-                class="sc-bcPKhP fjXGcT"
+                class="sc-bcPKhP fVQoNj"
               >
                 easy
                  (
@@ -33,7 +33,7 @@ exports[`RenderDifficulties component snapshot matches 1`] = `
               data-testid="hard"
             >
               <button
-                class="sc-bcPKhP fjXGcT"
+                class="sc-bcPKhP fVQoNj"
               >
                 hard
                  (
@@ -45,7 +45,7 @@ exports[`RenderDifficulties component snapshot matches 1`] = `
               data-testid="medium"
             >
               <button
-                class="sc-bcPKhP fjXGcT"
+                class="sc-bcPKhP fVQoNj"
               >
                 medium
                  (
@@ -57,7 +57,7 @@ exports[`RenderDifficulties component snapshot matches 1`] = `
               data-testid="all difficulties"
             >
               <button
-                class="sc-bcPKhP fjXGcT"
+                class="sc-bcPKhP fVQoNj"
               >
                 all difficulties
                  (

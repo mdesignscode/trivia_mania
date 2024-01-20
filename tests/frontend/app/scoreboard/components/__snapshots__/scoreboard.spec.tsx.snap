@@ -4,7 +4,7 @@ exports[`Board component snapshot matches 1`] = `
 <body>
   <div>
     <div
-      class="p-4"
+      class="p-4 overflow-y-auto"
       data-testid="scoreboard-container"
     >
       <h1

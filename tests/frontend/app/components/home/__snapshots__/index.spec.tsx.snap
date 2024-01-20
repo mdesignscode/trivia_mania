@@ -8,7 +8,7 @@ exports[`HomePage component Renders <Difficulties /> 1`] = `
         class="h-full w-full relative overflow-hidden"
       >
         <div
-          class="col w-full h-full"
+          class="col h-full overflow-y-auto"
           data-testid="home-container"
         >
           <div>
@@ -28,7 +28,7 @@ exports[`HomePage component Renders <Difficulties /> 1`] = `
                   data-testid="easy"
                 >
                   <button
-                    class="sc-bcPKhP fjXGcT"
+                    class="sc-bcPKhP fVQoNj"
                   >
                     easy
                      (
@@ -40,7 +40,7 @@ exports[`HomePage component Renders <Difficulties /> 1`] = `
                   data-testid="hard"
                 >
                   <button
-                    class="sc-bcPKhP fjXGcT"
+                    class="sc-bcPKhP fVQoNj"
                   >
                     hard
                      (
@@ -52,7 +52,7 @@ exports[`HomePage component Renders <Difficulties /> 1`] = `
                   data-testid="medium"
                 >
                   <button
-                    class="sc-bcPKhP fjXGcT"
+                    class="sc-bcPKhP fVQoNj"
                   >
                     medium
                      (
@@ -64,7 +64,7 @@ exports[`HomePage component Renders <Difficulties /> 1`] = `
                   data-testid="all difficulties"
                 >
                   <button
-                    class="sc-bcPKhP fjXGcT"
+                    class="sc-bcPKhP fVQoNj"
                   >
                     all difficulties
                      (
@@ -75,10 +75,10 @@ exports[`HomePage component Renders <Difficulties /> 1`] = `
               </div>
             </div>
           </div>
-          <div
-            class="bg-accent absolute -z-10 rounded-full w-64 h-64"
-          />
         </div>
+        <div
+          class="bg-accent absolute -z-10 rounded-full w-64 h-64"
+        />
       </div>
     </div>
   </div>
@@ -93,11 +93,11 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
         class="h-full w-full relative overflow-hidden"
       >
         <div
-          class="col w-full h-full"
+          class="col h-full overflow-y-auto"
           data-testid="home-container"
         >
           <div
-            class="justify-between items-center h-full flex"
+            class="justify-between items-center gap-4 flex h-full"
           >
             <div
               class="col items-center justify-center bg-accent rounded-r-3xl h-full w-1/4"
@@ -119,7 +119,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                       data-testid="easy"
                     >
                       <button
-                        class="sc-bcPKhP fjXGcT"
+                        class="sc-bcPKhP kQvaAL"
                       >
                         easy
                          (
@@ -131,7 +131,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                       data-testid="hard"
                     >
                       <button
-                        class="sc-bcPKhP fjXGcT"
+                        class="sc-bcPKhP kQvaAL"
                       >
                         hard
                          (
@@ -143,7 +143,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                       data-testid="medium"
                     >
                       <button
-                        class="sc-bcPKhP fjXGcT"
+                        class="sc-bcPKhP kQvaAL"
                       >
                         medium
                          (
@@ -155,7 +155,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                       data-testid="all difficulties"
                     >
                       <button
-                        class="sc-bcPKhP fjXGcT"
+                        class="sc-bcPKhP kQvaAL"
                       >
                         all difficulties
                          (
@@ -175,7 +175,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                     data-testid="play-button"
                   >
                     <button
-                      class="sc-bcPKhP dmjhkA"
+                      class="sc-bcPKhP da-DpOO"
                     >
                       Start Playing
                     </button>
@@ -184,7 +184,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
               </div>
             </div>
             <div
-              class="text-center col gap-3 justify-center mx-4 overflow-y-auto h-11/12 w-3/4"
+              class="text-center col gap-3 justify-center mx-4 h-11/12 w-3/4"
               data-testid="render-categories-container"
             >
               <h1
@@ -207,7 +207,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                       data-testid="Category 1"
                     >
                       <button
-                        class="sc-bcPKhP fjXGcT"
+                        class="sc-bcPKhP fVQoNj"
                       >
                         Category 1
                          (
@@ -219,7 +219,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                       data-testid="Category 10"
                     >
                       <button
-                        class="sc-bcPKhP fjXGcT"
+                        class="sc-bcPKhP fVQoNj"
                       >
                         Category 10
                          (
@@ -231,7 +231,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                       data-testid="Category 11"
                     >
                       <button
-                        class="sc-bcPKhP fjXGcT"
+                        class="sc-bcPKhP fVQoNj"
                       >
                         Category 11
                          (
@@ -243,7 +243,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                       data-testid="Category 12"
                     >
                       <button
-                        class="sc-bcPKhP fjXGcT"
+                        class="sc-bcPKhP fVQoNj"
                       >
                         Category 12
                          (
@@ -255,7 +255,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                       data-testid="Category 13"
                     >
                       <button
-                        class="sc-bcPKhP fjXGcT"
+                        class="sc-bcPKhP fVQoNj"
                       >
                         Category 13
                          (
@@ -267,7 +267,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                       data-testid="Category 14"
                     >
                       <button
-                        class="sc-bcPKhP fjXGcT"
+                        class="sc-bcPKhP fVQoNj"
                       >
                         Category 14
                          (
@@ -279,7 +279,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                       data-testid="Category 15"
                     >
                       <button
-                        class="sc-bcPKhP fjXGcT"
+                        class="sc-bcPKhP fVQoNj"
                       >
                         Category 15
                          (
@@ -291,7 +291,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                       data-testid="Category 16"
                     >
                       <button
-                        class="sc-bcPKhP fjXGcT"
+                        class="sc-bcPKhP fVQoNj"
                       >
                         Category 16
                          (
@@ -303,7 +303,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                       data-testid="Category 17"
                     >
                       <button
-                        class="sc-bcPKhP fjXGcT"
+                        class="sc-bcPKhP fVQoNj"
                       >
                         Category 17
                          (
@@ -315,7 +315,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                       data-testid="Category 18"
                     >
                       <button
-                        class="sc-bcPKhP fjXGcT"
+                        class="sc-bcPKhP fVQoNj"
                       >
                         Category 18
                          (
@@ -333,7 +333,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                     data-testid="show-more-button"
                   >
                     <button
-                      class="sc-bcPKhP coQATf"
+                      class="sc-bcPKhP jLmHOz"
                     >
                       More categories
                     </button>
@@ -342,7 +342,7 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
                     data-testid="reset-categories-button"
                   >
                     <button
-                      class="sc-bcPKhP fjXGcT"
+                      class="sc-bcPKhP fVQoNj pointer-events-none"
                     >
                       Reset categories
                     </button>
@@ -351,10 +351,10 @@ exports[`HomePage component Renders <Difficulties />, <Categories /> and <Play /
               </div>
             </div>
           </div>
-          <div
-            class="bg-accent absolute -z-10 rounded-full  w-10/12 h-full"
-          />
         </div>
+        <div
+          class="bg-accent absolute -z-10 rounded-full w-10/12 h-full"
+        />
       </div>
     </div>
   </div>
@@ -369,7 +369,7 @@ exports[`HomePage component Renders <Welcome /> 1`] = `
         class="h-full w-full relative overflow-hidden"
       >
         <div
-          class="col w-full h-full"
+          class="col h-full overflow-y-auto"
           data-testid="home-container"
         >
           <div
@@ -390,16 +390,16 @@ exports[`HomePage component Renders <Welcome /> 1`] = `
               data-testid="welcome-continue-button"
             >
               <button
-                class="sc-bcPKhP coQATf text-2xl"
+                class="sc-bcPKhP jLmHOz text-2xl"
               >
                 Continue
               </button>
             </span>
           </div>
-          <div
-            class="bg-accent absolute -z-10 rounded-full w-64 h-64"
-          />
         </div>
+        <div
+          class="bg-accent absolute -z-10 rounded-full w-64 h-64"
+        />
       </div>
     </div>
   </div>

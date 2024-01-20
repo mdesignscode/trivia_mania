@@ -8,7 +8,7 @@ exports[`RenderQuestions component snapshot matches with a list of questions 1`]
         class="h-full flex-1 flex justify-center"
       >
         <div
-          class="col justify-center items-center gap-4 max-w-3xl mx-8 h-full"
+          class="col justify-center items-center gap-4 max-w-3xl mx-8 my-4 h-full overflow-y-auto"
           data-testid="render-questions-container"
         >
           <h1
@@ -67,7 +67,7 @@ exports[`RenderQuestions component snapshot matches with a list of questions 1`]
                 data-testid="Mocha & Chai"
               >
                 <button
-                  class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+                  class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
                   id="Mocha & Chai"
                 >
                   <span
@@ -82,7 +82,7 @@ exports[`RenderQuestions component snapshot matches with a list of questions 1`]
                 data-testid="React | Vue | Angular"
               >
                 <button
-                  class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+                  class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
                   id="React | Vue | Angular"
                 >
                   <span
@@ -97,7 +97,7 @@ exports[`RenderQuestions component snapshot matches with a list of questions 1`]
                 data-testid="Mock Aswer 3"
               >
                 <button
-                  class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+                  class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
                   id="Mock Aswer 3"
                 >
                   <span
@@ -112,7 +112,7 @@ exports[`RenderQuestions component snapshot matches with a list of questions 1`]
                 data-testid="Mock Correct Answer"
               >
                 <button
-                  class="sc-bcPKhP fjXGcT flex w-full justify-center gap-2 items-center animate__animated"
+                  class="sc-bcPKhP fVQoNj flex w-full justify-center gap-2 items-center animate__animated"
                   id="Mock Correct Answer"
                 >
                   <span
@@ -128,7 +128,7 @@ exports[`RenderQuestions component snapshot matches with a list of questions 1`]
               data-testid="continue-later-button"
             >
               <button
-                class="sc-bcPKhP fjXGcT w-full"
+                class="sc-bcPKhP fVQoNj w-full"
               >
                 Continue Later
               </button>
@@ -265,7 +265,7 @@ exports[`RenderQuestions component snapshot matches with unsaved data 1`] = `
                   data-testid="save-progress-button"
                 >
                   <button
-                    class="sc-bcPKhP coQATf"
+                    class="sc-bcPKhP jLmHOz"
                   >
                     Save progress
                   </button>
@@ -274,7 +274,7 @@ exports[`RenderQuestions component snapshot matches with unsaved data 1`] = `
                   data-testid="discard-progress-button"
                 >
                   <button
-                    class="sc-bcPKhP fjXGcT"
+                    class="sc-bcPKhP fVQoNj"
                   >
                     Discard Progress
                   </button>

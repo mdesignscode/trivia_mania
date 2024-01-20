@@ -37,7 +37,8 @@ export const mockSetPlayFilters = jest.fn(),
   mockSetPageReady = jest.fn(),
   mockSetDifficultyChoice = jest.fn(),
   mockSetCategoryChoice = jest.fn(),
-  mockSetPlayerMode = jest.fn()
+  mockSetPlayerMode = jest.fn(),
+  mockSetNewFilters = jest.fn();
 
 // create mock user
 export const mockUser = new User("mock user", "mockId");
@@ -64,7 +65,9 @@ export const mockGlobalContext: IGlobalContext = {
     "all difficulties": false,
   },
   playerMode: "Guest",
-  setPlayerMode: mockSetPlayerMode
+  setPlayerMode: mockSetPlayerMode,
+  setNewFilters: mockSetNewFilters,
+  newFilters: false
 };
 
 // wrapper for rendering custom hooks

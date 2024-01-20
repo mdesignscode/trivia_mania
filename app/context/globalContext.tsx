@@ -22,7 +22,6 @@ import {
   useEffect,
   useState,
 } from "react";
-
 export interface IUserStatus {
   user: User | null;
   isOnline: boolean;
@@ -103,7 +102,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
     categories: "",
   });
   const playUrl = encodeURI(
-    `/game?difficulty=${playFilters.difficulty}&categories=${playFilters.categories}`
+    `/game?difficulty=${playFilters.difficulty}&categories=${playFilters.categories.replaceAll("&", "|")}`
   );
 
   const [newFilters, setNewFilters] = useState(false);

@@ -5,7 +5,7 @@ exports[`DisplayUserProgress component snapshot matches last results 1`] = `
   <div>
     <div>
       <div
-        class="text-xl text-gray-800 w-11/12 col gap-4 mx-auto py-4"
+        class="text-xl text-gray-800 w-11/12 col gap-4 mx-auto py-4 overflow-y-auto"
         data-testid="display-user-progress-container"
       >
         <div>
@@ -166,7 +166,7 @@ exports[`DisplayUserProgress component snapshot matches no user stats 1`] = `
   <div>
     <div>
       <div
-        class="text-xl text-gray-800 w-11/12 col gap-4 mx-auto py-4"
+        class="text-xl text-gray-800 w-11/12 col gap-4 mx-auto py-4 overflow-y-auto"
         data-testid="display-user-progress-container"
       >
         <div>
@@ -220,7 +220,7 @@ exports[`DisplayUserProgress component snapshot matches user's progress 1`] = `
   <div>
     <div>
       <div
-        class="text-xl text-gray-800 w-11/12 col gap-4 mx-auto py-4"
+        class="text-xl text-gray-800 w-11/12 col gap-4 mx-auto py-4 overflow-y-auto"
         data-testid="display-user-progress-container"
       >
         <div>

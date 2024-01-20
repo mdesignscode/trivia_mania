@@ -22,7 +22,7 @@ exports[`Welcome component component snapshot matches 1`] = `
           data-testid="welcome-continue-button"
         >
           <button
-            class="sc-bcPKhP coQATf text-2xl"
+            class="sc-bcPKhP jLmHOz text-2xl"
           >
             Continue
           </button>

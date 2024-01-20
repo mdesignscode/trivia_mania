@@ -84,7 +84,7 @@ export default function RenderQuestion({
             return (
               <Button
                 className="flex w-full justify-center gap-2 items-center animate__animated"
-                onClick={() => handleUserAnswer(answer, i)}
+                onClick={() => handleUserAnswer(entity, i)}
                 key={answer}
                 id={answer}
                 disabled={timesUp}

@@ -72,8 +72,10 @@ describe("RenderQuestion component", () => {
 
     // find an answer button to click
     const randomValue = Math.floor(Math.random() * 4),
-      randomAnswerValue = decodeHTMLEntities(mockQuestion.answers[randomValue]);
-    const randomAnswer = await screen.findByText(randomAnswerValue);
+      randomAnswerValue = mockQuestion.answers[randomValue];
+    const randomAnswer = await screen.findByText(
+      decodeHTMLEntities(randomAnswerValue)
+    );
 
     expect(randomAnswer).toBeInTheDocument();
 
@@ -122,11 +124,11 @@ describe("RenderQuestion component", () => {
     );
 
     // find `Submit Results` button
-    const sumbitResultsButton = await screen.findByText("Submit Results");
-    expect(sumbitResultsButton).toBeInTheDocument();
+    const submitResultsButton = await screen.findByText("Submit Results");
+    expect(submitResultsButton).toBeInTheDocument();
 
     // click button
-    await user.click(sumbitResultsButton);
+    await user.click(submitResultsButton);
 
     expect(mockHandleNextQuestion).toBeCalled();
   });

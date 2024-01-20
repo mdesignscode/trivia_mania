@@ -5,7 +5,7 @@ exports[`RenderCategories component Should render the \`DisplayCategories\` and 
   <div>
     <div>
       <div
-        class="text-center col gap-3 justify-center mx-4 overflow-y-auto h-11/12 w-3/4"
+        class="text-center col gap-3 justify-center mx-4 h-11/12 w-3/4"
         data-testid="render-categories-container"
       >
         <h1
@@ -28,7 +28,7 @@ exports[`RenderCategories component Should render the \`DisplayCategories\` and 
                 data-testid="Category 1"
               >
                 <button
-                  class="sc-bcPKhP fjXGcT"
+                  class="sc-bcPKhP fVQoNj"
                 >
                   Category 1
                    (
@@ -40,7 +40,7 @@ exports[`RenderCategories component Should render the \`DisplayCategories\` and 
                 data-testid="Category 10"
               >
                 <button
-                  class="sc-bcPKhP fjXGcT"
+                  class="sc-bcPKhP fVQoNj"
                 >
                   Category 10
                    (
@@ -52,7 +52,7 @@ exports[`RenderCategories component Should render the \`DisplayCategories\` and 
                 data-testid="Category 11"
               >
                 <button
-                  class="sc-bcPKhP fjXGcT"
+                  class="sc-bcPKhP fVQoNj"
                 >
                   Category 11
                    (
@@ -64,7 +64,7 @@ exports[`RenderCategories component Should render the \`DisplayCategories\` and 
                 data-testid="Category 12"
               >
                 <button
-                  class="sc-bcPKhP fjXGcT"
+                  class="sc-bcPKhP fVQoNj"
                 >
                   Category 12
                    (
@@ -76,7 +76,7 @@ exports[`RenderCategories component Should render the \`DisplayCategories\` and 
                 data-testid="Category 13"
               >
                 <button
-                  class="sc-bcPKhP fjXGcT"
+                  class="sc-bcPKhP fVQoNj"
                 >
                   Category 13
                    (
@@ -88,7 +88,7 @@ exports[`RenderCategories component Should render the \`DisplayCategories\` and 
                 data-testid="Category 14"
               >
                 <button
-                  class="sc-bcPKhP fjXGcT"
+                  class="sc-bcPKhP fVQoNj"
                 >
                   Category 14
                    (
@@ -100,7 +100,7 @@ exports[`RenderCategories component Should render the \`DisplayCategories\` and 
                 data-testid="Category 15"
               >
                 <button
-                  class="sc-bcPKhP fjXGcT"
+                  class="sc-bcPKhP fVQoNj"
                 >
                   Category 15
                    (
@@ -112,7 +112,7 @@ exports[`RenderCategories component Should render the \`DisplayCategories\` and 
                 data-testid="Category 16"
               >
                 <button
-                  class="sc-bcPKhP fjXGcT"
+                  class="sc-bcPKhP fVQoNj"
                 >
                   Category 16
                    (
@@ -124,7 +124,7 @@ exports[`RenderCategories component Should render the \`DisplayCategories\` and 
                 data-testid="Category 17"
               >
                 <button
-                  class="sc-bcPKhP fjXGcT"
+                  class="sc-bcPKhP fVQoNj"
                 >
                   Category 17
                    (
@@ -136,7 +136,7 @@ exports[`RenderCategories component Should render the \`DisplayCategories\` and 
                 data-testid="Category 18"
               >
                 <button
-                  class="sc-bcPKhP fjXGcT"
+                  class="sc-bcPKhP fVQoNj"
                 >
                   Category 18
                    (
@@ -154,7 +154,7 @@ exports[`RenderCategories component Should render the \`DisplayCategories\` and 
               data-testid="show-more-button"
             >
               <button
-                class="sc-bcPKhP coQATf"
+                class="sc-bcPKhP jLmHOz"
               >
                 More categories
               </button>
@@ -163,7 +163,7 @@ exports[`RenderCategories component Should render the \`DisplayCategories\` and 
               data-testid="reset-categories-button"
             >
               <button
-                class="sc-bcPKhP fjXGcT"
+                class="sc-bcPKhP fVQoNj pointer-events-none"
               >
                 Reset categories
               </button>
@@ -181,7 +181,7 @@ exports[`RenderCategories component Should render the \`DisplayCategoriesMobile\
   <div>
     <div>
       <div
-        class="text-center col gap-3 justify-center mx-4 overflow-y-auto w-full h-3/4 py-4"
+        class="text-center col gap-3 justify-center mx-4 w-full h-3/4 py-4"
         data-testid="render-categories-container"
       >
         <h1
@@ -193,7 +193,7 @@ exports[`RenderCategories component Should render the \`DisplayCategoriesMobile\
           class="col gap-3"
         >
           <div
-            class="px-4 overflow-y-auto"
+            class="px-4"
             data-testid="display-categories-mobile-container"
           >
             <div>
@@ -205,7 +205,7 @@ exports[`RenderCategories component Should render the \`DisplayCategoriesMobile\
                   data-testid="Category 1"
                 >
                   <button
-                    class="sc-bcPKhP fjXGcT"
+                    class="sc-bcPKhP fVQoNj"
                   >
                     Category 1
                      (
@@ -217,7 +217,7 @@ exports[`RenderCategories component Should render the \`DisplayCategoriesMobile\
                   data-testid="Category 10"
                 >
                   <button
-                    class="sc-bcPKhP fjXGcT"
+                    class="sc-bcPKhP fVQoNj"
                   >
                     Category 10
                      (
@@ -229,7 +229,7 @@ exports[`RenderCategories component Should render the \`DisplayCategoriesMobile\
                   data-testid="Category 11"
                 >
                   <button
-                    class="sc-bcPKhP fjXGcT"
+                    class="sc-bcPKhP fVQoNj"
                   >
                     Category 11
                      (
@@ -241,7 +241,7 @@ exports[`RenderCategories component Should render the \`DisplayCategoriesMobile\
                   data-testid="Category 12"
                 >
                   <button
-                    class="sc-bcPKhP fjXGcT"
+                    class="sc-bcPKhP fVQoNj"
                   >
                     Category 12
                      (
@@ -253,7 +253,7 @@ exports[`RenderCategories component Should render the \`DisplayCategoriesMobile\
                   data-testid="Category 13"
                 >
                   <button
-                    class="sc-bcPKhP fjXGcT"
+                    class="sc-bcPKhP fVQoNj"
                   >
                     Category 13
                      (
@@ -265,7 +265,7 @@ exports[`RenderCategories component Should render the \`DisplayCategoriesMobile\
                   data-testid="Category 14"
                 >
                   <button
-                    class="sc-bcPKhP fjXGcT"
+                    class="sc-bcPKhP fVQoNj"
                   >
                     Category 14
                      (
@@ -277,7 +277,7 @@ exports[`RenderCategories component Should render the \`DisplayCategoriesMobile\
                   data-testid="Category 15"
                 >
                   <button
-                    class="sc-bcPKhP fjXGcT"
+                    class="sc-bcPKhP fVQoNj"
                   >
                     Category 15
                      (
@@ -289,7 +289,7 @@ exports[`RenderCategories component Should render the \`DisplayCategoriesMobile\
                   data-testid="Category 16"
                 >
                   <button
-                    class="sc-bcPKhP fjXGcT"
+                    class="sc-bcPKhP fVQoNj"
                   >
                     Category 16
                      (
@@ -301,7 +301,7 @@ exports[`RenderCategories component Should render the \`DisplayCategoriesMobile\
                   data-testid="Category 17"
                 >
                   <button
-                    class="sc-bcPKhP fjXGcT"
+                    class="sc-bcPKhP fVQoNj"
                   >
                     Category 17
                      (
@@ -313,7 +313,7 @@ exports[`RenderCategories component Should render the \`DisplayCategoriesMobile\
                   data-testid="Category 18"
                 >
                   <button
-                    class="sc-bcPKhP fjXGcT"
+                    class="sc-bcPKhP fVQoNj"
                   >
                     Category 18
                      (
@@ -332,7 +332,7 @@ exports[`RenderCategories component Should render the \`DisplayCategoriesMobile\
               data-testid="show-more-button"
             >
               <button
-                class="sc-bcPKhP coQATf"
+                class="sc-bcPKhP jLmHOz"
               >
                 Next categories
               </button>
@@ -341,7 +341,7 @@ exports[`RenderCategories component Should render the \`DisplayCategoriesMobile\
               data-testid="reset-categories-button"
             >
               <button
-                class="sc-bcPKhP fjXGcT"
+                class="sc-bcPKhP fVQoNj pointer-events-none"
               >
                 Reset categories
               </button>

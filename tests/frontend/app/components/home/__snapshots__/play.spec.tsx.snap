@@ -13,7 +13,7 @@ exports[`Play component snapshot matches 1`] = `
             data-testid="play-button"
           >
             <button
-              class="sc-bcPKhP dmjhkA"
+              class="sc-bcPKhP khbLnE"
             >
               Start Playing
             </button>

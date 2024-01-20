@@ -4,10 +4,8 @@ import { GameProvider } from "@/context/gameContext";
 import { GlobalContext } from "@/context/globalContext";
 import {
   CATEGORIES,
-  DIFFICULTY,
-  NEW_PARAMS,
-  QUESTIONS_LIST,
-  clearQuestionData,
+  DIFFICULTY, QUESTIONS_LIST,
+  clearQuestionData
 } from "@/utils/localStorage_utils";
 import { useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
@@ -33,12 +31,14 @@ export default function GamePage() {
 
       // get search filters from search params
       const difficultyString = params.get(DIFFICULTY) || "";
-      const categoriesString = params.get(CATEGORIES) || "";
+      const categoriesString =
+        params.get(CATEGORIES)?.replaceAll("|", "&") || "";
 
       // set new params flag if play filters different from search params
       if (
         newFilters ||
-        (difficultyString !== difficulty && categoriesString !== categories)
+        (difficultyString !== difficulty &&
+          categoriesString !== categories)
       ) {
         setNewFilters(true);
         clearQuestionData();

@@ -16,7 +16,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 1"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 1
                (
@@ -28,7 +28,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 10"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 10
                (
@@ -40,7 +40,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 11"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 11
                (
@@ -52,7 +52,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 12"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 12
                (
@@ -64,7 +64,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 13"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 13
                (
@@ -76,7 +76,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 14"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 14
                (
@@ -88,7 +88,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 15"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 15
                (
@@ -100,7 +100,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 16"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 16
                (
@@ -112,7 +112,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 17"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 17
                (
@@ -124,7 +124,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 18"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 18
                (
@@ -141,7 +141,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 19"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 19
                (
@@ -153,7 +153,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 2"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 2
                (
@@ -165,7 +165,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 20"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 20
                (
@@ -177,7 +177,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 3"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 3
                (
@@ -189,7 +189,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 4"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 4
                (
@@ -201,7 +201,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 5"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 5
                (
@@ -213,7 +213,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 6"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 6
                (
@@ -225,7 +225,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 7"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 7
                (
@@ -237,7 +237,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 8"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 8
                (
@@ -249,7 +249,7 @@ exports[`DisplayCategories component snapshot matches 1`] = `
             data-testid="Category 9"
           >
             <button
-              class="sc-bcPKhP fjXGcT"
+              class="sc-bcPKhP fVQoNj"
             >
               Category 9
                (

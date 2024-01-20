@@ -3,7 +3,11 @@ import { Button } from "@/components/styledComponents";
 import { GlobalContext } from "@/context/globalContext";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { ANSWERED_QUESTIONS, UNSAVED_DATA, clearQuestionData } from "@/utils/localStorage_utils";
+import {
+  ANSWERED_QUESTIONS,
+  UNSAVED_DATA,
+  clearQuestionData,
+} from "@/utils/localStorage_utils";
 import { IUpdateUserStatsRequest } from "@/models/customRequests";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
@@ -11,48 +15,46 @@ import User from "@/models/user";
 
 export default function HandleUnsavedProgress() {
   const [hasUnsavedProgress, setHasUnsavedProgress] = useState(false);
-  const router = useRouter()
-  const [error, setError] = useState("")
+  const router = useRouter();
+  const [error, setError] = useState("");
 
   const mutation = useMutation(() => {
     const hasUnsavedData = localStorage.getItem(UNSAVED_DATA) as string;
-    const answeredQuestions = localStorage.getItem(ANSWERED_QUESTIONS) as string;
+    const answeredQuestions = localStorage.getItem(
+      ANSWERED_QUESTIONS
+    ) as string;
 
-      const progress = JSON.parse(hasUnsavedData);
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-      const url = `${baseUrl}/users/updateStats`;
-      const { id } = triviaUser as User;
+    const progress = JSON.parse(hasUnsavedData);
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const url = `${baseUrl}/users/updateStats`;
+    const { id } = triviaUser as User;
 
-      return axios.post(url, {
-        stats: progress,
-        id,
-        answeredQuestions: answeredQuestions.split(","),
-      } as IUpdateUserStatsRequest);
-  })
+    return axios.post(url, {
+      stats: progress,
+      id,
+      answeredQuestions: answeredQuestions.split(","),
+    } as IUpdateUserStatsRequest);
+  });
 
-  const {
-    storageIsAvailable,
-    triviaUser
-  } = useContext(GlobalContext);
-
+  const { storageIsAvailable, triviaUser } = useContext(GlobalContext);
 
   function saveProgress() {
     const hasUnsavedData = localStorage.getItem(UNSAVED_DATA);
     const answeredQuestions = localStorage.getItem(ANSWERED_QUESTIONS);
 
     if (hasUnsavedData && triviaUser && answeredQuestions) {
-      mutation.mutate()
+      mutation.mutate();
     }
   }
 
   useEffect(() => {
     if (mutation.data && triviaUser) {
-      clearQuestionData()
-      router.push("/users/" + triviaUser.id)
+      clearQuestionData();
+      router.push("/users/" + triviaUser.id);
     } else if (mutation.error) {
-      setError((mutation.error as any).message)
+      setError((mutation.error as any).message);
     }
-  }, [mutation, router, triviaUser])
+  }, [mutation, router, triviaUser]);
 
   useEffect(() => {
     if (storageIsAvailable) {
@@ -70,7 +72,7 @@ export default function HandleUnsavedProgress() {
     }
 
     if (triviaUser) {
-      router.push("/users/" + triviaUser.id)
+      router.push("/users/" + triviaUser.id);
     }
   }
 
@@ -92,10 +94,7 @@ export default function HandleUnsavedProgress() {
               Save progress
             </Button>
 
-            <Button
-              onClick={discardProgress}
-              testid="discard-progress-button"
-            >
+            <Button onClick={discardProgress} testid="discard-progress-button">
               Discard Progress
             </Button>
           </div>

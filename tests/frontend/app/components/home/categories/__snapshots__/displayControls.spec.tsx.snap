@@ -12,7 +12,7 @@ exports[`DisplayControls component snapshot matches 1`] = `
           data-testid="show-more-button"
         >
           <button
-            class="sc-bcPKhP coQATf"
+            class="sc-bcPKhP jLmHOz"
           >
             More categories
           </button>
@@ -21,7 +21,7 @@ exports[`DisplayControls component snapshot matches 1`] = `
           data-testid="reset-categories-button"
         >
           <button
-            class="sc-bcPKhP fjXGcT"
+            class="sc-bcPKhP fVQoNj pointer-events-none"
           >
             Reset categories
           </button>

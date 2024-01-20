@@ -25,10 +25,8 @@ import {
   ReactElement,
   SetStateAction,
   createContext,
-  useCallback,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
 
@@ -73,7 +71,6 @@ export const GameContext = createContext<IGameContext>(initialGameContext);
 export function GameProvider({ children }: { children: ReactElement }) {
   const [playerStats, setPlayerStats] = useState<IUserStats>(initialStat);
   const [hasSubmit, setHasSubmit] = useState(false);
-  const [makeRequest, setMakeRequest] = useState(true)
 
   const [answeredQuestions, setAnsweredQuestions] = useState<string[]>([]);
 

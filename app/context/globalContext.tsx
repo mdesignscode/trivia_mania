@@ -20,7 +20,6 @@ import {
   SetStateAction,
   createContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
 
@@ -54,6 +53,8 @@ export interface IGlobalContext {
   setCategoryChoice: Dispatch<SetStateAction<boolean[]>>;
   playerMode: "Guest" | "Signed In";
   setPlayerMode: Dispatch<SetStateAction<"Guest" | "Signed In">>;
+  newFilters: boolean;
+  setNewFilters: Dispatch<SetStateAction<boolean>>;
 }
 
 export const initialGlobalContext: IGlobalContext = {
@@ -73,6 +74,8 @@ export const initialGlobalContext: IGlobalContext = {
   setCategoryChoice: () => {},
   playerMode: "Guest",
   setPlayerMode: () => {},
+  setNewFilters: () => {},
+  newFilters: false
 };
 
 export const GlobalContext =
@@ -102,6 +105,8 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
   const playUrl = encodeURI(
     `/game?difficulty=${playFilters.difficulty}&categories=${playFilters.categories}`
   );
+
+  const [newFilters, setNewFilters] = useState(false);
 
   const [pageReady, setPageReady] = useState(false);
 
@@ -216,6 +221,8 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
     categoryChoice,
     playerMode,
     setPlayerMode,
+    newFilters,
+    setNewFilters,
   };
 
   return (

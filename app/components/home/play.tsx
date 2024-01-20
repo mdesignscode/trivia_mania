@@ -13,6 +13,7 @@ export default function Play() {
     setPlayFilters,
     playFilters: { difficulty, categories },
     playUrl,
+    setNewFilters
   } = useContext(GlobalContext);
   const { showCategories } = useContext(HomeContext);
 
@@ -24,20 +25,17 @@ export default function Play() {
 
       if (localDifficulty === difficulty && localCategories === categories) {
         return;
-      } else {
-        // new filters are different
-        localStorage.setItem(DIFFICULTY, difficulty);
-        localStorage.setItem(CATEGORIES, categories);
-
-        // notify game page to fetch new questions
-        localStorage.setItem(NEW_PARAMS, "true");
-
-        // update filters in state
-        setPlayFilters(() => ({
-          difficulty,
-          categories,
-        }));
       }
+      setNewFilters(true)
+      // new filters are different
+      localStorage.setItem(DIFFICULTY, difficulty);
+      localStorage.setItem(CATEGORIES, categories);
+
+      // update filters in state
+      setPlayFilters(() => ({
+        difficulty,
+        categories,
+      }));
     }
   }
 

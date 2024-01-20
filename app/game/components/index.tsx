@@ -19,7 +19,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
 import RenderQuestion from "./question";
@@ -176,6 +175,7 @@ export default function Question({
 
     // submit current progress
     submitProgress();
+    router.push("/")
   }
 
   useEffect(() => {

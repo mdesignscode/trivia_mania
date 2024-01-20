@@ -67,6 +67,8 @@ export default function useFetchQuestionsList(): IFetchQuestions {
     triviaUser,
     playFilters: { difficulty, categories },
     storageIsAvailable,
+    setNewFilters,
+    newFilters,
   } = useContext(GlobalContext);
 
   // query function
@@ -87,7 +89,7 @@ export default function useFetchQuestionsList(): IFetchQuestions {
 
   // fetch list of questions
   const { data, isFetched } = useQuery({
-    queryKey: ["play", triviaUser],
+    queryKey: ["play", triviaUser, newFilters],
     queryFn: getQuestions,
     initialData: [],
     enabled: shouldFetchQuestions,
@@ -138,25 +140,23 @@ export default function useFetchQuestionsList(): IFetchQuestions {
 
   // fetch questions from api and store in local storage
   const fetchNewQuestions = useCallback(() => {
-    const newParams = localStorage.getItem(NEW_PARAMS);
-
     if (fetchQuestions) {
-      if (newParams) {
+      if (newFilters) {
         setShouldFetchQuestions(true);
         if (isFetched) {
-          clearQuestionData();
           localStorage.setItem(QUESTIONS_LIST, JSON.stringify(data));
           localStorage.setItem(CATEGORIES, categories);
           localStorage.setItem(DIFFICULTY, difficulty);
           setLocalStorageReady(true);
           setFetchQuestions(false);
+          setNewFilters(false);
         }
       } else {
         setLocalStorageReady(true);
         setFetchQuestions(false);
       }
     }
-  }, [categories, data, difficulty, fetchQuestions, isFetched]);
+  }, [categories, data, difficulty, fetchQuestions, isFetched, newFilters, setNewFilters]);
 
   // set questions pool
   useEffect(() => {
@@ -176,7 +176,6 @@ export default function useFetchQuestionsList(): IFetchQuestions {
   }, [
     createQuestionPool,
     data,
-    data.length,
     fetchNewQuestions,
     fetchQuestions,
     isFetched,

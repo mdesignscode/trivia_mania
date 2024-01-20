@@ -7,6 +7,7 @@ import { CATEGORIES } from "@/utils/localStorage_utils";
 import { Dispatch, SetStateAction, useContext } from "react";
 import Loading from "../loading";
 import useWindowWidth from "@/hooks/windowWidth";
+import { classNames } from "@/components/navigation/desktop";
 
 interface DisplayControlsProps {
   setShowMore: Dispatch<SetStateAction<boolean>>;
@@ -23,10 +24,12 @@ export default function DisplayControls({
     setPlayFilters,
     setCategoryChoice,
     playFilters: { categories },
+    setNewFilters,
   } = useContext(GlobalContext);
   const isMobile = useWindowWidth();
 
   function handleReset() {
+    setNewFilters(true);
     setPlayFilters((state) => ({
       ...state,
       categories: "",
@@ -62,6 +65,9 @@ export default function DisplayControls({
         testid="reset-categories-button"
         onClick={handleReset}
         primary={!!categories}
+        className={classNames(
+          !categories ? "pointer-events-none" : ""
+        )}
       >
         Reset categories
       </Button>

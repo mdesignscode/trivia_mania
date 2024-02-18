@@ -1,9 +1,9 @@
-import { Webhook } from "svix";
-import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import storage from "@/models/index";
-import User from "@/models/user";
-import { initialStat } from "@/models/interfaces";
+import { headers } from "next/headers";
+import { PrismaClient } from "prisma/generated/client";
+import { Webhook } from "svix";
+
+const prisma = new PrismaClient()
 
 export function OPTIONS() {
   const headers = new Headers();
@@ -76,32 +76,39 @@ export async function POST(req: Request) {
     // handle signup
     case "user.created":
       // create new user
-      const newUser = new User(username, id, initialStat, imageUrl);
+      await prisma.user.create({
+        data: {
+          id,
+          username,
+          imageUrl
+        }
+      })
 
-      storage.newUser(newUser);
       response = `${id} created`;
       break;
 
     // handle delete
     case "user.deleted":
-      storage.deleteUser(id);
+      await prisma.user.delete({
+        where: {
+          id
+        }
+      })
       response = `${id} deleted`;
       break;
 
     // handle update
     case "user.updated":
-      const userStats = storage.getUserStats(id);
-      const updatedUser = new User(username, id, userStats, imageUrl);
-      storage.newUser(updatedUser);
+      await prisma.user.update({
+        where: { id },
+        data: { username, imageUrl }
+      })
       response = `${id} updated`;
       break;
 
     default:
       break;
   }
-
-  // save changes
-  storage.save();
 
   return new Response(response, {
     status: response === "An error occured" ? 500 : 201,

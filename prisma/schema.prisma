@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Question {
+  category      String
+  answers       String[]
+  correctAnswer String
+  id            Int      @id @default(autoincrement())
+  question      String   @unique
+  difficulty    String
+}
+
+model User {
+  id          String     @id
+  username    String
+  stats       UserStats? @relation(fields: [userStatsId], references: [id])
+  userStatsId Int?
+  imageUrl    String?
+}
+
+model UserStats {
+  id                Int             @id @default(autoincrement())
+  total             StatsTotal      @relation(fields: [statsTotalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  difficultyStats   DifficulyStat[]
+  categoryStats     CategoryStat[]
+  avatar            String?
+  answeredQuestions String[]
+  User              User[]
+  statsTotalId      Int
+}
+
+model StatsTotal {
+  id              Int         @id @default(autoincrement())
+  answered        Int
+  correctAnswered Int
+  UserStats       UserStats[]
+}
+
+model DifficulyStat {
+  id              Int           @id @default(autoincrement())
+  answered        Int
+  correctAnswered Int
+  UserStats       UserStats?    @relation(fields: [userStatsId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userStatsId     Int?
+  CategoryStat    CategoryStat? @relation(fields: [categoryStatId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  categoryStatId  Int?
+}
+
+model CategoryStat {
+  id              Int             @id @default(autoincrement())
+  difficultyStats DifficulyStat[]
+  UserStats       UserStats?      @relation(fields: [userStatsId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userStatsId     Int?
+}

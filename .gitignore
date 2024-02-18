@@ -40,3 +40,7 @@ main.ts
 file.json.bak
 colorPalette.txt
 description.txt
+.env
+
+prisma/generated
+prisma/migrations/migration_lock.toml

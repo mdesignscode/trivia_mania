@@ -13,6 +13,8 @@ import RenderType from "@testing-library/dom/types/queries";
 import { ReactNode } from "react";
 import { RenderResult, render } from "./test_utils";
 import { renderGlobalContext } from "./test_global_context";
+import { mockCategoriesStats } from "./test_home_context";
+import { mockDifficultyStats } from "./mockData";
 
 export function renderProvider(
   provider: "game"
@@ -45,7 +47,10 @@ export function renderProvider(provider: string) {
     case "home":
       return (children: (value: IHomeContext) => ReactNode) =>
         renderGlobalContext(
-          <HomeProvider>
+          <HomeProvider
+            categoryStats={mockCategoriesStats}
+            difficultyStats={mockDifficultyStats}
+          >
             <HomeContext.Consumer>{children}</HomeContext.Consumer>
           </HomeProvider>
         );

@@ -4,7 +4,6 @@ import { Button } from "@/components/styledComponents";
 import { HomeContext } from "@/context/homeContext";
 import { Transition } from "@headlessui/react";
 import { Fragment, useContext } from "react";
-import Loading from "../loading";
 
 interface DisplayCategoriesProps {
   showMore: boolean;
@@ -15,15 +14,16 @@ export default function DisplayCategories({
   showMore,
   handleCategories,
 }: DisplayCategoriesProps) {
-  const { categoryStats, fetchingCategories } = useContext(HomeContext);
-  const { categoryChoice } = useContext(GlobalContext);
-  const categoriesRadius = Object.keys(categoryStats).length / 2;
+  const { categoryStats, difficultyStats } = useContext(HomeContext),
+    {
+      categoryChoice,
+      playFilters: { difficulty },
+    } = useContext(GlobalContext),
+    categoriesRadius = Object.keys(categoryStats).length / 2,
+    totalCategories = Object.keys(categoryStats).length,
+    styles = "flex gap-2 flex-wrap justify-center";
 
-  const styles = "flex gap-2 flex-wrap justify-center";
-
-  return fetchingCategories ? (
-    <Loading length={15} />
-  ) : (
+  return (
     <div className="col gap-2" data-testid="display-categories-container">
       {/* display first 10 categories */}
       <div className={styles} data-testid="first-categories-set">
@@ -41,7 +41,7 @@ export default function DisplayCategories({
                 key={stat}
                 testid={stat}
               >
-                {stat} ({categoryStats[stat]})
+                {stat} ({categoryStats[stat][difficulty]})
               </Button>
             );
           })}
@@ -66,18 +66,25 @@ export default function DisplayCategories({
               const j = i + categoriesRadius;
               return (
                 <Button
-                  onClick={() => {
-                    const value = stat === "all categories" ? "" : stat;
-                    handleCategories(j, value);
-                  }}
+                  onClick={() => handleCategories(j, stat)}
                   primary={categoryChoice[j]}
                   key={stat}
                   testid={stat}
                 >
-                  {stat} ({categoryStats[stat]})
+                  {stat} ({categoryStats[stat][difficulty]})
                 </Button>
               );
             })}
+          <Button
+            onClick={() =>
+              handleCategories(totalCategories, "all difficulties")
+            }
+            primary={categoryChoice[totalCategories]}
+            key={"all difficulties"}
+            testid={"all difficulties"}
+          >
+            All categories ({difficultyStats["all difficulties"]})
+          </Button>
         </div>
       </Transition>
     </div>

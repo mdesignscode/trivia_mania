@@ -1,9 +1,5 @@
 /* Handles all logic for home page */
 "use client";
-import { GlobalContext } from "@/context/globalContext";
-import useInitialStats from "@/hooks/initialStats";
-import { TStatsRequest } from "@/models/customRequests";
-import axios from "axios";
 import {
   Dispatch,
   SetStateAction,
@@ -12,6 +8,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { GlobalContext } from "./globalContext";
 
 interface ICurrentUI {
   welcome: boolean;
@@ -21,20 +18,16 @@ interface ICurrentUI {
 }
 
 export interface IHomeContext {
-  categoryStats: Record<string, number>;
-  fetchingCategories: boolean;
-  getDifficultyCategoriesStats: (difficulty: string) => Promise<void>;
-  setFetchingCategories: Dispatch<SetStateAction<boolean>>;
   currentUI: ICurrentUI;
   setCurrentUI: Dispatch<SetStateAction<ICurrentUI>>;
-  showCategories: boolean
+  showCategories: boolean;
+  difficultyStats: TQuestionStats;
+  categoryStats: Record<string, TQuestionStats>;
 }
 
 export const defaultHomeContext: IHomeContext = {
+  difficultyStats: {},
   categoryStats: {},
-  fetchingCategories: true,
-  getDifficultyCategoriesStats: () => Promise.resolve(),
-  setFetchingCategories: () => {},
   currentUI: {
     welcome: true,
     difficulties: false,
@@ -42,19 +35,24 @@ export const defaultHomeContext: IHomeContext = {
     play: false,
   },
   setCurrentUI: () => {},
-  showCategories: false
+  showCategories: false,
 };
 
 export const HomeContext = createContext<IHomeContext>(defaultHomeContext);
 
-export function HomeProvider({ children }: { children: React.ReactNode }) {
-  // home state
-  const { categoryStats: initialCategoryStats, categoriesLoading } =
-    useInitialStats();
+interface IHomeProviderProps {
+  children: React.ReactNode;
+  difficultyStats: TQuestionStats;
+  categoryStats: Record<string, TQuestionStats>;
+}
 
-  const [categoryStats, setCategoryStats] = useState<Record<string, number>>(
-    {}
-  );
+export function HomeProvider({
+  children,
+  difficultyStats,
+  categoryStats,
+}: IHomeProviderProps) {
+  // home state
+  const { setCategoryChoice } = useContext(GlobalContext);
 
   // display different UI's
   const [currentUI, setCurrentUI] = useState<ICurrentUI>({
@@ -65,48 +63,22 @@ export function HomeProvider({ children }: { children: React.ReactNode }) {
   });
   const showCategories = currentUI.categories && !currentUI.welcome;
 
-  const [fetchingCategories, setFetchingCategories] = useState(true);
-  const {
-    triviaUser,
-  } = useContext(GlobalContext);
-
+  // set categories choice state
   useEffect(() => {
-    setFetchingCategories(categoriesLoading);
-    setCategoryStats(initialCategoryStats);
-  }, [categoriesLoading, initialCategoryStats]);
-
-  // fetch category stats based on difficulty
-  async function getDifficultyCategoriesStats(difficulty: string) {
-    try {
-      // load categories
-      setFetchingCategories(true);
-
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-      const url = baseUrl + "questions/stats";
-
-      const { data } = await axios.post(url, {
-        recordType: "categories",
-        difficulty,
-        userId: triviaUser?.id,
-      } as TStatsRequest);
-      setCategoryStats(data);
-
-      // display categories
-      setFetchingCategories(false);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+    setCategoryChoice(
+      Object.keys(categoryStats)
+        .concat([])
+        .map(() => false)
+    );
+  }, [categoryStats, setCategoryChoice]);
 
   // store object
   const store: IHomeContext = {
     showCategories,
-    categoryStats,
-    fetchingCategories,
-    getDifficultyCategoriesStats,
-    setFetchingCategories,
     setCurrentUI,
     currentUI,
+    difficultyStats,
+    categoryStats,
   };
 
   return <HomeContext.Provider value={store}>{children}</HomeContext.Provider>;

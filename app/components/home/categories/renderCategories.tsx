@@ -1,7 +1,6 @@
 /* Renders categories components */
 "use client";
 import { classNames } from "@/components/navigation/desktop";
-import { GlobalContext } from "@/context/globalContext";
 import { HomeContext } from "@/context/homeContext";
 import useWindowWidth from "@/hooks/windowWidth";
 import { motion } from "framer-motion";

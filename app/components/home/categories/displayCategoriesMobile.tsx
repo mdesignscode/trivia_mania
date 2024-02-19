@@ -4,7 +4,6 @@ import { Button } from "@/components/styledComponents";
 import { HomeContext } from "@/context/homeContext";
 import { motion } from "framer-motion";
 import { useContext } from "react";
-import Loading from "../loading";
 
 interface DisplayCategoriesProps {
   showMore: boolean;
@@ -15,18 +14,18 @@ export default function DisplayCategoriesMobile({
   showMore,
   handleCategories,
 }: DisplayCategoriesProps) {
-  const { categoryStats, fetchingCategories } = useContext(HomeContext);
-  const { categoryChoice } = useContext(GlobalContext);
-  const categoriesRadius = Math.floor(Object.keys(categoryStats).length / 2);
+  const { categoryStats, difficultyStats } = useContext(HomeContext),
+    {
+      categoryChoice,
+      playFilters: { difficulty },
+    } = useContext(GlobalContext),
+    categoriesRadius = Math.floor(Object.keys(categoryStats).length / 2),
+    totalCategories = Object.keys(categoryStats).length;
 
   const styles = "flex gap-2 flex-wrap justify-center";
 
-  return fetchingCategories ? (
-    <Loading length={8} />
-  ) : (
-    <div
-      data-testid="display-categories-mobile-container" className="px-4"
-    >
+  return (
+    <div data-testid="display-categories-mobile-container" className="px-4">
       {!showMore && (
         <motion.div
           initial={{ opacity: 0, x: -100 }}
@@ -48,7 +47,7 @@ export default function DisplayCategoriesMobile({
                     key={stat}
                     testid={stat}
                   >
-                    {stat} ({categoryStats[stat]})
+                    {stat} ({categoryStats[stat][difficulty]})
                   </Button>
                 );
               })}
@@ -70,18 +69,25 @@ export default function DisplayCategoriesMobile({
               .map((stat, i) => {
                 return (
                   <Button
-                    onClick={() => {
-                      const value = stat === "all categories" ? "" : stat;
-                      handleCategories(i, value);
-                    }}
+                    onClick={() => handleCategories(i, stat)}
                     primary={categoryChoice[i]}
                     key={stat}
                     testid={stat}
                   >
-                    {stat} ({categoryStats[stat]})
+                    {stat} ({categoryStats[stat][difficulty]})
                   </Button>
                 );
               })}
+            <Button
+              onClick={() =>
+                handleCategories(totalCategories, "all difficulties")
+              }
+              primary={categoryChoice[totalCategories]}
+              key={"all difficulties"}
+              testid={"all difficulties"}
+            >
+              All categories ({difficultyStats["all difficulties"]})
+            </Button>
           </div>
         </motion.div>
       )}

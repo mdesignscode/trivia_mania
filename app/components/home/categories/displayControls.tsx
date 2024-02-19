@@ -1,13 +1,11 @@
 /* `Show more categories` and `Reset categories` buttons */
 "use client";
 import { GlobalContext } from "@/app/context/globalContext";
+import { classNames } from "@/components/navigation/desktop";
 import { Button } from "@/components/styledComponents";
-import { HomeContext } from "@/context/homeContext";
+import useWindowWidth from "@/hooks/windowWidth";
 import { CATEGORIES } from "@/utils/localStorage_utils";
 import { Dispatch, SetStateAction, useContext } from "react";
-import Loading from "../loading";
-import useWindowWidth from "@/hooks/windowWidth";
-import { classNames } from "@/components/navigation/desktop";
 
 interface DisplayControlsProps {
   setShowMore: Dispatch<SetStateAction<boolean>>;
@@ -18,7 +16,6 @@ export default function DisplayControls({
   setShowMore,
   showMore,
 }: DisplayControlsProps) {
-  const { fetchingCategories } = useContext(HomeContext);
   const {
     storageIsAvailable,
     setPlayFilters,
@@ -38,9 +35,7 @@ export default function DisplayControls({
     if (storageIsAvailable) localStorage.removeItem(CATEGORIES);
   }
 
-  return fetchingCategories ? (
-    <Loading length={2} width={120} />
-  ) : (
+  return (
     <div
       className="flex justify-center gap-4"
       data-testid="display-controls-container"
@@ -65,9 +60,7 @@ export default function DisplayControls({
         testid="reset-categories-button"
         onClick={handleReset}
         primary={!!categories}
-        className={classNames(
-          !categories ? "pointer-events-none" : ""
-        )}
+        className={classNames(!categories ? "pointer-events-none" : "")}
       >
         Reset categories
       </Button>

@@ -121,7 +121,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const { data, isFetched } = useQuery({
-    queryKey: ["getUser"],
+    queryKey: ["getUser-" + user?.id],
     queryFn: async () => {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;

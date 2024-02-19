@@ -1,15 +1,12 @@
 "use client";
 import { GlobalContext } from "@/app/context/globalContext";
 import { HomeContext } from "@/context/homeContext";
-import {
-  useContext
-} from "react";
+import { useContext } from "react";
 import RenderDifficulties from "./renderDifficulties";
 
 export default function Difficulties() {
   // get context
   const {
-    getDifficultyCategoriesStats,
     setCurrentUI,
     currentUI: { difficulties },
   } = useContext(HomeContext);
@@ -20,8 +17,8 @@ export default function Difficulties() {
   } = useContext(GlobalContext);
 
   function handleDifficulty(value: string) {
-    // fetch questions based on clicked difficulty
-    const seek = difficulty ? (difficulty === value ? "" : value) : value;
+    // render questions based on clicked difficulty
+    const seek = difficulty ? (difficulty === value ? "all difficulties" : value) : value;
 
     setDifficultyChoice((state) => {
       const newState: Record<string, boolean> = {};
@@ -42,8 +39,6 @@ export default function Difficulties() {
       ...state,
       categories: true,
     }));
-
-    getDifficultyCategoriesStats(seek);
   }
 
   return (

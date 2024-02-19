@@ -62,3 +62,7 @@ type TQuestion = {
   question: string;
   difficulty: string;
 }
+
+type TQuestionStats = {
+  [key: string]: number
+}

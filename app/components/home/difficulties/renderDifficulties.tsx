@@ -16,14 +16,13 @@ interface RenderDifficultiesProps {
 export default function RenderDifficulties({
   handleDifficulty,
 }: RenderDifficultiesProps) {
-  const { difficultiesLoading, difficultyStats } = useInitialStats();
-
   const {
     currentUI: { difficulties },
     showCategories,
+    difficultyStats,
   } = useContext(HomeContext);
   const { difficultyChoice } = useContext(GlobalContext);
-  const isMobile = useWindowWidth()
+  const isMobile = useWindowWidth();
 
   const difficultyTransitionUI = difficulties
     ? showCategories
@@ -33,7 +32,7 @@ export default function RenderDifficulties({
 
   const difficultiesStyles = classNames(
     "flex gap-2 justify-center",
-    showCategories ? isMobile ? "flex-wrap" : "col" : "flex-wrap"
+    showCategories ? (isMobile ? "flex-wrap" : "col") : "flex-wrap"
   );
 
   return (
@@ -51,28 +50,21 @@ export default function RenderDifficulties({
       >
         <h1 className="text-xl">Choose difficulty</h1>
 
-        {!difficultiesLoading ? (
-          <div className={difficultiesStyles}>
-            {Object.keys(difficultyChoice).map((stat) => {
-              return (
-                <Button
-                  onClick={() => {
-                    const value = stat === "all difficulties" ? "" : stat;
-                    handleDifficulty(value);
-                  }}
-                  testid={stat}
-                  primary={difficultyChoice[stat]}
-                  key={stat}
-                  showCategories={showCategories}
-                >
-                  {stat} ({difficultyStats[stat]})
-                </Button>
-              );
-            })}
-          </div>
-        ) : (
-          <Loading length={4} />
-        )}
+        <div className={difficultiesStyles}>
+          {Object.keys(difficultyChoice).map((stat) => {
+            return (
+              <Button
+                onClick={() => handleDifficulty(stat)}
+                testid={stat}
+                primary={difficultyChoice[stat]}
+                key={stat}
+                showCategories={showCategories}
+              >
+                {stat} ({difficultyStats[stat]})
+              </Button>
+            );
+          })}
+        </div>
       </div>
     </motion.div>
   );

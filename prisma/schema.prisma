@@ -26,7 +26,6 @@ model User {
   username    String
   stats       UserStats? @relation(fields: [userStatsId], references: [id])
   userStatsId Int?
-  imageUrl    String?
 }
 
 model UserStats {

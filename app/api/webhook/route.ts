@@ -80,7 +80,6 @@ export async function POST(req: Request) {
         data: {
           id,
           username,
-          imageUrl
         }
       })
 
@@ -101,7 +100,7 @@ export async function POST(req: Request) {
     case "user.updated":
       await prisma.user.update({
         where: { id },
-        data: { username, imageUrl }
+        data: { username }
       })
       response = `${id} updated`;
       break;

@@ -12,12 +12,10 @@ jest.mock("@/hooks/initialStats", () => {
   return jest.fn(
     () =>
       ({
-        difficultiesLoading: false,
         difficultyStats: mockDifficultyStats,
         categoryStats: mockCategoriesStats,
-        categoriesLoading: false,
         previousDifficulty: "",
-      } as IInitialStats)
+      })
   );
 });
 

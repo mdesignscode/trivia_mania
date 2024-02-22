@@ -70,7 +70,7 @@ export async function POST(req: Request) {
   const eventType = evt.type;
 
   let response = "An error occured";
-  const { id, username, imageUrl } = payload.data;
+  const { id, username } = payload.data;
 
   switch (eventType) {
     // handle signup

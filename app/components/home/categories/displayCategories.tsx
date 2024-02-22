@@ -21,7 +21,8 @@ export default function DisplayCategories({
     } = useContext(GlobalContext),
     categoriesRadius = Object.keys(categoryStats).length / 2,
     totalCategories = Object.keys(categoryStats).length,
-    styles = "flex gap-2 flex-wrap justify-center";
+    styles = "flex gap-2 flex-wrap justify-center",
+    { handleReset } = useContext(HomeContext);
 
   return (
     <div className="col gap-2" data-testid="display-categories-container">
@@ -76,9 +77,10 @@ export default function DisplayCategories({
               );
             })}
           <Button
-            onClick={() =>
-              handleCategories(totalCategories, "all difficulties")
-            }
+            onClick={() => {
+              handleReset();
+              handleCategories(totalCategories, "all difficulties");
+            }}
             primary={categoryChoice[totalCategories]}
             key={"all difficulties"}
             testid={"all difficulties"}

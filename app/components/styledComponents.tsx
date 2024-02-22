@@ -120,6 +120,7 @@ interface IButtonProps
   testid?: string;
   play?: boolean;
   showCategories?: boolean;
+  parentStyles?: string;
 }
 
 export function Button({
@@ -134,6 +135,7 @@ export function Button({
   play,
   disabled,
   showCategories,
+  parentStyles,
 }: IButtonProps) {
   return (
     <motion.span
@@ -142,11 +144,13 @@ export function Button({
       whileHover="hover"
       whileTap="rest"
       onClick={onClick}
+      className={parentStyles}
     >
       <ButtonComponent
         className={classNames(
           className || "",
-          textSize ? `text-${textSize}` : ""
+          textSize ? `text-${textSize}` : "",
+          "w-full"
         )}
         id={id}
         $cta={cta}

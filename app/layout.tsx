@@ -24,7 +24,7 @@ export default function RootLayout({
         <GlobalProvider>
           <html lang="en" className="h-full">
             <body
-              className={`${inter.className} h-full bg-light dark:bg-secondary text-dark dark:text-light col`}
+              className={`${inter.className} h-full bg-light dark:bg-secondary text-dark dark:text-light col overflow-y-hidden`}
             >
               <Body>{children}</Body>
             </body>

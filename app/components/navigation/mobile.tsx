@@ -81,14 +81,12 @@ export default function MobileNav({ navigation, path }: NavProps) {
                     data-testid="your-stats-button"
                     href={`/users/${triviaUser.id}`}
                     className={classNames(
-                      `/users/${triviaUser.id}` === path
+                      `/stats` === path
                         ? navStyles.active
                         : navStyles.inActive[0],
                       navStyles.inActive[1]
                     )}
-                    aria-current={
-                      `/users/${triviaUser.id}` === path ? "page" : undefined
-                    }
+                    aria-current={`/stats` === path ? "page" : undefined}
                   >
                     <ChartBarIcon height={25} width={25} />
                     Your Stats

@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { GlobalContext } from "./globalContext";
+import { CATEGORIES } from "@/utils/localStorage_utils";
 
 interface ICurrentUI {
   welcome: boolean;
@@ -23,6 +24,7 @@ export interface IHomeContext {
   showCategories: boolean;
   difficultyStats: TQuestionStats;
   categoryStats: Record<string, TQuestionStats>;
+  handleReset(): void;
 }
 
 export const defaultHomeContext: IHomeContext = {
@@ -36,6 +38,7 @@ export const defaultHomeContext: IHomeContext = {
   },
   setCurrentUI: () => {},
   showCategories: false,
+  handleReset: () => {},
 };
 
 export const HomeContext = createContext<IHomeContext>(defaultHomeContext);
@@ -52,7 +55,12 @@ export function HomeProvider({
   categoryStats,
 }: IHomeProviderProps) {
   // home state
-  const { setCategoryChoice } = useContext(GlobalContext);
+  const {
+    storageIsAvailable,
+    setPlayFilters,
+    setNewFilters,
+    setCategoryChoice,
+  } = useContext(GlobalContext);
 
   // display different UI's
   const [currentUI, setCurrentUI] = useState<ICurrentUI>({
@@ -72,6 +80,16 @@ export function HomeProvider({
     );
   }, [categoryStats, setCategoryChoice]);
 
+  function handleReset() {
+    setNewFilters(true);
+    setPlayFilters((state) => ({
+      ...state,
+      categories: "",
+    }));
+    setCategoryChoice((state) => state.map(() => false));
+    if (storageIsAvailable) localStorage.removeItem(CATEGORIES);
+  }
+
   // store object
   const store: IHomeContext = {
     showCategories,
@@ -79,6 +97,7 @@ export function HomeProvider({
     currentUI,
     difficultyStats,
     categoryStats,
+    handleReset,
   };
 
   return <HomeContext.Provider value={store}>{children}</HomeContext.Provider>;

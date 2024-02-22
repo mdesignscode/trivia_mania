@@ -3,7 +3,7 @@ import { GlobalContext } from "@/context/globalContext";
 import {
   HomeIcon,
   PuzzlePieceIcon,
-  StarIcon,
+  StarIcon
 } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
 import { useContext } from "react";

@@ -34,7 +34,8 @@ type TFilters = {
 };
 
 export interface IGlobalContext {
-  triviaUser: User | null;
+  triviaUser: TUser;
+  setTriviaUser: Dispatch<SetStateAction<TUser>>;
   storageIsAvailable: boolean;
   setPlayFilters: (
     cb: (state: { difficulty: string; categories: string }) => {
@@ -58,6 +59,7 @@ export interface IGlobalContext {
 
 export const initialGlobalContext: IGlobalContext = {
   triviaUser: null,
+  setTriviaUser: () => {},
   storageIsAvailable: false,
   playFilters: {
     difficulty: "",
@@ -84,7 +86,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
   // global state
   // app uses localStorage
   const [storageIsAvailable, setStorageIsAvailable] = useState(false);
-  const [triviaUser, setTriviaUser] = useState<User | null>(null);
+  const [triviaUser, setTriviaUser] = useState<TUser>(null);
 
   const [difficultyChoice, setDifficultyChoice] = useState<
     Record<string, boolean>
@@ -179,11 +181,6 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
       const previousDifficulty = localStorage.getItem(DIFFICULTY);
       const previousCategories = localStorage.getItem(CATEGORIES);
 
-      // first run on client
-      if (!previousDifficulty && !previousCategories) {
-        localStorage.setItem(NEW_PARAMS, "true");
-      }
-
       if (previousDifficulty) {
         setPlayFilters((state) => ({
           ...state,
@@ -208,6 +205,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
   // store object
   const store: IGlobalContext = {
     triviaUser,
+    setTriviaUser,
     storageIsAvailable: storageIsAvailable,
     playFilters,
     setPlayFilters: setPlayFilters,

@@ -4,13 +4,16 @@ import { GameProvider } from "@/context/gameContext";
 import { GlobalContext } from "@/context/globalContext";
 import {
   CATEGORIES,
-  DIFFICULTY, QUESTIONS_LIST,
-  clearQuestionData
+  DIFFICULTY,
+  QUESTIONS_LIST,
+  clearQuestionData,
 } from "@/utils/localStorage_utils";
 import { useSearchParams } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
-import RenderQuestions from "./components/renderQuestions";
+import { useContext, useEffect, useRef, useState } from "react";
+import RenderQuestions from "./components";
 import Start from "./components/start";
+import useFetchQuestions from "@/hooks/fetchQuestions";
+import useGameStore from "./components/store";
 
 export default function GamePage() {
   const params = useSearchParams();
@@ -21,55 +24,18 @@ export default function GamePage() {
     setNewFilters,
     storageIsAvailable,
   } = useContext(GlobalContext);
-  const [pageReady, setPageReady] = useState(false);
+  const [pageReady, setPageReady] = useState(false),
+    { questions } = useGameStore();
 
-  useEffect(() => {
-    if (!storageIsAvailable) return;
-
-    if (!pageReady) {
-      if (!localStorage.getItem(QUESTIONS_LIST)) setNewFilters(true);
-
-      // get search filters from search params
-      const difficultyString = params.get(DIFFICULTY) || "";
-      const categoriesString =
-        params.get(CATEGORIES)?.replaceAll("|", "&") || "";
-
-      // set new params flag if play filters different from search params
-      if (
-        newFilters ||
-        (difficultyString !== difficulty &&
-          categoriesString !== categories)
-      ) {
-        setNewFilters(true);
-        clearQuestionData();
-
-        // search filters should be new play filters
-        setPlayFilters(() => ({
-          difficulty: difficultyString,
-          categories: categoriesString,
-        }));
-      }
-      setPageReady(true);
-    }
-  }, [
-    categories,
-    difficulty,
-    newFilters,
-    pageReady,
-    params,
-    setNewFilters,
-    setPlayFilters,
-    storageIsAvailable,
-  ]);
+  useFetchQuestions({
+    difficulty: params.get(DIFFICULTY) || "all difficulties",
+    categories: params.get(CATEGORIES) || "",
+  });
 
   return (
-    pageReady && (
-      <GameProvider>
-        <>
-          <RenderQuestions />
-          <Start />
-        </>
-      </GameProvider>
-    )
+    <>
+      <RenderQuestions />
+      {/* <Start /> */}
+    </>
   );
 }

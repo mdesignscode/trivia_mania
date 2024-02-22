@@ -22,21 +22,31 @@ model Question {
 }
 
 model User {
-  id          String     @id
-  username    String
-  stats       UserStats? @relation(fields: [userStatsId], references: [id])
-  userStatsId Int?
+  id               String             @id
+  username         String
+  stats            UserStats?         @relation(fields: [userStatsId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userStatsId      Int?
+  AnsweredQuestion AnsweredQuestion[]
 }
 
 model UserStats {
-  id                Int             @id @default(autoincrement())
-  total             StatsTotal      @relation(fields: [statsTotalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id                Int                @id @default(autoincrement())
+  total             StatsTotal         @relation(fields: [statsTotalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   difficultyStats   DifficulyStat[]
   categoryStats     CategoryStat[]
   avatar            String?
-  answeredQuestions String[]
+  answeredQuestions AnsweredQuestion[]
   User              User[]
   statsTotalId      Int
+}
+
+model AnsweredQuestion {
+  id          Int        @id @default(autoincrement())
+  questionId  Int
+  User        User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId      String
+  UserStats   UserStats? @relation(fields: [userStatsId], references: [id])
+  userStatsId Int?
 }
 
 model StatsTotal {
@@ -50,6 +60,7 @@ model DifficulyStat {
   id              Int           @id @default(autoincrement())
   answered        Int
   correctAnswered Int
+  difficulty      String
   UserStats       UserStats?    @relation(fields: [userStatsId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userStatsId     Int?
   CategoryStat    CategoryStat? @relation(fields: [categoryStatId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -58,6 +69,7 @@ model DifficulyStat {
 
 model CategoryStat {
   id              Int             @id @default(autoincrement())
+  category        String
   difficultyStats DifficulyStat[]
   UserStats       UserStats?      @relation(fields: [userStatsId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userStatsId     Int?

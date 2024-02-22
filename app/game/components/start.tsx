@@ -1,12 +1,11 @@
 /* Fetch questions in background */
 "use client";
-import { motion } from "framer-motion";
-import { GameContext } from "@/app/context/gameContext";
 import { Button } from "@/components/styledComponents";
-import { useContext } from "react";
+import { motion } from "framer-motion";
+import useGameStore from "./store";
 
 export default function Start() {
-  const { setStartPlaying, startPlaying } = useContext(GameContext);
+  const { questions, setStartPlaying, startPlaying } = useGameStore();
 
   return (
     !startPlaying && (
@@ -26,7 +25,13 @@ export default function Start() {
 
           <h2>30 Seconds Per Question</h2>
 
-          <Button testid="start-game-button" play={true} cta={true} onClick={() => setStartPlaying(true)}>
+          <Button
+            disabled={!questions.length}
+            testid="start-game-button"
+            play={true}
+            cta={true}
+            onClick={() => setStartPlaying(true)}
+          >
             Start
           </Button>
         </motion.div>

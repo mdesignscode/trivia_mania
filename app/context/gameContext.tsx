@@ -63,7 +63,7 @@ export const initialGameContext: IGameContext = {
   error: "",
   setQuestionsPool: () => {},
   answeredQuestions: [],
-  hasSubmit: false
+  hasSubmit: false,
 };
 
 export const GameContext = createContext<IGameContext>(initialGameContext);
@@ -135,18 +135,23 @@ export function GameProvider({ children }: { children: ReactElement }) {
       if (storageIsAvailable) {
         clearQuestionData();
       }
-      setHasSubmit(true)
-      router.push("/users/" + triviaUser.id);
+      setHasSubmit(true);
+      router.push("/stats" + triviaUser.id);
     }
   }, [error, isError, isFetched, router, storageIsAvailable, triviaUser]);
 
   const updateProgress = (question: IQuestion, answer: string) => {
     setAnsweredQuestions((state) => {
-      const truthyAnswered = state.filter(Boolean)
-      const newState = truthyAnswered.length ? [...state, question.id] : [question.id];
+      const truthyAnswered = state.filter(Boolean);
+      const newState = truthyAnswered.length
+        ? [...state, question.id]
+        : [question.id];
 
       if (storageIsAvailable) {
-        localStorage.setItem(ANSWERED_QUESTIONS, newState.join(","));
+        localStorage.setItem(
+          ANSWERED_QUESTIONS,
+          Array.from(new Set(newState)).join(",")
+        );
       }
       return newState;
     });
@@ -216,7 +221,7 @@ export function GameProvider({ children }: { children: ReactElement }) {
 
       return newState;
     });
-  }
+  };
 
   const submitProgress = () => {
     if (triviaUser) {
@@ -239,7 +244,7 @@ export function GameProvider({ children }: { children: ReactElement }) {
     error: errorMessage,
     setQuestionsPool,
     answeredQuestions,
-    hasSubmit
+    hasSubmit,
   };
 
   return <GameContext.Provider value={store}>{children}</GameContext.Provider>;

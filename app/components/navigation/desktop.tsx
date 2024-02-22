@@ -33,7 +33,7 @@ export default function DesktopNav({ navigation, path }: NavProps) {
   const { isLoaded } = useUser();
 
   return (
-    <div className="hidden md:block mx-auto w-full px-2 md:px-6 lg:px-8 bg-secondary text-light z-10 sticky top-0">
+    <div className="hidden md:block mx-auto w-full px-2 md:px-6 lg:px-8 bg-secondary text-light">
       <div className="relative flex h-16 items-center justify-between">
         <div className="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
           <div className="flex flex-shrink-0 items-center">
@@ -81,15 +81,15 @@ export default function DesktopNav({ navigation, path }: NavProps) {
                     {triviaUser && (
                       <Link
                         data-testid="your-stats-button"
-                        href={`/users/${triviaUser.id}`}
+                        href="/stats"
                         className={classNames(
-                          `/users/${triviaUser.id}` === path
+                          `/stats` === path
                             ? navStyles.active
                             : navStyles.inActive[0],
                           navStyles.inActive[1]
                         )}
                         aria-current={
-                          `/users/${triviaUser.id}` === path
+                          `/stats` === path
                             ? "page"
                             : undefined
                         }

@@ -14,7 +14,7 @@ export default function DisplayCategoriesMobile({
   showMore,
   handleCategories,
 }: DisplayCategoriesProps) {
-  const { categoryStats, difficultyStats } = useContext(HomeContext),
+  const { categoryStats, difficultyStats, handleReset } = useContext(HomeContext),
     {
       categoryChoice,
       playFilters: { difficulty },
@@ -79,9 +79,10 @@ export default function DisplayCategoriesMobile({
                 );
               })}
             <Button
-              onClick={() =>
-                handleCategories(totalCategories, "all difficulties")
-              }
+              onClick={() => {
+                handleReset();
+                handleCategories(totalCategories, "all difficulties");
+              }}
               primary={categoryChoice[totalCategories]}
               key={"all difficulties"}
               testid={"all difficulties"}

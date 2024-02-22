@@ -1,20 +1,21 @@
 "use client";
 import { useEffect, useState } from "react";
+import { TTimerState } from "./QuestionHandlers";
 
 const TIME_LIMIT = 30;
 
 export interface ITimerProps {
   handleTimesUp: Function;
-  timerHasStarted: boolean;
+  timerState: TTimerState;
 }
 
-export default function Timer({ handleTimesUp, timerHasStarted }: ITimerProps) {
+export default function Timer({ handleTimesUp, timerState }: ITimerProps) {
   const [timePassed, setTimePassed] = useState(0);
   const [timeLeft, setTimeLeft] = useState(TIME_LIMIT);
   const [remainingPathColor, setRemainingPathColor] = useState("green");
 
   useEffect(() => {
-    if (timerHasStarted) {
+    if (timerState === "started") {
       const timerInterval = setInterval(() => {
         setTimePassed((prevTimePassed) => prevTimePassed + 1);
         setTimeLeft(TIME_LIMIT - timePassed);
@@ -30,7 +31,7 @@ export default function Timer({ handleTimesUp, timerHasStarted }: ITimerProps) {
 
       return () => clearInterval(timerInterval);
     }
-  }, [handleTimesUp, timeLeft, timePassed, timerHasStarted]);
+  }, [handleTimesUp, timeLeft, timePassed, timerState]);
 
   // Calculate the percentage of timeLeft
   const percentage = ((TIME_LIMIT - timeLeft) / TIME_LIMIT) * 100;

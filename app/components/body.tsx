@@ -83,7 +83,7 @@ export default function Body({ children }: { children: React.ReactNode }) {
     <>
       <Navigation />
 
-      {children}
+      <div className="flex-1">{children}</div>
     </>
   ) : (
     <div className="col gap-4 my-auto" data-testid="intro-animation-container">

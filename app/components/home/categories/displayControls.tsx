@@ -1,6 +1,7 @@
 /* `Show more categories` and `Reset categories` buttons */
 "use client";
 import { GlobalContext } from "@/app/context/globalContext";
+import { HomeContext } from "@/app/context/homeContext";
 import { classNames } from "@/components/navigation/desktop";
 import { Button } from "@/components/styledComponents";
 import useWindowWidth from "@/hooks/windowWidth";
@@ -17,23 +18,10 @@ export default function DisplayControls({
   showMore,
 }: DisplayControlsProps) {
   const {
-    storageIsAvailable,
-    setPlayFilters,
-    setCategoryChoice,
     playFilters: { categories },
-    setNewFilters,
   } = useContext(GlobalContext);
+  const { handleReset } = useContext(HomeContext);
   const isMobile = useWindowWidth();
-
-  function handleReset() {
-    setNewFilters(true);
-    setPlayFilters((state) => ({
-      ...state,
-      categories: "",
-    }));
-    setCategoryChoice((state) => state.map(() => false));
-    if (storageIsAvailable) localStorage.removeItem(CATEGORIES);
-  }
 
   return (
     <div

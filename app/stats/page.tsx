@@ -17,7 +17,7 @@ export default function UserProgress() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ id: user?.id }),
+          body: JSON.stringify({ userId: user?.id }),
         }),
         response = await request.json();
         setTopTenPosition(response.topTenPosition);

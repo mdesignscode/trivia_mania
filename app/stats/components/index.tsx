@@ -14,9 +14,11 @@ interface DisplayUserProgressProps {
 export default function DisplayUserProgress({
   topTenPosition,
 }: DisplayUserProgressProps) {
-  const globalContext = useContext(GlobalContext);
-  const triviaUser = globalContext.triviaUser as NonNullable<TUser>,
-    userStats = triviaUser.stats as NonNullable<typeof triviaUser.stats>;
+  const { triviaUser } = useContext(GlobalContext);
+
+  if (!triviaUser) return <h1>Loading user...</h1>
+
+  const userStats = triviaUser.stats
 
   return (
     <div

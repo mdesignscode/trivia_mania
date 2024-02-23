@@ -16,9 +16,9 @@ export default function Hero({
     >
       <h2>This is your progress</h2>
       {topTenPosition > 0 && (
-        <h2>
+        <em>
           Congratulations you are number {topTenPosition} in the Leader board
-        </h2>
+        </em>
       )}
 
       <h3>Total questions answered: {userStats.total.answered}</h3>

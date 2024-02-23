@@ -15,6 +15,12 @@ import { classNames } from "@/components/navigation/desktop";
 import useGameStore from "./store";
 import { GlobalContext } from "@/app/context/globalContext";
 
+export const colorMap: { [key: string]: string } = {
+  easy: "green",
+  medium: "gold",
+  hard: "red",
+};
+
 interface IQuestionProps {
   questionIndex: number;
   index: number;
@@ -28,12 +34,7 @@ export default function Question({
   question: { answers, category, correctAnswer, difficulty, question, id },
   setQuestionIndex,
 }: IQuestionProps) {
-  const colorMap: { [key: string]: string } = {
-      easy: "green",
-      medium: "gold",
-      hard: "red",
-    },
-    [answerFeedback, setAnswerFeedback] = useState<(JSX.Element | null)[]>([
+  const [answerFeedback, setAnswerFeedback] = useState<(JSX.Element | null)[]>([
       null,
       null,
       null,

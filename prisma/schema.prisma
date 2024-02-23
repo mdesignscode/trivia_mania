@@ -34,7 +34,6 @@ model UserStats {
   total             StatsTotal      @relation(fields: [statsTotalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   difficultyStats   DifficulyStat[]
   categoryStats     CategoryStat[]
-  avatar            String?
   answeredQuestions Int[]
   User              User[]
   statsTotalId      Int

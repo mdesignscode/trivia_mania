@@ -1,9 +1,12 @@
-import { CategoryStat } from "@/models/interfaces";
-import User from "@/models/user";
-import _ from "lodash";
+import { clerkClient } from "@clerk/nextjs";
+import _, { capitalize } from "lodash";
 import Image from "next/image";
 
-export default function Board({ topTenUsers }: { topTenUsers: Array<User> }) {
+export default function Board({
+  topTenUsers,
+}: {
+  topTenUsers: NonNullable<TUser>[];
+}) {
   const colorMap: { [key: string]: string } = {
     easy: "green",
     medium: "gold",
@@ -23,56 +26,57 @@ export default function Board({ topTenUsers }: { topTenUsers: Array<User> }) {
             >
               <div className="flex items-center">
                 <div className="mr-4">
-                  <Image
-                    src={user.avatar}
-                    alt={`Avatar for ${user.username}`}
-                    width={50}
-                    height={50}
-                    className="rounded-full"
-                  />
+                  {(async () => {
+                    const clerkUserser = await clerkClient.users.getUser(
+                      user?.id
+                    );
+
+                    return (
+                      <Image
+                        src={clerkUserser.imageUrl}
+                        alt={`Avatar for ${user.username}`}
+                        width={50}
+                        height={50}
+                        className="rounded-full"
+                      />
+                    );
+                  })()}
                 </div>
                 <div>
                   <p className="text-xl font-semibold">
                     {index + 1}. {user.username}
                   </p>
                   <p className="text-gray-500">
-                    Total Correct Answers: {user.stats.total.correctAnswered}
+                    Total Correct Answers: {user?.stats?.total.correctAnswered}
                   </p>
                 </div>
               </div>
               <div className="flex gap-2 flex-col">
-                {Object.keys(user.stats).map((category) => {
-                  if (!["easy", "hard", "medium", "total"].includes(category)) {
-                    const categoryStat = user.stats[category] as CategoryStat;
-                    return (
-                      <div key={_.uniqueId()} data-testid={`${user.username}-${category}`} className="col">
-                        <h3 className="text-gray-700">
-                          {category} Correct Answers
-                        </h3>
+                {user?.stats?.categoryStats.map((categoryStat) => {
+                  return (
+                    <div key={categoryStat?.id} className="col">
+                      <h3 className="text-gray-700">
+                        {categoryStat?.category} correct answers
+                      </h3>
 
-                        <div className="flex gap-3">
-                          {Object.keys(categoryStat).map((difficulty) => {
-                            const capitalized = difficulty.split("");
-                            capitalized[0] = capitalized[0].toUpperCase();
-                            const capitalizedDifficulty = capitalized.join("");
-
-                            return (
-                              <div
-                                key={_.uniqueId()}
-                                className="flex gap-1"
-                                style={{ color: colorMap[difficulty] }}
-                              >
-                                <h4>{capitalizedDifficulty}:</h4>
-                                <p>
-                                  {categoryStat[difficulty].correctAnswered}
-                                </p>
-                              </div>
-                            );
-                          })}
-                        </div>
+                      <div className="flex gap-3">
+                        {categoryStat?.difficultyStats.map((difficultyStat) => (
+                          <div
+                            key={_.uniqueId()}
+                            className="flex gap-1"
+                            style={{
+                              color: colorMap[difficultyStat?.difficulty || ""],
+                            }}
+                          >
+                            <h4>
+                              {capitalize(difficultyStat?.difficulty || "")}:
+                            </h4>
+                            <p>{difficultyStat?.correctAnswered}</p>
+                          </div>
+                        ))}
                       </div>
-                    );
-                  }
+                    </div>
+                  );
                 })}
               </div>
             </div>

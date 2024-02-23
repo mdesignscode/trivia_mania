@@ -1,8 +1,12 @@
 import Board from "./components/scoreboard"
-import storage from "@/models/index"
 
 export default async function ScoreBoard () {
-  const topTenUsers = storage.getTopTenUsers()
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL,
+    url = baseUrl + "users/topTenPlayers",
+    request = await fetch(url),
+    response = await request.json()
 
-  return <Board topTenUsers={topTenUsers} />
+  console.log(response)
+
+  return <Board topTenUsers={response} />;
 }

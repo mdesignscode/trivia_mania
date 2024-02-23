@@ -3,11 +3,9 @@ import { classNames } from "@/components/navigation/desktop";
 import { Button } from "@/components/styledComponents";
 import { GlobalContext } from "@/context/globalContext";
 import { HomeContext } from "@/context/homeContext";
-import useInitialStats from "@/hooks/initialStats";
 import useWindowWidth from "@/hooks/windowWidth";
 import { motion } from "framer-motion";
 import { useContext } from "react";
-import Loading from "../loading";
 
 interface RenderDifficultiesProps {
   handleDifficulty: (value: string) => void;

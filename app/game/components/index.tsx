@@ -5,10 +5,10 @@ import Question from "./question";
 import useGameStore from "./store";
 
 export default function RenderQuestions() {
-  const { questions } = useGameStore(),
+  const { questions, startPlaying } = useGameStore(),
     [questionIndex, setQuestionIndex] = useState(0);
 
-  return (
+  return startPlaying && (
     <div className="col gap-4 items-center p-4">
       <h2 className="text-xl font-bold">
         Question {questionIndex + 1} of {questions.length}

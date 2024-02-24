@@ -48,3 +48,6 @@ type TTopTenPlayers = {
   stats: TCategoryStat[]
 }[]
 
+type TQuestionStats = {
+  [key: string]: number
+}

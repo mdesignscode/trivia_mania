@@ -33,12 +33,34 @@ export default function useFetchQuestions({
       return;
     }
 
+    // check for first time render on client
+    const [localDifficulty, localCategories] = [localStorage.getItem("difficulty"), localStorage.getItem("categories")]
+
+    if (!localDifficulty && !localCategories) {
+      // fetch new questions
+      setEnabled(true);
+
+      // set new filters in local storage
+      localStorage.setItem("difficulty", difficulty)
+      localStorage.setItem("categories", categories)
+
+      return
+    }
+
+    // fetch new questions if user answered questions updates
+    const invalidateQuestions = localStorage.getItem("fetchNewQuestions")
+
+    if (invalidateQuestions === "true") {
+      setEnabled(true)
+      return
+    }
+
     // check if new filters match
     if (!newFilters) return;
 
     // fetch new questions
     setEnabled(true);
-  }, [newFilters, storageIsAvailable]);
+  }, [categories, difficulty, newFilters, storageIsAvailable]);
 
   useQuery<TQuestion[]>({
     queryKey: [`fetchQuestions`, difficulty, categories],

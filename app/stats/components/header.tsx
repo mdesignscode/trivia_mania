@@ -1,11 +1,12 @@
-"use client"
+"use client";
 
-import { useUser } from "@clerk/nextjs";
+import { GlobalContext } from "@/app/context/globalContext";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useContext } from "react";
 
-export default function Header({ user }: { user: NonNullable<TUser> }) {
-  const { user: clerkUser } = useUser()
+export default function Header() {
+  const { triviaUser } = useContext(GlobalContext);
   return (
     <motion.div
       initial={{ perspective: 400, rotate: 20, y: -200, opacity: 0 }}
@@ -20,11 +21,11 @@ export default function Header({ user }: { user: NonNullable<TUser> }) {
           className="rounded-full"
           width={50}
           height={50}
-          src={clerkUser?.imageUrl || ""}
+          src={triviaUser?.avatar || ""}
           alt="user avatar icon"
         />
 
-        <h1 className="text-3xl">{user.username}</h1>
+        <h1 className="text-3xl">{triviaUser?.username}</h1>
       </div>
     </motion.div>
   );

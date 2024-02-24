@@ -1,40 +1,34 @@
 "use client";
-import { GlobalContext } from "@/app/context/globalContext";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useContext } from "react";
 import DisplayStats from "./displayStats";
 import Header from "./header";
 import Hero from "./hero";
 
 interface DisplayUserProgressProps {
   topTenPosition: number;
+  userStats: TCategoryStat[] | null;
 }
 
 export default function DisplayUserProgress({
   topTenPosition,
+  userStats
 }: DisplayUserProgressProps) {
-  const { triviaUser } = useContext(GlobalContext);
-
-  if (!triviaUser) return <h1>Loading user...</h1>
-
-  const userStats = triviaUser.stats
-
   return (
     <div
       className="text-xl text-gray-800 w-11/12 col gap-4 mx-auto py-4 overflow-y-auto"
       data-testid="display-user-progress-container"
     >
       {/* Header */}
-      <Header user={triviaUser} />
+      <Header />
 
       {userStats ? (
         <>
           {/* Hero */}
-          <Hero userStats={userStats} topTenPosition={topTenPosition} />
+          <Hero topTenPosition={topTenPosition} />
 
           {/* user overall stats */}
-          <DisplayStats message="Your overall stats" stats={userStats} />
+          <DisplayStats message="Your overall stats" userStats={userStats} />
         </>
       ) : (
         <motion.div

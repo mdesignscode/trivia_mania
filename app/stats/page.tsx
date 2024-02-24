@@ -6,12 +6,14 @@ import { useEffect, useState } from "react";
 
 export default function UserProgress() {
   const { user } = useUser(),
-    [topTenPosition, setTopTenPosition] = useState(0)
+    [topTenPosition, setTopTenPosition] = useState(0),
+    [userStats, setUserStats] = useState<TCategoryStat[] | null>(null);
 
   useEffect(() => {
-    async function setPosition () {
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL,
-        url = baseUrl + "users/topTenPosition",
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+    async function setPosition() {
+      const url = baseUrl + "users/topTenPosition",
         request = await fetch(url, {
           method: "POST",
           headers: {
@@ -20,10 +22,30 @@ export default function UserProgress() {
           body: JSON.stringify({ userId: user?.id }),
         }),
         response = await request.json();
-        setTopTenPosition(response.topTenPosition);
+      setTopTenPosition(response.topTenPosition);
     }
-    setPosition()
-  }, [user?.id])
 
-  return <DisplayUserProgress topTenPosition={topTenPosition} />;
+    async function setStats() {
+      const url = baseUrl + "users/stats",
+        request = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: user?.id }),
+        }),
+        response = await request.json();
+      setUserStats(response);
+    }
+
+    setPosition();
+    setStats();
+  }, [user?.id]);
+
+  return (
+    <DisplayUserProgress
+      userStats={userStats}
+      topTenPosition={topTenPosition}
+    />
+  );
 }

@@ -1,19 +1,25 @@
 "use client";
 
+import { GlobalContext } from "@/app/context/globalContext";
+import { classNames } from "@/components/navigation/desktop";
 import { Button } from "@/components/styledComponents";
 import { Transition } from "@headlessui/react";
+import { useRouter } from "next/navigation";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import QuestionControls from "./QuestionControls";
-import Timer from "./timerCountdown";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
 import {
   TTimerState,
   handleTimesUp,
   handleUserAnswer,
 } from "./QuestionHandlers";
-import { useRouter } from "next/navigation";
-import { classNames } from "@/components/navigation/desktop";
 import useGameStore from "./store";
-import { GlobalContext } from "@/app/context/globalContext";
+import Timer from "./timerCountdown";
 
 export const colorMap: { [key: string]: string } = {
   easy: "green",
@@ -51,9 +57,16 @@ export default function Question({
         ? "View Progress"
         : "Next Question"
     ),
-    { triviaUser, setTriviaUser } = useContext(GlobalContext),
+    { triviaUser, setTriviaUser, storageIsAvailable } =
+      useContext(GlobalContext),
     user = triviaUser as NonNullable<TUser>,
-    [updatingStats, setUpdatingStats] = useState(false)
+    [updatingStats, setUpdatingStats] = useState(false);
+
+  useEffect(() => {
+    if (storageIsAvailable) {
+      localStorage.setItem("fetchNewQuestions", "false");
+    }
+  }, [storageIsAvailable]);
 
   return (
     <Transition

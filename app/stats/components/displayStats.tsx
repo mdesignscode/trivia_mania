@@ -3,15 +3,14 @@ import { motion } from "framer-motion";
 import { capitalize } from "lodash";
 
 interface DisplayStatsProps {
-  stats: NonNullable<TUserStats>;
+  userStats: TCategoryStat[];
   message: string;
 }
 
-function isDifficultyStat(stat: string): stat is keyof TDifficultyStat {
-  return ["easy", "medium", "hard"].includes(stat);
-}
-
-export default function DisplayStats({ stats, message }: DisplayStatsProps) {
+export default function DisplayStats({
+  userStats,
+  message,
+}: DisplayStatsProps) {
   return (
     <motion.div
       initial={{ perspective: 400, rotate: 20, y: -200, opacity: 0 }}
@@ -23,46 +22,53 @@ export default function DisplayStats({ stats, message }: DisplayStatsProps) {
       <strong>{message}</strong>
 
       <div className="col gap-3 md:flex-row">
-        {["easy", "medium", "hard"].map((difficulty) => {
-          const sortedCategories = stats.categoryStats.toSorted((a, b) =>
-              (a?.category || "") > (b?.category || "") ? 1 : 0
-            ),
-            categoriesByDifficulty = sortedCategories.filter(
-              (categoryStat) =>
-                (categoryStat?.difficultyStats.filter(
-                  (difficultyStat) => difficultyStat?.difficulty === difficulty
-                ) || [])[0]?.difficulty === difficulty
+        {["easy" as const, "medium" as const, "hard" as const].map(
+          (difficulty) => {
+            const filteredStats = userStats.filter(
+              (stat) => !!stat && !!stat[`${difficulty}Id`]
             );
 
-          return (
-            categoriesByDifficulty.length > 0 && (
-              <div
-                key={difficulty}
-                className="border-2 dark:border-light rounded-lg space-y-3 p-4 md:flex-1"
-              >
-                <strong style={{ color: colorMap[difficulty] }}>
-                  {capitalize(difficulty)}
-                </strong>
+            return (
+              !!filteredStats.length && (
+                <div
+                  key={difficulty}
+                  className="col gap-3 border-2 rounded-lg p-4 md:flex-1"
+                  style={{ borderColor: colorMap[difficulty] }}
+                >
+                  <strong style={{ color: colorMap[difficulty] }}>
+                    {capitalize(difficulty)}
+                  </strong>
 
-                <div className="col">
-                  {categoriesByDifficulty.map((categoryStat) => (
-                    <div
-                      key={categoryStat?.id}
-                      className="flex justify-between"
-                    >
-                      <p>{categoryStat?.category}</p>
+                  {userStats
+                    .filter((stat): stat is NonNullable<typeof stat> => !!stat)
+                    .map((stat) => {
+                      if (stat[`${difficulty}Id`]) {
+                        return (
+                          <div
+                            key={stat[`${difficulty}Id`]}
+                            className="col gap-1"
+                          >
+                            <p>{stat.category}</p>
 
-                      <div>
-                        {categoryStat?.difficultyStats[0]?.correctAnswered}/
-                        {categoryStat?.difficultyStats[0]?.correctAnswered}
-                      </div>
-                    </div>
-                  ))}
+                            <div className="w-[95%] text-base ml-auto">
+                              <div className="flex justify-between">
+                                <p>Total answered</p>
+                                <p>{stat[`${difficulty}Answered`]}</p>
+                              </div>
+                              <div className="flex justify-between">
+                                <p>Correct answered</p>
+                                <p>{stat[`${difficulty}Correct`]}</p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+                    })}
                 </div>
-              </div>
-            )
-          );
-        })}
+              )
+            );
+          }
+        )}
       </div>
     </motion.div>
   );

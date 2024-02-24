@@ -1,3 +1,4 @@
+import storageAvailable from "@/components/localStorageDetection";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { Dispatch, SetStateAction } from "react";
@@ -29,7 +30,6 @@ export function handleTimesUp({
   userAnswer,
   user,
   question,
-  setTriviaUser,
   setUpdatingStats,
 }: {
   setTriviaUser?: Dispatch<SetStateAction<TUser>>;
@@ -47,13 +47,12 @@ export function handleTimesUp({
     el?.style.setProperty("--animate-duration", "1s");
     el?.classList.add("animate__rubberBand");
 
-    if (user && question && setTriviaUser && setUpdatingStats) {
+    if (user && question && setUpdatingStats) {
       setUpdatingStats(true);
       updateProgress({
         user,
         question,
         answeredCorrect: correctAnswer === userAnswer,
-        setTriviaUser,
       });
       setUpdatingStats(false);
     } else
@@ -76,7 +75,6 @@ export async function handleUserAnswer({
   user,
   question,
   answeredCorrect,
-  setTriviaUser,
   setUpdatingStats,
 }: IHandleUserAnswerProps) {
   setTimerState("ended");
@@ -120,9 +118,12 @@ export async function handleUserAnswer({
     answeredCorrect,
     question,
     user,
-    setTriviaUser,
   });
   setUpdatingStats(false);
+
+  if (storageAvailable()) {
+    localStorage.setItem("fetchNewQuestions", "true")
+  }
 }
 
 export function handleNextQuestion({

@@ -1,44 +1,38 @@
 type TUser = ({
-  stats: TUserStats
+  easyStats: {
+    id: number;
+  };
+  mediumStats: {
+    id: number;
+  };
+  hardStats: {
+    id: number;
+  };
 } & {
   id: string;
   username: string;
-  userStatsId: number | null;
+  avatar: string;
   answeredQuestions: number[];
-}) | null
-
-type TCategoryStat = ({
-  difficultyStats: TDifficultyStat[];
-} & {
-  id?: number;
-  userStatsId?: number | null;
-  category: string;
-}) | null
-
-type TDifficultyStat = {
-  id?: number;
-  answered: number;
   correctAnswered: number;
-  userStatsId?: number | null;
-  categoryStatId?: number | null;
-  difficulty: string;
-} | null
+  totalAnswered: number;
+  easyStatId: number;
+  mediumStatId: number;
+  hardStatId: number;
+}) | null
 
-type TTotal = Omit<{
+type TCategoryStat = {
   id: number;
-  answered: number;
-  correctAnswered: number;
-}, "id">
-
-type TUserStats = ({
-  total: TTotal
-  difficultyStats: TDifficultyStat[]
-  categoryStats: TCategoryStat[]
-  answeredQuestions: number[]
-} & {
-  id?: number;
-  statsTotalId?: number;
-}) | null
+  category: string;
+  easyId: number;
+  easyAnswered: number;
+  easyCorrect: number;
+  mediumId: number;
+  mediumAnswered: number;
+  mediumCorrect: number;
+  hardId: number;
+  hardAnswered: number;
+  hardCorrect: number;
+} | null
 
 type TQuestion = {
   category: string;
@@ -47,8 +41,10 @@ type TQuestion = {
   id: number;
   question: string;
   difficulty: string;
-} | null
-
-type TQuestionStats = {
-  [key: string]: number
 }
+
+type TTopTenPlayers = {
+  user: TUser;
+  stats: TCategoryStat[]
+}[]
+

@@ -1,13 +1,15 @@
 "use client";
+import { GlobalContext } from "@/app/context/globalContext";
 import { motion } from "framer-motion";
+import { useContext } from "react";
 
 export default function Hero({
-  userStats,
   topTenPosition,
 }: {
-  userStats: NonNullable<TUserStats>;
   topTenPosition: number;
 }) {
+  const { triviaUser } = useContext(GlobalContext);
+
   return (
     <motion.div
       initial={{ perspective: 400, rotate: 20, y: -200, opacity: 0 }}
@@ -21,8 +23,8 @@ export default function Hero({
         </em>
       )}
 
-      <h3>Total questions answered: {userStats.total.answered}</h3>
-      <h3>Total correct answers: {userStats.total.correctAnswered}</h3>
+      <h3>Total questions answered: {triviaUser?.totalAnswered}</h3>
+      <h3>Total correct answers: {triviaUser?.correctAnswered}</h3>
     </motion.div>
   );
 }

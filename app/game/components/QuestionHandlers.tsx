@@ -2,12 +2,12 @@ import storageAvailable from "@/components/localStorageDetection";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { Dispatch, SetStateAction } from "react";
-import updateProgress from "./updateUserProgress";
 
 export type TTimerState = "started" | "ended";
 type TSetTimerState = Dispatch<SetStateAction<TTimerState>>;
 
 interface IHandleUserAnswerProps {
+  setshouldSubmit: Dispatch<SetStateAction<boolean>>
   setTriviaUser: Dispatch<SetStateAction<TUser>>;
   value: string;
   i: number;
@@ -18,27 +18,19 @@ interface IHandleUserAnswerProps {
   answers: string[];
   setTimerState: TSetTimerState;
   router: AppRouterInstance;
-  answeredCorrect: boolean;
-  user: NonNullable<TUser>;
-  question: NonNullable<TQuestion>;
-  setUpdatingStats: Dispatch<SetStateAction<boolean>>
 }
 
 export function handleTimesUp({
   correctAnswer,
   setTimerState,
   userAnswer,
-  user,
-  question,
-  setUpdatingStats,
+  setshouldSubmit,
 }: {
+  setshouldSubmit: Dispatch<SetStateAction<boolean>>;
   setTriviaUser?: Dispatch<SetStateAction<TUser>>;
   userAnswer: string;
   setTimerState: TSetTimerState;
   correctAnswer: string;
-  user?: NonNullable<TUser>;
-  question?: NonNullable<TQuestion>;
-  setUpdatingStats?: Dispatch<SetStateAction<boolean>>;
 }) {
   // display correct answer if user did not click any button
   if (!userAnswer) {
@@ -47,18 +39,7 @@ export function handleTimesUp({
     el?.style.setProperty("--animate-duration", "1s");
     el?.classList.add("animate__rubberBand");
 
-    if (user && question && setUpdatingStats) {
-      setUpdatingStats(true);
-      updateProgress({
-        user,
-        question,
-        answeredCorrect: correctAnswer === userAnswer,
-      });
-      setUpdatingStats(false);
-    } else
-      throw new Error(
-        "Provide user and question if user did not answer in time!"
-      );
+    setshouldSubmit(true);
   }
 
   setTimerState("ended");
@@ -72,10 +53,7 @@ export async function handleUserAnswer({
   correctAnswer,
   answers,
   setTimerState,
-  user,
-  question,
-  answeredCorrect,
-  setUpdatingStats,
+  setshouldSubmit,
 }: IHandleUserAnswerProps) {
   setTimerState("ended");
 
@@ -113,16 +91,10 @@ export async function handleUserAnswer({
     el?.classList.add("animate__shakeX");
   }
 
-  setUpdatingStats(true)
-  await updateProgress({
-    answeredCorrect,
-    question,
-    user,
-  });
-  setUpdatingStats(false);
+  setshouldSubmit(true);
 
   if (storageAvailable()) {
-    localStorage.setItem("fetchNewQuestions", "true")
+    localStorage.setItem("fetchNewQuestions", "true");
   }
 }
 

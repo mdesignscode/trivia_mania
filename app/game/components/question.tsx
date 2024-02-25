@@ -20,6 +20,7 @@ import {
 } from "./QuestionHandlers";
 import useGameStore from "./store";
 import Timer from "./timerCountdown";
+import useSubmitAnsweredQuestion from "@/hooks/submitAnsweredQuestion";
 
 export const colorMap: { [key: string]: string } = {
   easy: "green",
@@ -49,18 +50,15 @@ export default function Question({
     [timerState, setTimerState] = useState<TTimerState>("started"),
     [userAnswer, setUserAnswer] = useState(""),
     router = useRouter(),
-    { questions } = useGameStore(),
     [currentAction] = useState(
-      !(index % 5)
-        ? "Continue Playing"
-        : index === questions.length
-        ? "View Progress"
-        : "Next Question"
+      (index % 5) ? "Next Question" : "View Progress"
     ),
-    { triviaUser, setTriviaUser, storageIsAvailable } =
+    { setTriviaUser, storageIsAvailable } =
       useContext(GlobalContext),
-    user = triviaUser as NonNullable<TUser>,
-    [updatingStats, setUpdatingStats] = useState(false);
+    { setshouldSubmit } = useSubmitAnsweredQuestion({
+      answeredCorrect: userAnswer === correctAnswer,
+      question: { answers, category, correctAnswer, difficulty, question, id },
+    });
 
   useEffect(() => {
     if (storageIsAvailable) {
@@ -92,16 +90,7 @@ export default function Question({
             userAnswer,
             correctAnswer,
             setTimerState,
-            user,
-            question: {
-              answers,
-              category,
-              correctAnswer,
-              difficulty,
-              question,
-              id,
-            },
-            setUpdatingStats,
+            setshouldSubmit,
           })
         }
         timerState={timerState}
@@ -124,7 +113,7 @@ export default function Question({
               )}
               onClick={async () => {
                 await handleUserAnswer({
-                  setUpdatingStats,
+                  setshouldSubmit,
                   setTriviaUser,
                   setTimerState,
                   value: entity,
@@ -135,16 +124,6 @@ export default function Question({
                   i,
                   correctAnswer,
                   router,
-                  user,
-                  answeredCorrect: entity === correctAnswer,
-                  question: {
-                    answers,
-                    category,
-                    correctAnswer,
-                    difficulty,
-                    question,
-                    id,
-                  },
                 });
               }}
               key={answer}
@@ -173,7 +152,6 @@ export default function Question({
       </section>
 
       <QuestionControls
-        updatingStats={updatingStats}
         timerState={timerState}
         setQuestionIndex={setQuestionIndex}
         currentAction={currentAction}

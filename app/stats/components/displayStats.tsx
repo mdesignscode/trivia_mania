@@ -25,7 +25,8 @@ export default function DisplayStats({
         {["easy" as const, "medium" as const, "hard" as const].map(
           (difficulty) => {
             const filteredStats = userStats.filter(
-              (stat) => !!stat && !!stat[`${difficulty}Id`]
+              (stat): stat is NonNullable<typeof stat> =>
+                !!stat && !!stat[`${difficulty}Id`]
             );
 
             return (
@@ -39,31 +40,29 @@ export default function DisplayStats({
                     {capitalize(difficulty)}
                   </strong>
 
-                  {userStats
-                    .filter((stat): stat is NonNullable<typeof stat> => !!stat)
-                    .map((stat) => {
-                      if (stat[`${difficulty}Id`]) {
-                        return (
-                          <div
-                            key={stat[`${difficulty}Id`]}
-                            className="col gap-1"
-                          >
-                            <p>{stat.category}</p>
+                  {filteredStats.map((stat) => {
+                    if (stat[`${difficulty}Id`]) {
+                      return (
+                        <div
+                          key={stat[`${difficulty}Id`]}
+                          className="col gap-1"
+                        >
+                          <p>{stat.category}</p>
 
-                            <div className="w-[95%] text-base ml-auto">
-                              <div className="flex justify-between">
-                                <p>Total answered</p>
-                                <p>{stat[`${difficulty}Answered`]}</p>
-                              </div>
-                              <div className="flex justify-between">
-                                <p>Correct answered</p>
-                                <p>{stat[`${difficulty}Correct`]}</p>
-                              </div>
+                          <div className="w-[95%] text-base ml-auto">
+                            <div className="flex justify-between">
+                              <p>Total answered</p>
+                              <p>{stat[`${difficulty}Answered`]}</p>
+                            </div>
+                            <div className="flex justify-between">
+                              <p>Correct answered</p>
+                              <p>{stat[`${difficulty}Correct`]}</p>
                             </div>
                           </div>
-                        );
-                      }
-                    })}
+                        </div>
+                      );
+                    }
+                  })}
                 </div>
               )
             );

@@ -1,10 +1,9 @@
+import { useUser } from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { GlobalContext } from "../context/globalContext";
 import { Button } from "./styledComponents";
-import { useUser } from "@clerk/nextjs";
-import { Skeleton } from "@mui/material";
 
 export default function PlayerMode({
   shouldRender,

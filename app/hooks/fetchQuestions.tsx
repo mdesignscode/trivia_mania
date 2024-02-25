@@ -34,25 +34,30 @@ export default function useFetchQuestions({
     }
 
     // check for first time render on client
-    const [localDifficulty, localCategories] = [localStorage.getItem("difficulty"), localStorage.getItem("categories")]
+    const [localDifficulty, localCategories] = [
+      localStorage.getItem("difficulty"),
+      localStorage.getItem("categories"),
+    ];
 
     if (!localDifficulty && !localCategories) {
       // fetch new questions
       setEnabled(true);
 
       // set new filters in local storage
-      localStorage.setItem("difficulty", difficulty)
-      localStorage.setItem("categories", categories)
+      localStorage.setItem("difficulty", difficulty);
+      localStorage.setItem("categories", categories);
 
-      return
+      return;
     }
 
     // fetch new questions if user answered questions updates
-    const invalidateQuestions = localStorage.getItem("fetchNewQuestions")
+    // and game page refreshes
+    const invalidateQuestions = localStorage.getItem("fetchNewQuestions"),
+      gamePageMounted = localStorage.getItem("gamePageMounted");
 
-    if (invalidateQuestions === "true") {
-      setEnabled(true)
-      return
+    if (invalidateQuestions === "true" && gamePageMounted === "false") {
+      setEnabled(true);
+      return;
     }
 
     // check if new filters match

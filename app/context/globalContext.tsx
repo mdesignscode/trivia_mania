@@ -123,7 +123,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const { data, isFetched } = useQuery({
-    queryKey: ["getUser-" + user?.id],
+    queryKey: ["getUser-" + user?.id, user],
     queryFn: async () => {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -138,7 +138,6 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
         console.log(error);
       }
     },
-    initialData: {},
     enabled: !!user,
   });
 

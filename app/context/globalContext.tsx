@@ -138,7 +138,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
         console.log(error);
       }
     },
-    enabled: !!user && isLoaded && isSignedIn,
+    enabled: !!user
   });
 
   useEffect(() => {

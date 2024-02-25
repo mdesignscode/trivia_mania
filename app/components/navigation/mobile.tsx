@@ -79,7 +79,7 @@ export default function MobileNav({ navigation, path }: NavProps) {
                 {triviaUser && (
                   <Link
                     data-testid="your-stats-button"
-                    href={`/users/${triviaUser.id}`}
+                    href={`/stats`}
                     className={classNames(
                       `/stats` === path
                         ? navStyles.active

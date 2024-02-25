@@ -81,7 +81,7 @@ export default function Board({
                     const categoryStat = stats[category];
                     return (
                       <div key={category} className="col">
-                        <h3 className="text-gray-700">
+                        <h3 className="text-gray-700 font-semibold">
                           {category} correct answers
                         </h3>
 
@@ -91,7 +91,7 @@ export default function Board({
                           return (
                             <div
                               key={difficulty}
-                              className="flex gap-1"
+                              className="flex gap-1 ml-4"
                               style={{
                                 color: colorMap[difficulty],
                               }}

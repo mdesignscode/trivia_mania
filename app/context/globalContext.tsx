@@ -111,7 +111,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
 
   const [pageReady, setPageReady] = useState(false);
 
-  const { user } = useUser();
+  const { user, isLoaded, isSignedIn } = useUser();
 
   const [playerMode, setPlayerMode] = useState<"Guest" | "Signed In">("Guest");
 
@@ -138,7 +138,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
         console.log(error);
       }
     },
-    enabled: !!user,
+    enabled: !!user && isLoaded && isSignedIn,
   });
 
   useEffect(() => {

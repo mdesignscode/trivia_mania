@@ -14,7 +14,6 @@ type TUser = ({
   avatar: string;
   answeredQuestions: number[];
   correctAnswered: number;
-  totalAnswered: number;
   easyStatId: number;
   mediumStatId: number;
   hardStatId: number;

@@ -23,7 +23,7 @@ export default function Hero({
         </em>
       )}
 
-      <h3>Total questions answered: {triviaUser?.totalAnswered}</h3>
+      <h3>Total questions answered: {triviaUser?.answeredQuestions.length}</h3>
       <h3>Total correct answers: {triviaUser?.correctAnswered}</h3>
     </motion.div>
   );

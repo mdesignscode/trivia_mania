@@ -27,7 +27,6 @@ model User {
   avatar            String
   answeredQuestions Int[]
   correctAnswered   Int
-  totalAnswered     Int
 
   easyStats   EasyStat @relation(fields: [easyStatId], references: [id])
   mediumStats   MediumStat @relation(fields: [mediumStatId], references: [id])

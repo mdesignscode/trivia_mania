@@ -82,7 +82,6 @@ export async function POST(req: Request) {
           username,
           avatar: image_url,
           correctAnswered: 0,
-          totalAnswered: 0,
           easyStats: {
             create: {}
           },

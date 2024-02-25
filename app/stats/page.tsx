@@ -1,8 +1,6 @@
 import DisplayUserProgress from "./components";
 import { currentUser } from "@clerk/nextjs";
 
-export const dynamic = "force-dynamic";
-
 export default async function UserProgress() {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const user = await currentUser(),

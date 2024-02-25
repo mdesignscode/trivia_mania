@@ -20,7 +20,7 @@ export default function useSubmitAnsweredQuestion({
   answeredCorrect,
   question,
 }: ISubmitAnsweredQuestionProps) {
-  const { triviaUser } = useContext(GlobalContext);
+  const { triviaUser, setTriviaUser } = useContext(GlobalContext);
   const [shouldSubmit, setshouldSubmit] = useState(false);
 
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -36,6 +36,7 @@ export default function useSubmitAnsweredQuestion({
       };
       try {
         const { data } = await axios.post(url, postBody);
+        setTriviaUser(data)
 
         return data;
       } catch (error) {

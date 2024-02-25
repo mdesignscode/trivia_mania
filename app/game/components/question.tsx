@@ -50,9 +50,7 @@ export default function Question({
     [timerState, setTimerState] = useState<TTimerState>("started"),
     [userAnswer, setUserAnswer] = useState(""),
     router = useRouter(),
-    [currentAction] = useState(
-      (index % 5) ? "Next Question" : "View Progress"
-    ),
+    currentAction =  "Next Question",
     { setTriviaUser, storageIsAvailable } =
       useContext(GlobalContext),
     { setshouldSubmit } = useSubmitAnsweredQuestion({

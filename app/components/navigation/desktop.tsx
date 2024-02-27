@@ -29,8 +29,8 @@ export const navStyles = {
 };
 
 export default function DesktopNav({ navigation, path }: NavProps) {
-  const { triviaUser } = useContext(GlobalContext);
-  const { isLoaded } = useUser();
+  const { triviaUser, playUrl } = useContext(GlobalContext);
+  const { isLoaded, isSignedIn } = useUser();
 
   return (
     <div className="hidden md:block mx-auto w-full px-2 md:px-6 lg:px-8 bg-secondary text-light">
@@ -52,6 +52,7 @@ export default function DesktopNav({ navigation, path }: NavProps) {
             <div className="flex space-x-4">
               {navigation.map((item) => (
                 <Link
+                  prefetch={["/scoreboard", playUrl].includes(item.href) ? isSignedIn : true}
                   data-testid={item.name}
                   key={item.name}
                   href={item.href}
@@ -88,11 +89,7 @@ export default function DesktopNav({ navigation, path }: NavProps) {
                             : navStyles.inActive[0],
                           navStyles.inActive[1]
                         )}
-                        aria-current={
-                          `/stats` === path
-                            ? "page"
-                            : undefined
-                        }
+                        aria-current={`/stats` === path ? "page" : undefined}
                       >
                         <ChartBarIcon height={25} width={25} />
                         Your Stats

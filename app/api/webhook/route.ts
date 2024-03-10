@@ -73,7 +73,7 @@ export async function POST(req: Request) {
   const { id, username, image_url } = payload.data;
 
   // pass test user
-  if (id === "test_id") return new Response(null, { status: 201 })
+  if (id === "test_id" || !username) return new Response(null, { status: 201 })
 
   switch (eventType) {
     // handle signup

@@ -1,7 +1,7 @@
 import QueryProvider from "@/context/queryProvider";
 import "@/styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import Body from "./components/body";
 import { GlobalProvider } from "./context/globalContext";
@@ -11,6 +11,11 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Trivia Mania",
   description: "Portfolio Project by Marlon Baatjes",
+  manifest: "/site.webmanifest"
+};
+
+export const viewport: Viewport = {
+  themeColor: "#ffcb74",
 };
 
 export default function RootLayout({

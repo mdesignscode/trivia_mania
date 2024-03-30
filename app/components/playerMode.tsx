@@ -4,13 +4,14 @@ import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { GlobalContext } from "../context/globalContext";
 import { Button } from "./styledComponents";
+import ServerUnavailable from "./serverUnavailable";
 
 export default function PlayerMode({
   shouldRender,
 }: {
   shouldRender: boolean;
 }) {
-  const { setPlayerMode, setPageReady, triviaUser } = useContext(GlobalContext),
+  const { setPlayerMode, setPageReady, triviaUser, serverUnavailable } = useContext(GlobalContext),
     { isLoaded, isSignedIn } = useUser(),
     router = useRouter();
 
@@ -27,6 +28,8 @@ export default function PlayerMode({
   }
 
   if (!shouldRender) return;
+
+  if (serverUnavailable) return <ServerUnavailable />
 
   if (isLoaded && isSignedIn && !triviaUser) {
     return (

@@ -6,7 +6,6 @@ import User from "@/models/user";
 import {
   CATEGORIES,
   DIFFICULTY,
-  NEW_PARAMS,
   PROGRESS,
   USERNAME,
   clearQuestionData,
@@ -55,6 +54,7 @@ export interface IGlobalContext {
   setPlayerMode: Dispatch<SetStateAction<"Guest" | "Signed In">>;
   newFilters: boolean;
   setNewFilters: Dispatch<SetStateAction<boolean>>;
+  serverUnavailable: boolean;
 }
 
 export const initialGlobalContext: IGlobalContext = {
@@ -76,7 +76,8 @@ export const initialGlobalContext: IGlobalContext = {
   playerMode: "Guest",
   setPlayerMode: () => {},
   setNewFilters: () => {},
-  newFilters: false
+  newFilters: false,
+  serverUnavailable: false,
 };
 
 export const GlobalContext =
@@ -87,6 +88,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
   // app uses localStorage
   const [storageIsAvailable, setStorageIsAvailable] = useState(false);
   const [triviaUser, setTriviaUser] = useState<TUser>(null);
+  const [serverUnavailable, setServerUnavailable] = useState(false);
 
   const [difficultyChoice, setDifficultyChoice] = useState<
     Record<string, boolean>
@@ -104,14 +106,16 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
     categories: "",
   });
   const playUrl = encodeURI(
-    `/game?difficulty=${playFilters.difficulty}&categories=${playFilters.categories.replaceAll("&", "|")}`
+    `/game?difficulty=${
+      playFilters.difficulty
+    }&categories=${playFilters.categories.replaceAll("&", "|")}`
   );
 
   const [newFilters, setNewFilters] = useState(false);
 
   const [pageReady, setPageReady] = useState(false);
 
-  const { user, isLoaded, isSignedIn } = useUser();
+  const { user } = useUser();
 
   const [playerMode, setPlayerMode] = useState<"Guest" | "Signed In">("Guest");
 
@@ -138,17 +142,20 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
         console.log(error);
       }
     },
-    enabled: !!user
+    enabled: !!user,
+    onError: () => setServerUnavailable(true),
   });
 
   useEffect(() => {
     if (/sso-callback/.test(path)) {
-      setPageReady(true)
+      setPageReady(true);
     }
-  }, [path])
+  }, [path]);
 
   // set online user
   useEffect(() => {
+    if (serverUnavailable) return;
+
     if (isFetched && user) {
       // set online user
       const triviaUser = data;
@@ -172,7 +179,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
         }
       }
     }
-  }, [data, isFetched, storageIsAvailable, user]);
+  }, [data, isFetched, storageIsAvailable, user, serverUnavailable]);
 
   // get last set filters from local storage and put it in state
   useEffect(() => {
@@ -219,6 +226,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
     setPlayerMode,
     newFilters,
     setNewFilters,
+    serverUnavailable,
   };
 
   return (

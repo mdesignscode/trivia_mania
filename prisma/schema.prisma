@@ -7,9 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model Question {
@@ -22,15 +22,15 @@ model Question {
 }
 
 model User {
-  id                String   @id
+  id                String @id
   username          String
   avatar            String
   answeredQuestions Int[]
   correctAnswered   Int
 
-  easyStats   EasyStat @relation(fields: [easyStatId], references: [id])
-  mediumStats   MediumStat @relation(fields: [mediumStatId], references: [id])
-  hardStats    HardStat @relation(fields: [hardStatId], references: [id])
+  easyStats   EasyStat   @relation(fields: [easyStatId], references: [id])
+  mediumStats MediumStat @relation(fields: [mediumStatId], references: [id])
+  hardStats   HardStat   @relation(fields: [hardStatId], references: [id])
 
   easyStatId   Int
   mediumStatId Int

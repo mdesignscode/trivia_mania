@@ -27,7 +27,7 @@ export default async function UserProgress() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userId: "Catherine Pope" }),
+          body: JSON.stringify({ userId: user?.id }),
         }),
         response = await request.json();
       return response

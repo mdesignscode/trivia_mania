@@ -79,7 +79,7 @@ export async function POST(req: Request) {
     // handle signup
     case "user.created":
       // create new user
-      await prisma.user.create({
+      console.log(await prisma.user.create({
         data: {
           id,
           username,
@@ -95,7 +95,7 @@ export async function POST(req: Request) {
             create: {}
           }
         }
-      })
+      }))
 
       response = `${id} created`;
       break;

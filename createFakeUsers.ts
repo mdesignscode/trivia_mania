@@ -21,7 +21,7 @@ const splitNumber = (number: number): number[] => {
 
 const createFakeUser = async (username: string) => {
   const correctAnswered = getRandomNumber(40, 100),
-    triviaMattieFleming = await prisma.user.create({
+    triviaUser = await prisma.user.create({
       data: {
         id: username,
         avatar,
@@ -43,7 +43,7 @@ const createFakeUser = async (username: string) => {
       by: ["category"],
     });
 
-  console.log({ triviaMattieFleming });
+  console.log({ triviaUser });
 
   // Fisher-Yates shuffle algorithm
   for (let i = categories.length - 1; i > 0; i--) {
@@ -61,11 +61,11 @@ const createFakeUser = async (username: string) => {
         userId: username,
         easyAnswered: 0,
         easyCorrect,
-        easyId: triviaMattieFleming.easyStatId,
+        easyId: triviaUser.easyStatId,
         hardAnswered: 0,
         hardCorrect,
-        hardId: triviaMattieFleming.hardStatId,
-        mediumId: triviaMattieFleming.mediumStatId,
+        hardId: triviaUser.hardStatId,
+        mediumId: triviaUser.mediumStatId,
         mediumAnswered: 0,
         mediumCorrect,
       },
@@ -74,13 +74,15 @@ const createFakeUser = async (username: string) => {
     console.log({ categoryStat });
   });
 
-  return triviaMattieFleming;
+  return triviaUser;
 };
 
 async function main() {
   const fakeUsers = ["Lida Cross", "Randall Park", "Bill Buchanan", "Douglas Russell", "Annie Baldwin", "Don Willis", "Catherine Pope", "Georgia Richards", "Evelyn Gomez", "Clifford Guerrero"]
 
-  fakeUsers.forEach(username => createFakeUser(username))
+  for (const username of fakeUsers) {
+    await createFakeUser(username)
+  }
 }
 
 main()

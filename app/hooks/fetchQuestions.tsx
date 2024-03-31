@@ -76,6 +76,7 @@ export default function useFetchQuestions({
           difficulty,
           user,
         });
+        console.log(data)
 
         if (storageIsAvailable)
           localStorage.setItem("questions", JSON.stringify(data));

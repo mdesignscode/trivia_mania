@@ -54,7 +54,6 @@ export interface IGlobalContext {
   setPlayerMode: Dispatch<SetStateAction<"Guest" | "Signed In">>;
   newFilters: boolean;
   setNewFilters: Dispatch<SetStateAction<boolean>>;
-  serverUnavailable: boolean;
 }
 
 export const initialGlobalContext: IGlobalContext = {
@@ -77,7 +76,6 @@ export const initialGlobalContext: IGlobalContext = {
   setPlayerMode: () => {},
   setNewFilters: () => {},
   newFilters: false,
-  serverUnavailable: false,
 };
 
 export const GlobalContext =
@@ -88,7 +86,6 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
   // app uses localStorage
   const [storageIsAvailable, setStorageIsAvailable] = useState(false);
   const [triviaUser, setTriviaUser] = useState<TUser>(null);
-  const [serverUnavailable, setServerUnavailable] = useState(false);
 
   const [difficultyChoice, setDifficultyChoice] = useState<
     Record<string, boolean>
@@ -115,8 +112,6 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
 
   const [pageReady, setPageReady] = useState(false);
 
-  const { user } = useUser();
-
   const [playerMode, setPlayerMode] = useState<"Guest" | "Signed In">("Guest");
 
   const path = usePathname();
@@ -126,26 +121,6 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
     setStorageIsAvailable(storageAvailable());
   }, []);
 
-  const { data, isFetched } = useQuery({
-    queryKey: ["getUser-" + user?.id, user],
-    queryFn: async () => {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-        const url = baseUrl + "users/get";
-
-        const { data } = await axios.post(url, {
-          id: user?.id,
-        } as IGetUserRequest);
-
-        return data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    enabled: !!user,
-    onError: () => setServerUnavailable(true),
-  });
-
   useEffect(() => {
     if (/sso-callback/.test(path)) {
       setPageReady(true);
@@ -154,12 +129,8 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
 
   // set online user
   useEffect(() => {
-    if (serverUnavailable) return;
-
-    if (isFetched && user) {
+    if (triviaUser) {
       // set online user
-      const triviaUser = data;
-      setTriviaUser(triviaUser);
 
       if (storageIsAvailable) {
         // check if current user is previous user
@@ -179,7 +150,7 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
         }
       }
     }
-  }, [data, isFetched, storageIsAvailable, user, serverUnavailable]);
+  }, [storageIsAvailable, triviaUser]);
 
   // get last set filters from local storage and put it in state
   useEffect(() => {
@@ -226,7 +197,6 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
     setPlayerMode,
     newFilters,
     setNewFilters,
-    serverUnavailable,
   };
 
   return (

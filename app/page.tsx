@@ -1,7 +1,6 @@
 import HomePage from "@/components/home";
 import { HomeProvider } from "@/context/homeContext";
 import { currentUser } from "@clerk/nextjs";
-import Image from "next/image";
 import ServerUnavailable from "./components/serverUnavailable";
 
 export const dynamic = "force-dynamic";
@@ -9,8 +8,6 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   const user = await currentUser(),
     baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-  // let [categories, difficulties] = [null, null];
 
   try {
     const request = await fetch(baseUrl + "questions/stats", {
@@ -34,6 +31,6 @@ export default async function Home() {
       </HomeProvider>
     );
   } catch (error) {
-    return <ServerUnavailable />;
+    console.log(error)
   }
 }

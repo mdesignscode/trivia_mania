@@ -1,6 +1,0 @@
-This favicon was generated using the following font:
-
-- Font Title: Marmelad
-- Font Author: Copyright 2016 The Marmelad Project Authors (https://github.com/cyrealtype/Marmelad-Cyrillic)
-- Font Source: https://fonts.gstatic.com/s/marmelad/v18/Qw3eZQdSHj_jK2e-8tFLG-YMC0R8.ttf
-- Font License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL))

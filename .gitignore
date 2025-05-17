@@ -44,3 +44,7 @@ description.txt
 
 prisma/generated
 prisma/migrations/migration_lock.toml
+
+database.sqlite
+.svelte-kit
+

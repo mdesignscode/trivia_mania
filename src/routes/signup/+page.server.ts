@@ -1,30 +1,49 @@
-import { db } from '$lib/db';
-import { generateSessionToken, createSession } from '$lib/session';
-import { redirect, fail, type Actions } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
+import { redirect, fail } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
+import { isSignedIn } from 'currentUser';
+import { User } from 'models';
+import { sendEmail } from 'utils/emailVerification';
+import { createSession, generateSessionToken } from 'utils/session';
+
+export const load: PageServerLoad = async ({ cookies }) => {
+        const token = cookies.get('session');
+        return isSignedIn(token, '/signup');
+}
 
 export const actions: Actions = {
         default: async ({ request, cookies }) => {
                 const formData = await request.formData();
                 const username = formData.get('username')?.toString();
+                const email = formData.get('email')?.toString();
                 const password = formData.get('password')?.toString();
 
-                if (!username || !password) {
-                        return fail(400, { error: 'Username and password are required.' });
+                if (!username || !password || !email) {
+                        return fail(400, { error: 'Username, email and password are required.' });
                 }
 
-                const existingUser = db.prepare('SELECT * FROM user WHERE username = ?').get(username);
+                // check for existing user
+                const existingUser = await User.findOne({
+                        where: {
+                                username
+                        }
+                });
+
                 if (existingUser) {
                         return fail(400, { error: 'Username already taken.' });
                 }
 
+                // hash password and save user in db
                 const hashedPassword = await bcrypt.hash(password, 10);
+                const avatar = '/images/icons8-user-64.png';
 
-                const result = db.prepare('INSERT INTO user (username, password) VALUES (?, ?)').run(username, hashedPassword);
-                const userId = result.lastInsertRowid as number;
+                const newUser = await User.create({
+                        username, password: hashedPassword, email, correctAnswered: 0, answeredQuestions: [], avatar,
+                });
 
+                // sign user in
                 const token = generateSessionToken();
-                createSession(token, userId);
+                createSession(token, newUser.getDataValue("id"));
 
                 cookies.set('session', token, {
                         path: '/',
@@ -34,7 +53,11 @@ export const actions: Actions = {
                         maxAge: 60 * 60 * 24 * 30
                 });
 
-                throw redirect(302, '/protected');
+                const { status, data } = await sendEmail({ email, username });
+
+                if (status === 'fail') return fail(400, { error: data })
+
+                throw redirect(302, `/signup/validate-email?email=${email}`);
         }
 };
 

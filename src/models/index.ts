@@ -5,10 +5,9 @@ import EasyStat from './EasyStat';
 import MediumStat from './MediumStat';
 import HardStat from './HardStat';
 import CategoryStat from './CategoryStat';
+import Session from './Session';
+import EmailVerification from './EmailVerification';
 
-// User.belongsTo(EasyStat, { foreignKey: 'easyStatId' });
-// User.belongsTo(MediumStat, { foreignKey: 'mediumStatId' });
-// User.belongsTo(HardStat, { foreignKey: 'hardStatId' });
 User.belongsTo(EasyStat);
 User.belongsTo(MediumStat);
 User.belongsTo(HardStat);
@@ -16,6 +15,9 @@ User.belongsTo(HardStat);
 EasyStat.hasMany(User);
 MediumStat.hasMany(User);
 HardStat.hasMany(User);
+
+Session.belongsTo(User);
+User.hasMany(Session);
 
 export {
         sequelize,
@@ -25,5 +27,7 @@ export {
         MediumStat,
         HardStat,
         CategoryStat,
+        Session,
+        EmailVerification,
 };
 

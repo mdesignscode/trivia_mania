@@ -6,9 +6,22 @@ const User = sequelize.define(
         {
                 id: {
                         type: DataTypes.UUID,
+                        defaultValue: DataTypes.UUIDV4,
                         primaryKey: true,
                 },
+                isVerified: {
+                        type: DataTypes.BOOLEAN,
+                        defaultValue: false,
+                },
+                password: {
+                        type: DataTypes.STRING,
+                        allowNull: false,
+                },
                 username: {
+                        type: DataTypes.STRING,
+                        allowNull: false,
+                },
+                email: {
                         type: DataTypes.STRING,
                         allowNull: false,
                 },
@@ -23,17 +36,6 @@ const User = sequelize.define(
                         type: DataTypes.INTEGER,
                         allowNull: false,
                 },
-
-                // difficulty relationships
-                // easyStatId: {
-                //         type: DataTypes.INTEGER
-                // },
-                // hardStatId: {
-                //         type: DataTypes.INTEGER
-                // },
-                // mediumStatId: {
-                //         type: DataTypes.INTEGER
-                // },
         },
 );
 

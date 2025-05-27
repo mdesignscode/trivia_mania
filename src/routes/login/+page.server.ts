@@ -1,30 +1,41 @@
-import { db } from '$lib/db';
-import { generateSessionToken, createSession } from '$lib/session';
-import { redirect, fail, type Actions } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
+import { redirect, fail } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
+import { User } from 'models';
+import { isSignedIn } from 'currentUser';
+import { createSession, generateSessionToken } from 'utils/session';
+
+export const load: PageServerLoad = async ({ cookies }) => {
+        const token = cookies.get('session');
+        return isSignedIn(token, '/login');
+}
 
 export const actions: Actions = {
         default: async ({ request, cookies }) => {
-                const formData = await request.formData();
-                const username = formData.get('username')?.toString();
-                const password = formData.get('password')?.toString();
+                const form = await request.formData();
+                const email = form.get('username');
+                const password = form.get('password') as string;
 
-                if (!username || !password) {
-                        return fail(400, { error: 'Username and password are required.' });
+                if (!email || !password) {
+                        return fail(400, { error: 'Missing email or password.' });
                 }
 
-                const user = db.prepare('SELECT * FROM user WHERE username = ?').get(username);
+                const user = await User.findOne({
+                        where: { email },
+                        attributes: ["password", "id"],
+                });
+
                 if (!user) {
-                        return fail(400, { error: 'Invalid credentials.' });
+                        return fail(400, { error: 'Invalid email or password.' });
                 }
 
-                const passwordMatches = await bcrypt.compare(password, user.password);
-                if (!passwordMatches) {
-                        return fail(400, { error: 'Invalid credentials.' });
+                const validPassword = await bcrypt.compare(password, user.getDataValue('password'));
+                if (!validPassword) {
+                        return fail(400, { error: 'Invalid email or password.' });
                 }
 
                 const token = generateSessionToken();
-                createSession(token, user.id);
+                await createSession(token, user.getDataValue('id'));
 
                 cookies.set('session', token, {
                         path: '/',
@@ -34,7 +45,7 @@ export const actions: Actions = {
                         maxAge: 60 * 60 * 24 * 30
                 });
 
-                throw redirect(302, '/protected');
+                throw redirect(302, '/');
         }
 };
 

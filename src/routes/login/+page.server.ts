@@ -1,5 +1,5 @@
 import type { Actions, PageServerLoad } from './$types';
-import { redirect, fail } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
 import { User } from 'models';
 import { isSignedIn } from 'currentUser';
@@ -7,7 +7,7 @@ import { createSession, generateSessionToken } from 'utils/session';
 
 export const load: PageServerLoad = async ({ cookies }) => {
         const token = cookies.get('session');
-        return isSignedIn(token, '/login');
+        return await isSignedIn(token, '/login');
 }
 
 export const actions: Actions = {
@@ -22,7 +22,6 @@ export const actions: Actions = {
 
                 const user = await User.findOne({
                         where: { email },
-                        attributes: ["password", "id"],
                 });
 
                 if (!user) {
@@ -45,7 +44,9 @@ export const actions: Actions = {
                         maxAge: 60 * 60 * 24 * 30
                 });
 
-                throw redirect(302, '/');
+                const userData = user.dataValues;
+                delete userData.password;
+                return userData;
         }
 };
 

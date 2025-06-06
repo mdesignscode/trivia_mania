@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
 export const actions: Actions = {
         default: async ({ request, cookies }) => {
                 const formData = await request.formData();
-                const username = formData.get('username')?.toString();
+                const username = formData.get('username')?.toString().trim();
                 const email = formData.get('email')?.toString();
                 const password = formData.get('password')?.toString();
 
@@ -55,9 +55,14 @@ export const actions: Actions = {
 
                 const { status, data } = await sendEmail({ email, username });
 
-                if (status === 'fail') return fail(400, { error: data })
+                if (status === 'fail') return fail(500, { error: data })
 
-                throw redirect(302, `/signup/validate-email?email=${email}`);
+                const validateEmailUri = `/signup/validate-email?email=${email}`;
+
+                const userData = newUser.dataValues;
+                delete userData.password;
+
+                return { user: userData, redirectTo: validateEmailUri, message: 'Account created' };
         }
 };
 

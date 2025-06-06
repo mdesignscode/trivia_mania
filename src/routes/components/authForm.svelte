@@ -1,8 +1,10 @@
 <script lang="ts">
+        import SpinningLoader from './spinningLoader.svelte';
+        import Button from './button.svelte'
         import { enhance } from '$app/forms';
-        import Button from 'components/button.svelte'
 
-        let { children, route, form } = $props();
+        let { children, route, error, handler, loading } = $props();
+
         const routeOptions = {
                 '/signup': {
                         head: 'Create an account to save your progress',
@@ -22,13 +24,18 @@
 </script>
 
 <div class="col gap-4 md:mx-auto md:w-4/6 px-8 py-6">
-        <strong class="text-center text-lg underline">Trivia Mania</strong>
         <h1 class="text-lg">{routeOptions[route].head}</h1>
-        <form id="auth-form" use:enhance method="POST" class="bg-neutral-200 dark:bg-neutral-500 p-4 rounded-lg shadow-md dark:border-transparent border-2 col gap-3 gap-2">
+        <form id="auth-form" use:enhance={handler} method="POST" class="bg-neutral-200 dark:bg-neutral-500 p-4 rounded-lg shadow-md dark:border-transparent border-2 col gap-2">
                 {@render children()}
-                <Button type='submit' cta>{routeOptions[route].cta}</Button>
-                {#if form?.error}
-                        <p style="color:red">{form?.error}</p>
+                <button disabled={loading} class="disabled:opacity-60 flex gap-4 border border-accent items-center justify-center py-1 rounded-sm bg-accent hover:bg-transparent transition-all">
+                        {routeOptions[route].cta}
+
+                        {#if loading}
+                                <SpinningLoader size="8" />
+                        {/if}
+                </button>
+                {#if error}
+                        <p style="color:red">{error}</p>
                 {/if}
         </form>
 

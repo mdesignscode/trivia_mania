@@ -2,7 +2,7 @@
         let { size } = $props();
 </script>
  <svg
-         class={["animate-spin -ml-1 mr-3 text-dark size-10"]}
+        class={["animate-spin -ml-1 text-dark inline-block", `size-${size || 10}`]}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

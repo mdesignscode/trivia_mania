@@ -25,7 +25,7 @@ export const sendEmail = async ({ email, username }: { username: string, email: 
         const textBody = `<p>Hi ${username},</p>
     <p>Thank you for signing up with <strong>Trivia Mania</strong>! To complete your registration, please use the verification code below:</p>
     <div class="code-box">${code}</div>
-    <p>This code will expire in <strong>5 minutes</strong>. If you did not request this, you can safely ignore this email.</p>
+    <p>This code will expire in <strong>10 minutes</strong>. If you did not request this, you can safely ignore this email.</p>
     <p>Need help? <a href="mailto:${sender}">Contact our support team</a>.</p>
     <div class="footer">
       &copy; 2025 Trivia Mania. All rights reserved.
@@ -39,21 +39,20 @@ export const sendEmail = async ({ email, username }: { username: string, email: 
                         from: '"Trivia Mania" ejue1vs7n@mozmail.com', // sender address
                         to: email, // list of receivers
                         subject: 'Verify Your Email Address', // Subject line
-                        // text: 'This is a plain text body.', // plain text body
                         html: textBody, // HTML body
                 });
 
                 return { status: 'success', data: code };
         } catch (error) {
                 console.error('Error sending email:', error);
-                return { status: 'fail', data: error };
+                return { status: 'fail', data: error.message };
         }
 };
 
 
 export async function generateEmailVerificationCode(email: string): Promise<string> {
         const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
-        const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
 
         // existing verification should be updated
         const existingVerification = await EmailVerification.findOne({

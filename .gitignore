@@ -42,9 +42,11 @@ colorPalette.txt
 description.txt
 .env
 
-prisma/generated
-prisma/migrations/migration_lock.toml
-
 database.sqlite
 .svelte-kit
 /questionsCache.json
+
+static/images/uploads/*
+
+yarn.lock
+

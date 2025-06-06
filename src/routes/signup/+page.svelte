@@ -1,24 +1,42 @@
 <script lang="ts">
         import AuthForm from 'components/authForm.svelte';
+        import PasswordInput from 'components/passwordInput.svelte';
+        import { globalStore } from 'store';
+        import { goto } from '$app/navigation';
 
         let email = $state("");
         let username = $state("");
         let password = $state("");
+        let error = $state('');
+        let loading = $state(false);
+        let showPassword = $state(false);
 
-        import { page } from '$app/state';
-        let { data, form } = $props();
-        console.debug({data,form,state:page?.state});
+        const handleSignup = async () => {
+                loading = true;
+
+                return async ({ result }) => {
+                        if (result.type === 'failure') {
+                                error = result.data.error;
+                                loading = false;
+                                return;
+                        }
+                        globalStore.update(() => ({ ...$globalStore, user: result.data.user }));
+
+                        loading = false;
+                        goto(result.data.redirectTo);
+                }
+        }
 </script>
 
-{#if page?.state}{(() => console.log({state:page?.state}))()}{/if}
-
-<AuthForm {form} route="/signup">
+<AuthForm {error} {loading} handler={handleSignup} route="/signup">
         <input type="text" bind:value={username} name="username" placeholder="Username" required />
         <input type="email" bind:value={email} name="email" placeholder="Email" required />
-        <input type="password" bind:value={password} name="password" placeholder="Password" required />
-
-        {#if form?.error}
-                <p class="bg-red-800">{form?.error}</p>
-        {/if}
+        <PasswordInput
+                label="Create password"
+                name="password"
+                placeholder="Password"
+                show={showPassword}
+                value={password}
+        />
 </AuthForm>
 

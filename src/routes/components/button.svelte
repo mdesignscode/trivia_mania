@@ -1,5 +1,5 @@
 <script lang="ts">
-        let { primary, cta, play, showCategories, children, type } = $props();
+        let { primary, cta, play, danger, showCategories, children, type, nativeProps = { } } = $props();
 
         const color = "#ffcb74";
         const dark = "#2f2f2f";
@@ -8,6 +8,7 @@
         // Dynamic classes
         const classes = [
                 'base',
+                danger && 'danger',
                 primary && 'primary',
                 cta && 'cta',
                 showCategories && 'show-categories',
@@ -18,7 +19,7 @@
 
 </script>
 
-<button {type} class={classes} style={
+<button {...nativeProps} {type} class={[classes, nativeProps.class]} style={
         showCategories
         ? `--category-border-color: ${primary ? light : dark}; --category-hover-color: ${primary ? dark : light};`
         : ''
@@ -32,6 +33,7 @@
         }
 
         button.base {
+                @apply disabled:opacity-60 flex gap-4 items-center justify-center;
                 background: transparent;
                 border-radius: 5px;
                 border: 2px solid #ffcb74;
@@ -71,6 +73,15 @@
                         border-color: #f6f6f6;
                         color: #f6f6f6;
                 }
+        }
+
+        /* Danger */
+        button.danger {
+                @apply border-red-400 p-2 bg-transparent text-red-400;
+        }
+
+        button.danger:hover {
+                @apply bg-red-400 text-white;
         }
 
         /* CTA */

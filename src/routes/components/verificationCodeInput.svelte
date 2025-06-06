@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher, onMount } from 'svelte';
 
-  let { length = 6, error } = $props(); // Number of digits
+  let { length = 6, error } = $props();
   const dispatch = createEventDispatcher();
 
   let code = $state('');

@@ -1,0 +1,106 @@
+<script lang="ts">
+        import { on } from 'svelte/events';
+        import { onMount } from 'svelte';
+        import { globalStore } from 'store';
+        import { createDisclosure } from "svelte-headlessui";
+        import {
+                Bars3,
+                ChartBar,
+                UserCircle,
+                XMark,
+                Icon,
+        } from "svelte-hero-icons";
+        import { navStyles, navigation } from ".";
+
+        let { path } = $props();
+
+        const navbar = createDisclosure({ expanded: false });
+</script>
+
+<nav class="md:hidden text-light">
+        {#if $navbar.expanded}
+                <div class="absolute h-screen w-full bg-dark/80 z-40 top-0 left-0"></div>
+        {/if}
+
+        <div class="flex dark:bg-accent-100 bg-secondary relative z-50">
+                <button
+                        use:navbar.button
+                        data-testid="disclosure-button"
+                        class="relative inline-flex items-center justify-center rounded-md px-4 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                >
+                        <span class="sr-only">Open main menu</span>
+                        {#if $navbar.expanded}
+                                <Icon src={XMark} class="block h-6 w-6" aria-hidden="true" />
+                        {:else}
+                                <Icon src={Bars3} class="block h-6 w-6" aria-hidden="true" />
+                        {/if}
+                </button>
+
+                <a
+                        class="hover:bg-gray-700 rounded-md px-3 py-1 text-center flex-1"
+                        href="/"
+                >
+                        <h1 class="text-white text-2xl">Trivia Mania</h1>
+                </a>
+        </div>
+
+        {#if $navbar.expanded}
+        <div use:navbar.panel class={["space-y-1 px-2 pb-3 pt-2 absolute z-50 bg-secondary w-full transition-all", $navbar.expanded ? "h-auto opacity-100" : "h-0 opacity-0"]}>
+                {#each navigation as item}
+                        <a
+                                use:navbar.button
+                                data-testid={item.name}
+                                href={item.href}
+                                class={[
+                                        item.href.split("?")[0] === path
+                                                ? navStyles.active
+                                                : navStyles.inActive[0],
+                                        navStyles.inActive[1]
+                                ]}
+                                aria-current={item.href === path ? "page" : undefined}
+                        >
+                                <Icon src={item.icon} size="25" />
+                                {item.name}
+                        </a>
+                {/each}
+
+                <!-- User stats and User button -->
+                <div class="col">
+                        {#if $globalStore.user}
+                                <a
+                                        use:navbar.button
+                                        data-testid="your-stats-button"
+                                        href={`/stats`}
+                                        class={[
+                                                `/stats` === path
+                                                        ? navStyles.active
+                                                        : navStyles.inActive[0],
+                                                navStyles.inActive[1]
+                                        ]}
+                                        aria-current={`/stats` === path ? "page" : undefined}
+                                >
+                                        <Icon src={ChartBar} size="25" />
+                                        Your Stats
+                                </a>
+
+                                <a
+                                        use:navbar.button
+                                        href={`/settings`}
+                                        class={[
+                                                `/settings` === path
+                                                        ? navStyles.active
+                                                        : navStyles.inActive[0],
+                                                navStyles.inActive[1],
+                                                "-ml-2"
+                                        ]}
+                                        aria-current={`/settings` === path ? "page" : undefined}
+                                >
+                                        <img class="size-10 rounded-full" src={$globalStore.user?.avatar} alt="User icon" />
+                                        Settings
+                                </a>
+                        {/if}
+                </div>
+        </div>
+        {/if}
+</nav>
+

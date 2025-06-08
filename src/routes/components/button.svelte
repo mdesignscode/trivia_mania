@@ -21,8 +21,8 @@
 
 <button {...nativeProps} {type} class={[classes, nativeProps.class]} style={
         showCategories
-        ? `--category-border-color: ${primary ? light : dark}; --category-hover-color: ${primary ? dark : light};`
-        : ''
+                ? `--category-border-color: ${primary ? light : dark}; --category-hover-color: ${primary ? dark : light};`
+                : ''
 }>
         {@render children()}
 </button>
@@ -126,10 +126,20 @@
         /* Show categories modifier */
         button.show-categories {
                 border-color: var(--category-border-color);
+                opacity: 0.6;
         }
 
-        button.show-categories:hover {
-                border-color: var(--category-hover-color);
+        button.show-categories.primary {
+                opacity: 1;
+        }
+
+        button.show-categories.primary:hover {
+                background-color: #f6f6f6;
+                @apply dark:text-dark dark:border-dark;
+        }
+
+        button.play {
+                @apply border-dark dark:border-light hover:bg-light hover:dark:border-dark hover:text-dark;
         }
 </style>
 

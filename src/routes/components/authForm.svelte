@@ -57,4 +57,3 @@
 		@apply rounded-sm p-2 text-dark;
 	}
 </style>
-

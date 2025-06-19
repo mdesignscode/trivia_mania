@@ -3,10 +3,10 @@
 	import { createDisclosure } from 'svelte-headlessui';
 	import { Bars3, ChartBar, UserCircle, XMark, Icon } from 'svelte-hero-icons';
 	import { page } from '$app/state';
-        import { navStyles } from '.';
+	import { navStyles } from '.';
 
-        let { navigation, questionStarted, disabledLink } = $props();
-        const navbar = createDisclosure({ expanded: false });
+	let { navigation, questionStarted, disabledLink } = $props();
+	const navbar = createDisclosure({ expanded: false });
 </script>
 
 <nav class="text-light md:hidden">
@@ -15,8 +15,8 @@
 	{/if}
 
 	<div class="relative z-50 flex bg-secondary dark:bg-accent-100">
-                <button
-                        disabled={questionStarted}
+		<button
+			disabled={questionStarted}
 			use:navbar.button
 			data-testid="disclosure-button"
 			class="relative inline-flex items-center justify-center rounded-md px-4 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white disabled:opacity-50"
@@ -29,13 +29,7 @@
 			{/if}
 		</button>
 
-                <a
-                        class={[
-                                "flex-1 rounded-md px-3 py-1 text-center hover:bg-gray-700",
-                                disabledLink
-                        ]}
-                        href="/"
-                >
+		<a class={['flex-1 rounded-md px-3 py-1 text-center hover:bg-gray-700', disabledLink]} href="/">
 			<h1 class="text-2xl text-white">Trivia Mania</h1>
 		</a>
 	</div>
@@ -101,4 +95,3 @@
 		</div>
 	{/if}
 </nav>
-

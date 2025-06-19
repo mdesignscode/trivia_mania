@@ -32,7 +32,7 @@
 			}
 
 			request.message = result.data.message;
-                        globalStore.user = result.data.user;
+			globalStore.user = result.data.user;
 			request.loading = false;
 			loading = false;
 
@@ -67,7 +67,7 @@
 			<input type="hidden" bind:value={globalStore.user.username} name="username" />
 			<input type="hidden" bind:value={email} name="email" />
 			<VerificationCodeInput error={verifyingEmail.error} />
-                        <Button primary disabled={loading}>
+			<Button primary disabled={loading}>
 				Send
 				{#if verifyingEmail.loading}
 					<SpinningLoader size="8" />
@@ -120,7 +120,7 @@
 						name="newEmail"
 					/>
 					<input type="hidden" bind:value={globalStore.user.username} name="username" />
-                                        <Button disabled={loading}>
+					<Button disabled={loading}>
 						Change
 						{#if updatingEmail.loading}
 							<SpinningLoader size="8" />
@@ -139,4 +139,3 @@
 		}
 	}
 </style>
-

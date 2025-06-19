@@ -28,6 +28,10 @@ const User = sequelize.define(
                         type: DataTypes.STRING,
                         allowNull: false,
                         unique: true,
+                        set(email: string) {
+                                const lowerEmail = email.toLowerCase();
+                                this.setDataValue('email', lowerEmail);
+                        },
                 },
                 avatar: {
                         type: DataTypes.STRING,

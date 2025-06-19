@@ -9,10 +9,7 @@
 </script>
 
 <nav class="hidden w-full items-center bg-secondary px-2 text-light md:flex">
-	<a
-		class={['ml-1 mr-auto rounded-md px-3 py-2 text-xl hover:bg-gray-700', disabledLink]}
-		href="/"
-	>
+	<a class={['ml-1 mr-auto rounded-md px-3 py-2 text-xl hover:bg-gray-700', disabledLink]} href="/">
 		Trivia Mania
 	</a>
 
@@ -63,4 +60,3 @@
 		{/if}
 	</div>
 </nav>
-

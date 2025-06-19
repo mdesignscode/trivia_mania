@@ -58,13 +58,13 @@
 	<div class="flex gap-2">
 		{#each [...allDifficulties, 'all difficulties'] as diff}
 			<Button
-                                onclick={filteredCategories.length
-                                        ? () => handleSetDifficulty(diff)
-                                        : () => (globalStore.difficulty = diff)}
-                                class={[
-                                        diff === globalStore.difficulty && 'primary',
-                                        filteredCategories.length && 'show-categories'
-                                ]}
+				onclick={filteredCategories.length
+					? () => handleSetDifficulty(diff)
+					: () => (globalStore.difficulty = diff)}
+				class={[
+					diff === globalStore.difficulty && 'primary',
+					filteredCategories.length && 'show-categories'
+				]}
 			>
 				{diff}
 			</Button>
@@ -79,10 +79,7 @@
 
 			{@render difficultiesBox()}
 
-			<Button
-                           disabled={!globalStore.difficulty || loading}
-                           onclick={handleSetDifficulty}
-			>
+			<Button disabled={!globalStore.difficulty || loading} onclick={handleSetDifficulty}>
 				Continue
 				{#if loading}
 					<SpinningLoader size="8" />
@@ -93,11 +90,7 @@
 		<div class="col h-full overflow-y-hidden">
 			<div class="border-b-lg grid place-content-center gap-2 bg-accent py-6">
 				{@render difficultiesBox()}
-				<Button
-					play
-                                        disabled={!globalStore.categories.length}
-                                        onclick={handlePlay}
-				>
+				<Button play disabled={!globalStore.categories.length} onclick={handlePlay}>
 					{#if globalStore.categories.length}
 						Play
 					{:else}
@@ -110,16 +103,16 @@
 				<div class="flex flex-wrap justify-center gap-2">
 					{#each filteredCategories as { category, count }}
 						<Button
-                                                      onclick={() => handleSelectCategory(category)}
-                                                      class={globalStore.categories.includes(category) ? 'primary' : ''}
-						>{category} ({count})</Button
+							onclick={() => handleSelectCategory(category)}
+							class={globalStore.categories.includes(category) ? 'primary' : ''}
+							>{category} ({count})</Button
 						>
 					{/each}
 				</div>
 
 				<Button
-                                            onclick={() => (globalStore.categories = [])}
-                                            disabled={!globalStore.categories.length}
+					onclick={() => (globalStore.categories = [])}
+					disabled={!globalStore.categories.length}
 				>
 					Reset categories
 				</Button>
@@ -127,4 +120,3 @@
 		</div>
 	{/if}
 </section>
-

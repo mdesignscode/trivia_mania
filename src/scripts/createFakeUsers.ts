@@ -21,13 +21,15 @@ const createFakeUser = async (username: string) => {
         const saltRounds = 10;
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(username, salt);
+        const joinedUsername = username.split(' ').join('')
+        const email = `${joinedUsername}@seed.email`;
 
         const user = await User.create({
                 password: hash,
                 avatar,
                 username,
-                email: username,
-                isVerfied: true,
+                email,
+                isVerified: true,
         });
 
         // create user stats

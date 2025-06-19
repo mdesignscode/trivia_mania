@@ -144,4 +144,3 @@
 		@apply border-dark hover:bg-light hover:text-dark dark:border-light hover:dark:border-dark;
 	}
 </style>
-

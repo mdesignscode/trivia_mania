@@ -12,6 +12,8 @@ User.hasMany(Session);
 User.hasOne(UserStats);
 
 UserStats.hasMany(CategoryStat);
+UserStats.belongsTo(User);
+
 CategoryStat.belongsTo(UserStats);
 
 export {

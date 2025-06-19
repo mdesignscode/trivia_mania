@@ -1,10 +1,11 @@
 <script>
-        import { AuthForm } from 'components';
+	import { AuthForm, PasswordInput } from 'components';
 	import { globalStore } from 'store';
 	import { goto } from '$app/navigation';
 
 	let username = $state('');
 	let password = $state('');
+	let showPassword = $state(false);
 
 	let error = $state('');
 	let loading = $state(false);
@@ -18,7 +19,7 @@
 				loading = false;
 				return;
 			}
-                        globalStore.user = result.data;
+			globalStore.user = result.data;
 
 			update();
 			loading = false;
@@ -29,6 +30,11 @@
 
 <AuthForm {error} {loading} handler={handleLogin} route="/login">
 	<input type="email" bind:value={username} name="username" placeholder="Email" required />
-	<input type="password" bind:value={password} name="password" placeholder="Password" required />
+	<PasswordInput
+		label="Enter password"
+		name="password"
+		placeholder="Password"
+		show={showPassword}
+		value={password}
+	/>
 </AuthForm>
-

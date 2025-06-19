@@ -19,7 +19,7 @@
 				loading = false;
 				return;
 			}
-                        globalStore.user = result.data.user;
+			globalStore.user = result.data.user;
 
 			loading = false;
 			goto(result.data.redirectTo);
@@ -38,4 +38,3 @@
 		value={password}
 	/>
 </AuthForm>
-

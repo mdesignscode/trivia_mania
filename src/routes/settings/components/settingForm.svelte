@@ -1,5 +1,5 @@
 <script>
-        import { Button, SpinningLoader } from 'components';
+	import { Button, SpinningLoader } from 'components';
 	import { enhance } from '$app/forms';
 	import { globalStore } from 'store';
 
@@ -44,11 +44,11 @@
 				{@render children?.()}
 			</div>
 			<!-- find user by username on server -->
-			<input type="hidden" bind:value={$globalStore.user.username} name="username" />
+			<input type="hidden" bind:value={globalStore.user.username} name="username" />
 			<Button
 				danger={['?/logout', '?/deleteAccount'].includes(action)}
-                                class="self-start"
-                                disabled={updating || sessionDestroyed}
+				class="self-start"
+				disabled={updating || sessionDestroyed}
 			>
 				{cta}
 				{#if updating}
@@ -61,4 +61,3 @@
 		</form>
 	{/if}
 </div>
-

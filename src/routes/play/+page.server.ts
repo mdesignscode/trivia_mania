@@ -7,7 +7,6 @@ import { fail } from '@sveltejs/kit';
 // TODO: Add session validation for all form actions
 
 const filterQuestions = async (url, userAnswered) => {
-        console.log('Running load: Play')
         const categories = (url.searchParams.get('categories') || 'All Categories').split(',');
         const difficulty = url.searchParams.get('difficulty') || 'all difficulties';
 

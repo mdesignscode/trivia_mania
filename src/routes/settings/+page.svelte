@@ -106,7 +106,7 @@
 					use:enhance={handleChangeUserInfo}
 				>
 					<input type="hidden" bind:value={globalStore.user.username} name="username" />
-                                        <Button disabled={updating}>Set default</Button>
+					<Button disabled={updating}>Set default</Button>
 				</form>
 			{/if}
 		</div>
@@ -186,4 +186,3 @@
 		@apply dark:bg-gray-100 dark:text-dark;
 	}
 </style>
-

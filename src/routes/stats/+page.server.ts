@@ -1,6 +1,5 @@
 import { getUser } from 'currentUser';
-import { CategoryStat, Question, User, UserStats } from 'models';
-import type { argv0 } from 'process';
+import { CategoryStat, User, UserStats } from 'models';
 
 export const load = async ({ cookies }) => {
         const user = await getUser(cookies, '/stats');

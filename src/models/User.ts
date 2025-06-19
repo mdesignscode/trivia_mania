@@ -1,6 +1,8 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../utils/sequelize";
 
+const avatar = '/images/icons8-user-64.png';
+
 const User = sequelize.define(
         'User',
         {
@@ -20,21 +22,20 @@ const User = sequelize.define(
                 username: {
                         type: DataTypes.STRING,
                         allowNull: false,
+                        unique: true,
                 },
                 email: {
                         type: DataTypes.STRING,
                         allowNull: false,
+                        unique: true,
                 },
                 avatar: {
                         type: DataTypes.STRING,
-                        allowNull: false,
+                        defaultValue: avatar,
                 },
                 answeredQuestions: {
                         type: DataTypes.JSON,
-                },
-                correctAnswered: {
-                        type: DataTypes.INTEGER,
-                        allowNull: false,
+                        defaultValue: [],
                 },
         },
 );

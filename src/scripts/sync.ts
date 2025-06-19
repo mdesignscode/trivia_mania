@@ -5,7 +5,7 @@ import { createFakeUsers } from "./createFakeUsers";
 async function initDB() {
         try {
                 console.log('Initializing Database sync');
-                await sequelize.sync({ force: true }); // or alter: true
+                await sequelize.sync({ alter: true }); // or alter: true
                 console.log('✅ Database synced!');
 
                 console.log('Filling Database with questions...');

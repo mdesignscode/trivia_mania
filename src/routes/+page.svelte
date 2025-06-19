@@ -1,7 +1,7 @@
 <script lang="ts">
-        import Home from 'components/home/index.svelte';
+	import Home from 'components/home/index.svelte';
 
-        let { data } = $props();
+	let { data } = $props();
 </script>
 
 <svelte:head>
@@ -10,4 +10,3 @@
 </svelte:head>
 
 <Home allCategories={data.allCategories} allDifficulties={data.allDifficulties} />
-

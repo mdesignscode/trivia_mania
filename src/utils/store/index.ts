@@ -1,6 +1,7 @@
-import globalStore from './global';
+import globalStore from './global.svelte';
+import { questionStore, playStore } from './playStore.svelte';
 
 export {
-        globalStore,
+        globalStore, playStore, questionStore,
 }
 

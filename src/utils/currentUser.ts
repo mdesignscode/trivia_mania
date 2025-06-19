@@ -50,12 +50,10 @@ export const getUser = async (cookies: Cookies, route: string) => {
                 throw redirect(302, validateEmailUri);
 
         // user authenticated
-        const userData = user.dataValues;
+        const userData = user.get();
         delete userData.password;
 
-        return {
-                user: userData,
-        };
+        return user;
 }
 
 export const getUserByName = async (username: string | undefined, getPassword: boolean = false) => {

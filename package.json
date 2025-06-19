@@ -20,6 +20,7 @@
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@types/node": "^22.15.21",
 		"@types/sequelize": "^4.28.20",
+		"animate.css": "^4.1.1",
 		"autoprefixer": "^10.4.20",
 		"prettier": "^3.5.3",
 		"prettier-plugin-svelte": "^3.4.0",

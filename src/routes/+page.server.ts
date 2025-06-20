@@ -1,18 +1,29 @@
 import { getUser } from 'currentUser';
 import { Question } from 'models';
+import { Op } from 'sequelize';
 
-export const load = async ({ cookies }) => {
-        // const user =  await getUser(cookies);
+export const load = async ({ cookies, url }) => {
+        const user = await getUser(cookies, url.pathname);
         // get all difficulties
         const difficulties = await Question.findAll({
                 group: 'difficulty',
                 attributes: ['difficulty'],
+                where: {
+                        id: {
+                                [Op.notIn]: user?.get('answeredQuestions'),
+                        }
+                },
         })
 
         // count all questions by category
         const categories = await Question.count({
                 group: ['category', 'difficulty'],
-                attributes: ['category', 'difficulty']
+                attributes: ['category', 'difficulty'],
+                where: {
+                        id: {
+                                [Op.notIn]: user?.get('answeredQuestions'),
+                        }
+                },
         });
 
         // map difficulties to categories
@@ -27,7 +38,7 @@ export const load = async ({ cookies }) => {
         // add total questions for each category
         Object.keys(allCategories).forEach(key => {
                 const { easy, medium, hard } = allCategories[key];
-                const allDifficultiesCount = easy.count + medium.count + hard.count;
+                const allDifficultiesCount = (easy?.count || 0) + (medium?.count || 0) + (hard?.count || 0);
                 allCategories[key]['all difficulties'] = {
                         difficulty: 'all difficulties',
                         count: allDifficultiesCount,

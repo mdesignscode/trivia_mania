@@ -14,12 +14,26 @@
 		const localDifficulty = localStorage.getItem('difficulty') || '';
 		const localSelectedCategories = localStorage.getItem('selectedCategories') || '';
 		const selectedCategories = localSelectedCategories ? localSelectedCategories.split(',') : [];
+		const availableCategories = [];
+
+		// check availability of category
+		selectedCategories.forEach((c) => {
+			if (allCategories[c] && allCategories[c][localDifficulty]) {
+				availableCategories.push(c);
+			}
+		});
+
+		// update local storage with available categories
+		if (selectedCategories.some((c) => !availableCategories.includes(c)))
+			localStorage.setItem('selectedCategories', availableCategories.join(','));
 
 		globalStore.difficulty = localDifficulty;
-		globalStore.categories = selectedCategories;
+		globalStore.categories = availableCategories;
 
 		if (localDifficulty) {
-			filteredCategories = Object.values(allCategories).map((value) => value[localDifficulty]);
+			filteredCategories = Object.values(allCategories)
+				.map((value) => value[localDifficulty])
+				.filter(Boolean);
 		}
 	}
 
@@ -41,7 +55,9 @@
 			globalStore.difficulty = difficulty;
 			localStorage.setItem('difficulty', difficulty);
 		}
-		filteredCategories = Object.values(allCategories).map((value) => value[globalStore.difficulty]);
+		filteredCategories = Object.values(allCategories)
+			.map((value) => value[globalStore.difficulty])
+			.filter(Boolean);
 	};
 
 	const handlePlay = () => {
@@ -88,7 +104,7 @@
 		</div>
 	{:else}
 		<div class="col h-full overflow-y-hidden">
-			<div class="border-b-lg grid place-content-center gap-2 bg-accent py-6">
+			<div class="grid place-content-center gap-2 rounded-b-xl bg-accent py-6">
 				{@render difficultiesBox()}
 				<Button play disabled={!globalStore.categories.length} onclick={handlePlay}>
 					{#if globalStore.categories.length}
@@ -99,7 +115,9 @@
 				</Button>
 			</div>
 
-			<div class="col ustify-center flex-1 items-center gap-4 overflow-y-auto px-2 py-4">
+			<div
+				class="col flex-1 items-center gap-4 overflow-y-auto px-2 py-4 md:mx-auto md:w-4/6 md:pt-8"
+			>
 				<div class="flex flex-wrap justify-center gap-2">
 					{#each filteredCategories as { category, count }}
 						<Button

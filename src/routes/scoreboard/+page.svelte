@@ -1,5 +1,5 @@
 <script lang="ts">
-        import { colorMap } from 'utils';
+	import { colorMap } from 'utils';
 	let { data } = $props();
 </script>
 
@@ -14,7 +14,7 @@
 		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 			{#each data.topTen as { userStats, user, categoryStats }, index}
 				<div
-					class="col max-h-72 gap-3 overflow-y-auto rounded-lg border border-dark p-4 shadow-xl dark:border-transparent dark:bg-accent-200 bg-gray-200"
+					class="col max-h-72 gap-3 overflow-y-auto rounded-lg border border-dark bg-gray-200 p-4 shadow-xl dark:border-transparent dark:bg-accent-200"
 					data-testid={`user-${index}-stat`}
 				>
 					<div class="flex items-center">
@@ -28,7 +28,7 @@
 							/>
 						</div>
 						<div>
-							<p class="text-lg md:text-base font-semibold">
+							<p class="text-lg font-semibold md:text-base">
 								{index + 1}. {user.username}
 							</p>
 							<p class="text-gray-500 md:text-sm">
@@ -43,15 +43,15 @@
 									{categoryStat.category} correct answers
 								</h3>
 
-                                                                <div class="ml-4 flex gap-1" style={`color: ${colorMap['easy']}`}>
+								<div class="ml-4 flex gap-1" style={`color: ${colorMap['easy']}`}>
 									<h4>Easy:</h4>
 									<p>{categoryStat['totalEasyCorrect']}</p>
 								</div>
-                                                                <div class="ml-4 flex gap-1" style={`color: ${colorMap['medium']}`}>
+								<div class="ml-4 flex gap-1" style={`color: ${colorMap['medium']}`}>
 									<h4>Medium:</h4>
 									<p>{categoryStat['totalMediumCorrect']}</p>
 								</div>
-                                                                <div class="ml-4 flex gap-1" style={`color: ${colorMap['hard']}`}>
+								<div class="ml-4 flex gap-1" style={`color: ${colorMap['hard']}`}>
 									<h4>Hard:</h4>
 									<p>{categoryStat['totalHardCorrect']}</p>
 								</div>
@@ -65,4 +65,3 @@
 		<h1 class="text-2xl">There are currently no top ten players</h1>
 	{/if}
 </div>
-

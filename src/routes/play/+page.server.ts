@@ -85,6 +85,11 @@ export const actions = {
                                 total: answeredQuestions.length,
                                 totalCorrect,
                         });
+                } else {
+                        userStats.update({
+                                total: userStats.get('total') + answeredQuestions.length,
+                                totalCorrect: userStats.get('totalCorrect') + totalCorrect,
+                        });
                 }
 
                 // 🔁 Merge or create CategoryStat records

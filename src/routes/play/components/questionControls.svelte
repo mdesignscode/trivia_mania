@@ -15,6 +15,8 @@
 		updating = true;
 		return async ({ result }) => {
 			if (isLastQuestion) {
+				localStorage.removeItem('difficulty');
+				localStorage.removeItem('categories');
 				goto('/stats');
 			} else {
 				questionStore.timers = Array.from(result.data.questions, (_, i) => ({
@@ -28,6 +30,7 @@
 				playStore.globalIndex++;
 				playStore.userStats = {};
 				playStore.answeredQuestions = [];
+				playStore.totalCorrect = 0;
 			}
 		};
 	};

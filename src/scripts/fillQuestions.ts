@@ -1,4 +1,4 @@
-import { Question } from "../models";
+import { Question } from "models";
 import { retrieveObject, storeObject } from "./cacheFillData";
 
 const allQuestions = [];

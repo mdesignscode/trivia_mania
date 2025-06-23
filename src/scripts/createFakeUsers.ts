@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { CategoryStat, Question, User, UserStats } from "../models";
+import { CategoryStat, Question, User, UserStats } from "models";
 import { fn } from "sequelize";
 
 const avatar = '/images/icons8-user-64.png';

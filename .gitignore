@@ -34,7 +34,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-*.js
 tsES6_doc.txt
 main.ts
 colorPalette.txt

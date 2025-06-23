@@ -2,43 +2,45 @@ import bcrypt from 'bcryptjs';
 import fs from 'fs/promises';
 import path from 'path';
 import { fail, redirect } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 import { User, Session } from 'models';
 import { encodeHexLowerCase } from '@oslojs/encoding';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { randomUUID } from 'crypto';
 import { unlink } from 'fs/promises';
-import { getUserByName } from 'currentUser';
+
+export const load: PageServerLoad = ({ locals }) => {
+        const user = locals.user;
+        if (!user) throw redirect(302, '/login');
+}
 
 export const actions: Actions = {
-        setDefaultAvatar: async ({ request }) => {
-                const formData = await request.formData();
-                const username = formData.get('username')?.toString();
+        setDefaultAvatar: async ({ locals }) => {
+                const user = locals.user;
+                if (!user) throw redirect(302, '/login')
+
                 const defaultPath = '/images/icons8-user-64.png';
 
-                if (!username) return fail(400, { error: 'Missing username' });
-
-                const user = await getUserByName(username);
-
-                if (user.getDataValue('avatar') === defaultPath) return user.dataValues;
+                if (user.get('avatar') === defaultPath)
+                        return { message: "Avatar unchanged", user: user.get() };
 
                 // remove prev avatar
                 try {
-                        await unlink('static' + user.getDataValue('avatar'));
+                        await unlink('static' + user.get('avatar'));
                 } catch { ; }
 
                 user.setDataValue('avatar', defaultPath);
                 await user.save()
 
-                return { message: "Avatar updated", user: user.dataValues };
+                return { message: "Avatar updated", user: user.get() };
         },
-        changeAvatar: async ({ request }) => {
+        changeAvatar: async ({ request, locals }) => {
+                const user = locals.user;
+                if (!user) throw redirect(302, '/login');
+
                 const formData = await request.formData();
                 const avatar = formData.get('avatar')
-                const username = formData.get('username')?.toString();
                 const defaultPath = '/images/icons8-user-64.png';
-
-                if (!username) return fail(400, { error: 'Missing username' });
 
                 if (!avatar) return fail(400, { error: 'Missing avatar' });
 
@@ -48,17 +50,14 @@ export const actions: Actions = {
 
                 if (!isImageBuffer(buffer)) return fail(400, { error: 'Upload images only' });
 
-                // check for valid user
-                const user = await getUserByName(username);
-
                 // generate file name
                 const basePath = '/images/uploads/';
                 const extension = avatar.name.split('.').at(-1);
-                const filename = `${user.dataValues.username}_${randomUUID()}.${extension}`;
+                const filename = `${user.get.username}_${randomUUID()}.${extension}`;
 
                 // remove prev avatar
-                if (user.getDataValue('avatar') !== defaultPath)
-                        await unlink('static' + user.getDataValue('avatar'));
+                if (user.get('avatar') !== defaultPath)
+                        await unlink('static' + user.get('avatar'));
 
                 // save image to disc
                 const filePath = path.resolve('static' + basePath, filename)
@@ -68,39 +67,35 @@ export const actions: Actions = {
                 user.setDataValue('avatar', basePath + filename);
                 await user.save();
 
-                return { message: "Avatar updated", user: user.dataValues };
+                return { message: "Avatar updated", user: user.get };
         },
-        changeUsername: async ({ request }) => {
+        changeUsername: async ({ request, locals }) => {
+                const user = locals.user;
+                if (!user) throw redirect(302, '/login');
+
                 const formData = await request.formData();
                 const newUsername = formData.get('newUsername')?.toString();
-                const username = formData.get('username')?.toString();
-
-                if (!username) return fail(400, { error: 'Missing username' });
 
                 if (!newUsername) return fail(400, { error: 'Missing new display name' });
-
-                const user = await getUserByName(username);
 
                 user.setDataValue('username', newUsername);
                 await user.save();
                 return {
                         message: "Display name changed",
-                        user: user.dataValues,
+                        user: user.get(),
                 };
         },
-        changePassword: async ({ request }) => {
+        changePassword: async ({ request, locals }) => {
+                const user = locals.user;
+                if (!user) throw redirect(302, '/login');
+
                 const formData = await request.formData();
                 const newPassword = formData.get('newPassword')?.toString();
                 const currentPassword = formData.get('currentPassword')?.toString();
-                const username = formData.get('username')?.toString();
-
-                if (!username) return fail(400, { error: 'Missing username' });
 
                 if (!newPassword || !currentPassword) return fail(400, { error: 'Missing password' });
 
-                const user = await getUserByName(username, true);
-
-                const validPassword = await bcrypt.compare(currentPassword, user.getDataValue('password'));
+                const validPassword = await bcrypt.compare(currentPassword, user.get('password'));
                 if (!validPassword) {
                         return fail(400, { error: 'Invalid password.' });
                 }
@@ -109,7 +104,7 @@ export const actions: Actions = {
 
                 user.setDataValue('password', hashedPassword);
                 await user.save();
-                const userData = user.dataValues;
+                const userData = user.get();
                 delete userData.password;
 
                 return { user: userData, message: 'Password updated' }
@@ -122,14 +117,12 @@ export const actions: Actions = {
                 cookies.delete('session', { path: '/' });
                 return { user: null, redirectTo: '/login', message: 'Logged out' };
         },
-        deleteAccount: async ({ request }) => {
-                const formData = await request.formData();
-                const username = formData.get('username')?.toString();
-
-                if (!username) return fail(400, { error: 'Missing username' });
+        deleteAccount: async ({ locals }) => {
+                const user = locals.user;
+                if (!user) throw redirect(302, '/login');
 
                 await User.destroy({
-                        where: { username },
+                        where: { username: user.get('username') },
                 });
                 return { user: null, redirectTo: '/signup', message: 'Account deleted' };
         },

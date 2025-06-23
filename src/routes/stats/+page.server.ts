@@ -1,11 +1,13 @@
-import { getUser } from 'currentUser';
+import { redirect } from '@sveltejs/kit';
 import { CategoryStat, User, UserStats } from 'models';
 
-export const load = async ({ cookies }) => {
-        const user = await getUser(cookies, '/stats');
+export const load = async ({ locals }) => {
+        const user = locals.user;
+        if (!user) throw redirect(302, '/login');
+
         const userStats = await UserStats.findOne({
                 where: {
-                        UserId: user?.get('id'),
+                        UserId: user.get('id'),
                 }
         });
 

@@ -64,8 +64,6 @@
 			use:enhance={() => handleUserAction('verify', verifyingEmail)}
 			method="POST"
 		>
-			<input type="hidden" bind:value={globalStore.user.username} name="username" />
-			<input type="hidden" bind:value={email} name="email" />
 			<VerificationCodeInput error={verifyingEmail.error} />
 			<Button primary disabled={loading}>
 				Send
@@ -85,7 +83,6 @@
 			action="?/resendCode"
 			method="POST"
 		>
-			<input type="hidden" bind:value={email} name="email" />
 			{#if resendingEmail.loading}
 				<div class="flex items-center gap-2">
 					Requesting new code
@@ -119,7 +116,6 @@
 						bind:value={newEmail}
 						name="newEmail"
 					/>
-					<input type="hidden" bind:value={globalStore.user.username} name="username" />
 					<Button disabled={loading}>
 						Change
 						{#if updatingEmail.loading}
@@ -139,3 +135,4 @@
 		}
 	}
 </style>
+

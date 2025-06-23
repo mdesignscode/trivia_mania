@@ -3,7 +3,7 @@
 	import { globalStore } from 'store';
 	import { goto } from '$app/navigation';
 
-	let username = $state('');
+	let email = $state('');
 	let password = $state('');
 	let showPassword = $state(false);
 
@@ -19,17 +19,18 @@
 				loading = false;
 				return;
 			}
-			globalStore.user = result.data;
+                        update();
 
-			update();
+			globalStore.user = result.data.user;
 			loading = false;
+
 			goto('/');
 		};
 	};
 </script>
 
 <AuthForm {error} {loading} handler={handleLogin} route="/login">
-	<input type="email" bind:value={username} name="username" placeholder="Email" required />
+	<input type="email" bind:value={email} name="email" placeholder="Email" required />
 	<PasswordInput
 		label="Enter password"
 		name="password"
@@ -38,3 +39,4 @@
 		value={password}
 	/>
 </AuthForm>
+

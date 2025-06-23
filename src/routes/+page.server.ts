@@ -1,9 +1,11 @@
-import { getUser } from 'currentUser';
+import { redirect } from '@sveltejs/kit';
 import { Question } from 'models';
 import { Op } from 'sequelize';
 
-export const load = async ({ cookies, url }) => {
-        const user = await getUser(cookies, url.pathname);
+export const load = async ({ locals }) => {
+        const user = locals.user;
+        if (!user) throw redirect(302, '/login');
+
         // get all difficulties
         const difficulties = await Question.findAll({
                 group: 'difficulty',

@@ -1,15 +1,14 @@
 import type { Actions, PageServerLoad } from './$types';
 import { redirect, fail } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
-import { isSignedIn } from 'currentUser';
 import { User } from 'models';
 import { sendEmail } from 'utils/emailVerification';
 import { createSession, generateSessionToken } from 'utils/session';
 
-export const load: PageServerLoad = async ({ cookies }) => {
-        const token = cookies.get('session');
-        return isSignedIn(token, '/signup');
-}
+export const load = ({ locals }) => {
+        const user = locals.user;
+        if (user) throw redirect(302, '/');
+};
 
 export const actions: Actions = {
         default: async ({ request, cookies }) => {
@@ -43,7 +42,7 @@ export const actions: Actions = {
 
                 // sign user in
                 const token = generateSessionToken();
-                createSession(token, newUser.getDataValue("id"));
+                createSession(token, newUser.get("id"));
 
                 cookies.set('session', token, {
                         path: '/',
@@ -59,7 +58,7 @@ export const actions: Actions = {
 
                 const validateEmailUri = `/signup/validate-email?email=${email}`;
 
-                const userData = newUser.dataValues;
+                const userData = newUser.get();
                 delete userData.password;
 
                 return { user: userData, redirectTo: validateEmailUri, message: 'Account created' };

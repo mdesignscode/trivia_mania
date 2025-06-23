@@ -37,16 +37,12 @@ next-env.d.ts
 *.js
 tsES6_doc.txt
 main.ts
-file.json.bak
 colorPalette.txt
 description.txt
 .env
 
 database.sqlite
 .svelte-kit
-/questionsCache.json
 
 static/images/uploads/*
-
-yarn.lock
 

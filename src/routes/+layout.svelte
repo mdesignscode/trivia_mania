@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { globalStore } from 'store';
 	import Navigation from 'components/navigation/index.svelte';
-	import Header from './Header.svelte';
 	import '../app.css';
 
 	let { children, data } = $props();
 
 	// set logged in user
-	globalStore.user = data.user;
+        if (!globalStore.user)
+                globalStore.user = data.user;
 </script>
 
 <div class="col h-full">
@@ -17,3 +17,4 @@
 		{@render children()}
 	</main>
 </div>
+

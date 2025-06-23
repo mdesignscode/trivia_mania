@@ -1,7 +1,5 @@
-import { getUser } from 'currentUser';
-
-export const load = async ({ cookies, url }) => {
-        const user = await getUser(cookies, url.pathname);
-        if (user) return { user: user.get() };
+export const load = ({ locals }) => {
+        const user = locals.user;
+        return { user };
 }
 

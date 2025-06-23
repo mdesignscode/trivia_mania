@@ -1,10 +1,7 @@
-import { getUser, getUserByName } from 'currentUser';
-import { CategoryStat, Question, User, UserStats } from 'models';
+import { CategoryStat, Question, UserStats } from 'models';
 import { fn, Op } from 'sequelize';
-import type { Actions } from './$types';
-import { fail } from '@sveltejs/kit';
-
-// TODO: Add session validation for all form actions
+import type { Actions, PageServerLoad } from './$types';
+import { fail, redirect } from '@sveltejs/kit';
 
 const filterQuestions = async (url, userAnswered) => {
         const categories = (url.searchParams.get('categories') || 'All Categories').split(',');
@@ -32,28 +29,29 @@ const filterQuestions = async (url, userAnswered) => {
         return { questions, total: allQuestions.count };
 };
 
-export const load = async ({ cookies, url }) => {
-        const user = await getUser(cookies, url.pathname);
+export const load: PageServerLoad = async ({ url, locals }) => {
+        const user = locals.user;
+        if (!user) throw redirect(302, '/login');
         const userAnswered = user?.get('answeredQuestions');
         return filterQuestions(url, userAnswered);
 }
 
 export const actions = {
-        paginate: async ({ request }) => {
+        paginate: async ({ request, locals }) => {
+                const user = locals.user;
+                if (!user) throw redirect(302, '/login');
+
                 const form = await request.formData();
 
-                const username = form.get('username')?.toString();
                 const difficulty = form.get('difficulty')?.toString();
                 const categories = form.get('categories')?.toString();
                 const _totalCorrect = form.get('totalCorrect')?.toString() || '0';
                 const _stats = form.get('stats')?.toString();
                 const _answeredQuestions = form.get('answeredQuestions')?.toString();
 
-                if (!username) return fail(400, { error: 'Username missing' });
                 if (!_stats) return fail(400, { error: 'User stats missing' });
                 if (!_answeredQuestions) return fail(400, { error: 'Answered questions id list missing' });
 
-                const user = await getUserByName(username);
                 const stats = JSON.parse(_stats);
                 const answeredQuestions = JSON.parse(_answeredQuestions);
                 const totalCorrect = parseInt(_totalCorrect);

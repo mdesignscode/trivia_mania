@@ -13,12 +13,14 @@
 	const handleSignup = async () => {
 		loading = true;
 
-		return async ({ result }) => {
+		return async ({ result, update }) => {
 			if (result.type === 'failure') {
 				error = result.data.error;
 				loading = false;
 				return;
-			}
+                        }
+                        update();
+
 			globalStore.user = result.data.user;
 
 			loading = false;
@@ -38,3 +40,4 @@
 		value={password}
 	/>
 </AuthForm>
+

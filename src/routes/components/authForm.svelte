@@ -4,22 +4,22 @@
 
 	let { children, route, error, handler, loading } = $props();
 
-	const routeOptions = {
+	const routeOptions = $derived({
 		'/signup': {
 			head: 'Create an account to save your progress',
 			footer: 'Already have an account?',
 			alt: 'Sign in',
 			altRoute: '/login',
-			cta: 'Sign up'
+			cta: loading ? 'Creating account' : 'Sign up',
 		},
 		'/login': {
 			head: 'Welcome back',
 			footer: "Don't have an account?",
 			alt: 'Sign up',
 			altRoute: '/signup',
-			cta: 'Sign in'
+			cta: loading ? 'Signing in' : 'Sign in',
 		}
-	};
+	});
 </script>
 
 <div class="col gap-4 px-8 py-6 md:mx-auto md:w-4/6">
@@ -57,3 +57,4 @@
 		@apply rounded-sm p-2 text-dark;
 	}
 </style>
+

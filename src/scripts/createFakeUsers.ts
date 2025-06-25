@@ -70,8 +70,13 @@ export async function createFakeUsers() {
         ];
 
         for (const username of fakeUsers) {
-                await createFakeUser(username);
-                console.log(`✅ User created: ${username}`);
+                try {
+                        await createFakeUser(username);
+                        console.log(`✅ User created: ${username}`);
+                } catch {
+                        console.log('DB populated with fake users already')
+                        return;
+                }
         }
 
         console.log('🌱 Seeding complete.');

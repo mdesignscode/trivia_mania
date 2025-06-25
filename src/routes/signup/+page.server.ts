@@ -7,7 +7,9 @@ import { createSession, generateSessionToken } from 'utils/session';
 
 export const load = ({ locals }) => {
         const user = locals.user;
-        if (user) throw redirect(302, '/');
+        if (user) {
+                throw redirect(302, '/');
+        }
 };
 
 export const actions: Actions = {
@@ -21,47 +23,52 @@ export const actions: Actions = {
                         return fail(400, { error: 'Username, email and password are required.' });
                 }
 
-                // check for existing user
-                const existingUser = await User.findOne({
-                        where: {
-                                username
-                        }
-                });
+                const existingUser = await User.findOne({ where: { username } });
 
                 if (existingUser) {
                         return fail(400, { error: 'Username already taken.' });
                 }
 
-                // hash password and save user in db
                 const hashedPassword = await bcrypt.hash(password, 10);
                 const avatar = '/images/icons8-user-64.png';
 
                 const newUser = await User.create({
-                        username, password: hashedPassword, email, correctAnswered: 0, answeredQuestions: [], avatar,
+                        username,
+                        password: hashedPassword,
+                        email,
+                        correctAnswered: 0,
+                        answeredQuestions: [],
+                        avatar,
                 });
 
-                // sign user in
                 const token = generateSessionToken();
-                createSession(token, newUser.get("id"));
+
+                await createSession(token, newUser.get('id'));
 
                 cookies.set('session', token, {
                         path: '/',
                         httpOnly: true,
                         sameSite: 'strict',
                         secure: process.env.NODE_ENV === 'production',
-                        maxAge: 60 * 60 * 24 * 30
+                        maxAge: 60 * 60 * 24 * 30,
                 });
 
                 const { status, data } = await sendEmail({ email, username });
 
-                if (status === 'fail') return fail(500, { error: data })
+                if (status === 'fail') {
+                        return fail(500, { error: data });
+                }
 
                 const validateEmailUri = `/signup/validate-email?email=${email}`;
 
                 const userData = newUser.get();
                 delete userData.password;
 
-                return { user: userData, redirectTo: validateEmailUri, message: 'Account created' };
+                return {
+                        user: userData,
+                        redirectTo: validateEmailUri,
+                        message: 'Account created',
+                };
         }
 };
 

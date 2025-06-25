@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "rm database.sqlite 2> /dev/null ; npx tsx src/scripts/sync.ts && vite build",
+		"build": "npx tsx src/scripts/sync.ts && vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -37,6 +37,7 @@
 		"rollup": "npm:@rollup/wasm-node"
 	},
 	"dependencies": {
+		"@sveltejs/adapter-node": "^5.2.12",
 		"bcryptjs": "^3.0.2",
 		"nodemailer": "^7.0.3",
 		"sequelize": "^6.37.7",

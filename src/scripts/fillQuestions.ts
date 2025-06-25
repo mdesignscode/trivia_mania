@@ -10,9 +10,14 @@ export async function fillQuestions() {
 
         if (cache) {
                 console.log('Cache found');
-                cache.forEach(async question => {
-                        await Question.create(question);
-                });
+                for (const question of cache) {
+                        try {
+                                await Question.create(question);
+                        } catch (error) {
+                                console.log('DB populated with questions already')
+                                return;
+                        }
+                };
 
                 return;
         }
@@ -43,7 +48,8 @@ export async function fillQuestions() {
                                 await Question.create(newQuestion);
                                 allQuestions.push(newQuestion);
                         } catch (error) {
-                                ;
+                                console.log('DB populated already')
+                                return;
                         }
                 }
         }

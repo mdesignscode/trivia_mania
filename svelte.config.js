@@ -21,8 +21,6 @@ const config = {
                         utils: 'src/utils/',
                         store: 'src/utils/store/',
                 }
-
-                , csrf: { checkOrigin: false }
         }
 };
 

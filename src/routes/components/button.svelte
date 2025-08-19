@@ -1,7 +1,15 @@
 <script lang="ts">
-	let { primary, cta, play, danger, showCategories, children, type, ...nativeProps } = $props();
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 
-	const color = '#ffcb74';
+	interface Props extends HTMLButtonAttributes {
+		primary?: boolean;
+		cta?: boolean;
+		play?: boolean;
+		danger?: boolean;
+		showCategories?: boolean;
+	}
+	let { primary, cta, play, danger, showCategories, children, ...nativeProps }: Props = $props();
+
 	const dark = '#2f2f2f';
 	const light = '#f6f6f6';
 
@@ -20,13 +28,12 @@
 
 <button
 	{...nativeProps}
-	{type}
 	class={[classes, nativeProps.class]}
 	style={showCategories
 		? `--category-border-color: ${primary ? light : dark}; --category-hover-color: ${primary ? dark : light};`
 		: ''}
 >
-	{@render children()}
+	{@render children?.()}
 </button>
 
 <style>
@@ -144,3 +151,4 @@
 		@apply border-dark hover:bg-light hover:text-dark dark:border-light hover:dark:border-dark;
 	}
 </style>
+

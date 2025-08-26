@@ -27,9 +27,9 @@ export const load = async ({ locals }) => {
                 }
         });
 
-        const difficulties = difficultiesQuery.map((d) =>
+        const difficulties = Array.from(new Set(difficultiesQuery.map((d) =>
                 d.getDataValue('difficulty')
-        );
+        )));
 
         const categories = categoriesQuery.map((row: any) => ({
                 category: row.category,

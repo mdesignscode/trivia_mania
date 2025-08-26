@@ -1,10 +1,22 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../utils/sequelize";
+import { DataTypes, Model, type CreationOptional, type InferAttributes, type InferCreationAttributes } from 'sequelize';
+import sequelize from 'utils/sequelize';
+import type { TQuestionAttributes } from './Question';
+
+export default class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
+        declare id: CreationOptional<string>;
+        declare isVerified: CreationOptional<boolean>;
+        declare avatar: CreationOptional<string>;
+        declare password: string;
+        declare username: string;
+        declare email: string;
+        declare answeredQuestions: CreationOptional<(TQuestionAttributes['id'])[]>;
+};
+export type TUserAttributes = InferAttributes<User>;
+export type TUser = User;
 
 const avatar = '/images/icons8-user-64.png';
 
-const User = sequelize.define(
-        'User',
+User.init(
         {
                 id: {
                         type: DataTypes.UUID,
@@ -41,8 +53,8 @@ const User = sequelize.define(
                         type: DataTypes.JSON,
                         defaultValue: [],
                 },
-        },
+        }, {
+        sequelize,
+}
 );
-
-export default User;
 

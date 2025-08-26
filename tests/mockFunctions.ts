@@ -1,17 +1,17 @@
-global.$state = function(initial) {
-        const value = initial;
-        return new Proxy({ value }, {
-                get(target, prop) {
-                        return target.value[prop];
-                },
-                set(target, prop, val) {
-                        target.value[prop] = val;
-                        return true;
+import { expect, test } from 'vitest';
+
+export const testProtectedRoute = (action: Function) => {
+        test('protected route', async () => {
+                try {
+                        await action({ locals: {} });
+                } catch (e) {
+                        expect(e.status).toBe(302);
+                        expect(e.location).toBe('/login');
                 }
         });
 };
 
-global.mockLocalStorage = {
+export const mockLocalStorage = {
         storage: {},
         setItem(key: string, value: string) {
                 this.storage[key] = value;

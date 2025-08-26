@@ -1,25 +1,34 @@
 import { updateLocalPreferences, handleSelectCategory, handleSetDifficulty, handlePlay } from "utils/uiHelpers.svelte";
-import { mockAllCategories } from "../mockData";
+import { mockAllCategories } from "mockData";
 import type { TQuestionData } from "utils/processCategories";
 import { globalStore } from "utils/store";
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { mockLocalStorage } from "mockFunctions";
 
-const mockGoto = jest.fn()
+const mockGoto = vi.fn()
 const expectedFilteredCategories: TQuestionData[] = [
         { "category": "Society And Culture", "count": 1, "difficulty": "easy" },
         { "category": "Science", "count": 2, "difficulty": "easy" },
         { "category": "All Categories", "count": 3, "difficulty": "easy" }
 ];
 
-describe('updateLocalPreferences', () => {
-        it('sets selected filters in localStorage', () => {
-                // store some filters in localStorage
-                localStorage.setItem('difficulty', 'easy');
-                localStorage.setItem('selectedCategories', 'Science,Math');
+beforeEach(() => {
+        globalStore.user = null;
+        globalStore.difficulty = '';
+        globalStore.categories = [];
+        mockLocalStorage.clear();
+});
 
-                const filteredCategories = updateLocalPreferences(mockAllCategories, localStorage);
+describe('updateLocalPreferences', () => {
+        test('sets selected filters in localStorage', () => {
+                // store some filters in localStorage
+                mockLocalStorage.setItem('difficulty', 'easy');
+                mockLocalStorage.setItem('selectedCategories', 'Science,Math');
+
+                const filteredCategories = updateLocalPreferences(mockAllCategories, mockLocalStorage);
 
                 // unavailable categories should be removed
-                const selectedCategories = localStorage.getItem('selectedCategories')?.split(',');
+                const selectedCategories = mockLocalStorage.getItem('selectedCategories')?.split(',');
                 expect(selectedCategories).toContain('Science');
                 expect(selectedCategories).not.toContain('Math');
 
@@ -33,7 +42,7 @@ describe('updateLocalPreferences', () => {
 });
 
 describe("handleSelectCategory", () => {
-        it("updates the list of categories based on a given category", () => {
+        test("updates the list of categories based on a given category", () => {
                 handleSelectCategory('Science');
                 handleSelectCategory('Math');
                 expect(globalStore.categories).toEqual(['Science', 'Math']);
@@ -53,21 +62,21 @@ describe("handleSelectCategory", () => {
 })
 
 describe("handleSetDifficulty", () => {
-        it("sets difficulty in local storage and store", () => {
-                const filteredCategories = handleSetDifficulty(localStorage, mockAllCategories, 'easy')
+        test("sets difficulty in local storage and store", () => {
+                const filteredCategories = handleSetDifficulty(mockLocalStorage, mockAllCategories, 'easy')
                 expect(globalStore.difficulty).toBe('easy');
-                expect(localStorage.getItem('difficulty')).toBe('easy');
+                expect(mockLocalStorage.getItem('difficulty')).toBe('easy');
                 expect(filteredCategories).toEqual(expectedFilteredCategories);
         })
 })
 
 describe("handlePlay", () => {
-        it("stores filters in local storage, then navigates to play page, with filters as query params", () => {
+        test("stores filters in local storage, then navigates to play page, with filters as query params", () => {
                 globalStore.difficulty = 'easy';
                 globalStore.categories = ['Science'];
-                handlePlay(localStorage, mockGoto);
-                expect(localStorage.getItem('difficulty')).toBe('easy');
-                expect(localStorage.getItem('selectedCategories')).toBe('Science');
+                handlePlay(mockLocalStorage, mockGoto);
+                expect(mockLocalStorage.getItem('difficulty')).toBe('easy');
+                expect(mockLocalStorage.getItem('selectedCategories')).toBe('Science');
                 const expectedRoute = '/play?difficulty=easy&categories=Science';
                 expect(mockGoto).toHaveBeenCalledWith(expectedRoute);
         })

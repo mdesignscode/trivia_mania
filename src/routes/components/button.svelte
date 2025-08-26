@@ -7,8 +7,9 @@
 		play?: boolean;
 		danger?: boolean;
 		showCategories?: boolean;
+                parentStyles?: string;
 	}
-	let { primary, cta, play, danger, showCategories, children, ...nativeProps }: Props = $props();
+	let { primary, cta, play, danger, showCategories, children, parentStyles, ...nativeProps }: Props = $props();
 
 	const dark = '#2f2f2f';
 	const light = '#f6f6f6';
@@ -28,7 +29,7 @@
 
 <button
 	{...nativeProps}
-	class={[classes, nativeProps.class]}
+	class={[classes, nativeProps.class, parentStyles]}
 	style={showCategories
 		? `--category-border-color: ${primary ? light : dark}; --category-hover-color: ${primary ? dark : light};`
 		: ''}

@@ -1,8 +1,9 @@
-<script>
+<script lang="ts">
 	import { globalStore, questionStore, playStore } from 'store';
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	import { Button, SpinningLoader } from 'components';
+	import type { Actions } from '../$types';
 
 	let { index } = $props();
 	let updating = $state(false);
@@ -10,10 +11,10 @@
 	const isLastQuestion = playStore.globalIndex === playStore.totalQuestions;
 	const moreQuestions = !(index % 4) && index > 0;
 
-	const submitStats = (context) => {
+	const submitStats = (context: string) => {
 		loadingContext = context;
 		updating = true;
-		return async ({ result }) => {
+		return async ({ result }: { result }) => {
 			if (isLastQuestion) {
 				localStorage.removeItem('difficulty');
 				localStorage.removeItem('categories');
@@ -100,3 +101,4 @@
 		{/if}
 	{/if}
 </div>
+

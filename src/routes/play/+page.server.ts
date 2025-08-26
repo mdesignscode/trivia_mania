@@ -1,9 +1,20 @@
-import { CategoryStat, Question, UserStats } from 'models';
+import {
+        CategoryStat,
+        Question,
+        UserStats,
+        NewStatsSchema,
+        type TCategoryStatAttributes,
+        type TUserAttributes,
+        type TUserStatsAttributes,
+        type TNewStatsInput,
+} from 'models';
 import { fn, Op } from 'sequelize';
 import type { Actions, PageServerLoad } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
+import z from 'zod';
+import type { URL } from 'url';
 
-const filterQuestions = async (url, userAnswered) => {
+const filterQuestions = async (url: URL, userAnswered: TUserAttributes['answeredQuestions']) => {
         const categories = (url.searchParams.get('categories') || 'All Categories').split(',');
         const difficulty = url.searchParams.get('difficulty') || 'all difficulties';
 
@@ -25,7 +36,6 @@ const filterQuestions = async (url, userAnswered) => {
         });
 
         const questions = allQuestions.rows.map(q => q.get());
-
         return { questions, total: allQuestions.count };
 };
 
@@ -33,8 +43,8 @@ export const load: PageServerLoad = async ({ url, locals }) => {
         const user = locals.user;
         if (!user) throw redirect(302, '/login');
         const userAnswered = user?.get('answeredQuestions');
-        return filterQuestions(url, userAnswered);
-}
+        return await filterQuestions(url, userAnswered);
+};
 
 export const actions = {
         paginate: async ({ request, locals }) => {
@@ -49,12 +59,29 @@ export const actions = {
                 const _stats = form.get('stats')?.toString();
                 const _answeredQuestions = form.get('answeredQuestions')?.toString();
 
-                if (!_stats) return fail(400, { error: 'User stats missing' });
-                if (!_answeredQuestions) return fail(400, { error: 'Answered questions id list missing' });
+                // === Validate stats ===
+                const statsParseResult = NewStatsSchema.safeParse(JSON.parse(_stats ?? 'null'));
+                if (!statsParseResult.success) {
+                        return fail(400, {
+                                error: 'Invalid stats format',
+                                issues: statsParseResult.error.issues
+                        });
+                }
+                const stats = statsParseResult.data;
 
-                const stats = JSON.parse(_stats);
-                const answeredQuestions = JSON.parse(_answeredQuestions);
-                const totalCorrect = parseInt(_totalCorrect);
+                // === Validate answeredQuestions ===
+                const answeredQuestionsParseResult = z
+                        .array(z.number())
+                        .safeParse(JSON.parse(_answeredQuestions ?? 'null'));
+                if (!answeredQuestionsParseResult.success) {
+                        return fail(400, {
+                                error: 'Invalid answeredQuestions',
+                                issues: answeredQuestionsParseResult.error.issues
+                        });
+                }
+                const answeredQuestions = answeredQuestionsParseResult.data;
+
+                const totalCorrect: TUserStatsAttributes['totalCorrect'] = parseInt(_totalCorrect);
 
                 // 🧠 Update user's answered questions (merge and dedupe)
                 const existingAnswered = user.get('answeredQuestions') || [];
@@ -62,15 +89,16 @@ export const actions = {
                 await user.update({ answeredQuestions: mergedAnswers });
 
                 // 🦆 Mock URL-like object
+                type TSearchParams = { difficulty: string, categories: string };
                 const url = {
                         searchParams: {
                                 difficulty,
                                 categories,
-                                get(key) {
+                                get(key: 'difficulty' | 'categories'): TSearchParams[typeof key] | undefined {
                                         return this[key];
                                 }
                         }
-                };
+                } as any as URL;
 
                 // 📊 Get or create UserStats
                 let userStats = await UserStats.findOne({
@@ -100,7 +128,9 @@ export const actions = {
         }
 } satisfies Actions;
 
-function mergeObjects(existing, incoming) {
+export type TPaginatedQuestions = Awaited<ReturnType<typeof actions.paginate>>;
+
+function mergeObjects(existing: TCategoryStatAttributes, incoming: TNewStatsInput) {
         const allowedKeys = [
                 'total',
                 'totalCorrect',
@@ -110,7 +140,7 @@ function mergeObjects(existing, incoming) {
                 'totalMediumCorrect',
                 'totalHard',
                 'totalHardCorrect',
-        ];
+        ] as const;
 
         const merged = { ...existing };
 
@@ -123,8 +153,7 @@ function mergeObjects(existing, incoming) {
         return merged;
 }
 
-
-async function upsertCategoryStat(stat, userStatId) {
+async function upsertCategoryStat(stat: TNewStatsInput, userStatId: TUserStatsAttributes['id']) {
         const existing = await CategoryStat.findOne({
                 where: {
                         category: stat.category,

@@ -29,9 +29,11 @@
 
 				if (timeLeft < 1 && !store.timers[index].userAnswer) {
 					const el = document.getElementById(allQuestions.questions[index].correctAnswer);
-					el?.style.setProperty('--animate-duration', '1s');
-					el?.classList.add('animate__rubberBand');
-					el.style.opacity = '100';
+                                        if (el) {
+                                                el.style.setProperty('--animate-duration', '1s');
+                                                el.classList.add('animate__rubberBand');
+                                                el.style.opacity = '100';
+                                        }
 
 					const audio = document.getElementById('error') as HTMLAudioElement;
 					if (navigator.getAutoplayPolicy(audio) === 'allowed') {
@@ -66,3 +68,4 @@
 	/>
 	{timeLeft}
 </svg>
+

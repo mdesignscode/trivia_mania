@@ -1,13 +1,7 @@
-type TUser = {
-        id: string,
-        isVerified: boolean,
-        username: string,
-        email: string,
-        avatar: string,
-        answeredQuestions: string[]
-}
+import type { TUserAttributes } from "models";
+
 type TGlobalStore = {
-        user: TUser | null,
+        user: TUserAttributes | null,
         difficulty: string,
         categories: string[],
 };

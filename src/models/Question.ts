@@ -1,8 +1,18 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../utils/sequelize";
+import { DataTypes, Model, type CreationOptional, type InferAttributes, type InferCreationAttributes } from 'sequelize';
+import sequelize from 'utils/sequelize';
 
-const Question = sequelize.define(
-        'Question',
+
+export default class Question extends Model<InferAttributes<Question>, InferCreationAttributes<Question>> {
+        declare id: CreationOptional<number>;
+        declare category: string;
+        declare answers: string[];
+        declare correctAnswer: string;
+        declare question: string;
+        declare difficulty: string;
+};
+export type TQuestionAttributes = InferAttributes<Question>;
+
+Question.init(
         {
                 id: {
                         type: DataTypes.INTEGER,
@@ -30,8 +40,8 @@ const Question = sequelize.define(
                         type: DataTypes.STRING,
                         allowNull: false,
                 },
-        },
+        }, {
+        sequelize
+}
 );
-
-export default Question;
 

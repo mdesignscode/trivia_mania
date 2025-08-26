@@ -1,5 +1,12 @@
 import type { TAllCategories, TQuestionData } from "utils/processCategories";
-import type { globalStore } from "utils/store";
+import type { TUser } from "utils/store/global.svelte";
+
+export const mockCategoriesQuery: TQuestionData[] = [
+        { category: 'Society And Culture', difficulty: 'easy', count: 1 },
+        { category: 'Society And Culture', difficulty: 'hard', count: 1 },
+        { category: 'Science', difficulty: 'easy', count: 2 },
+        { category: 'Science', difficulty: 'hard', count: 1 }
+];
 
 export const mockAllCategories: TAllCategories = {
         'Society And Culture': {
@@ -30,6 +37,14 @@ export const mockAllCategories: TAllCategories = {
                 }
         }
 }
+type TQuestion = {
+        id: number,
+        category: string,
+        answers: string[],
+        correctAnswer: string,
+        question: string,
+        difficulty: string
+}
 
 export const mockAllQuestions = [
         {
@@ -44,6 +59,9 @@ export const mockAllQuestions = [
                 correctAnswer: 'Operation Overlord',
                 question: 'What was the code name of the Allied invasion of Normandy in 1944?',
                 difficulty: 'easy',
+                getDataValue(key: keyof TQuestion): TQuestion[typeof key] {
+                        return this[key];
+                },
         },
         {
                 id: 2,
@@ -52,6 +70,9 @@ export const mockAllQuestions = [
                 correctAnswer: 'Celsius',
                 question: 'On which scale is normal human body temperature approximately 37 degrees?',
                 difficulty: 'easy',
+                getDataValue(key: keyof TQuestion): TQuestion[typeof key] {
+                        return this[key];
+                },
         },
         {
                 id: 3,
@@ -60,6 +81,9 @@ export const mockAllQuestions = [
                 correctAnswer: 'Supermarine',
                 question: 'Which Aircraft Manufactuer Produced The Spitfire? ',
                 difficulty: 'hard',
+                getDataValue(key: keyof TQuestion): TQuestion[typeof key] {
+                        return this[key];
+                },
         },
         {
                 id: 4,
@@ -73,6 +97,9 @@ export const mockAllQuestions = [
                 correctAnswer: 'Toronto Raptors',
                 question: 'Which of these is a basketball team based in Toronto?',
                 difficulty: 'hard',
+                getDataValue(key: keyof TQuestion): TQuestion[typeof key] {
+                        return this[key];
+                },
         },
         {
                 id: 5,
@@ -81,15 +108,21 @@ export const mockAllQuestions = [
                 correctAnswer: 'The spin',
                 question: 'What is the name of the cycle in a washing machine that dries clothes?',
                 difficulty: 'easy',
+                getDataValue(key: keyof TQuestion): TQuestion[typeof key] {
+                        return this[key];
+                },
         },
 ]
 
-export const mockUser: typeof globalStore.user = {
+export const mockUser: TUser & { get(key: keyof TUser): TUser[typeof key] } = {
         id: 'mock-id',
         email: 'mockuser@email',
         avatar: 'defaulf-avatar.png',
         username: 'mock user',
         isVerified: true,
         answeredQuestions: [],
+        get(key) {
+                return this[key];
+        }
 };
 

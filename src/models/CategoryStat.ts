@@ -1,8 +1,23 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../utils/sequelize";
+import { DataTypes, Model, type CreationOptional, type ForeignKey, type InferAttributes, type InferCreationAttributes } from 'sequelize';
+import sequelize from 'utils/sequelize';
+import type UserStats from './UserStats';
 
-const CategoryStat = sequelize.define(
-        'CategoryStat',
+export default class CategoryStat extends Model<InferAttributes<CategoryStat>, InferCreationAttributes<CategoryStat>> {
+        declare id: CreationOptional<number>;
+        declare category: string;
+        declare total: CreationOptional<number>;
+        declare totalCorrect: CreationOptional<number>;
+        declare totalEasy: CreationOptional<number>;
+        declare totalEasyCorrect: CreationOptional<number>;
+        declare totalMedium: CreationOptional<number>;
+        declare totalMediumCorrect: CreationOptional<number>;
+        declare totalHard: CreationOptional<number>;
+        declare totalHardCorrect: CreationOptional<number>;
+        declare UserStatId: ForeignKey<UserStats['id']>;
+};
+export type TCategoryStatAttributes = InferAttributes<CategoryStat>;
+
+CategoryStat.init(
         {
                 id: {
                         type: DataTypes.INTEGER,
@@ -54,14 +69,14 @@ const CategoryStat = sequelize.define(
                         defaultValue: 0,
                 },
         }, {
-                indexes: [
-                        {
-                                unique: true,
-                                fields: ['userStatId', 'category'], // <-- Composite unique constraint
-                        },
-                ],
-        }
+        sequelize,
+        indexes: [
+                {
+                        unique: true,
+                        fields: ['userStatId', 'category'],
+                },
+        ],
+        timestamps: false,
+}
 );
-
-export default CategoryStat;
 

@@ -1,7 +1,11 @@
+import type { TUser } from './models';
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
 declare global {
 	namespace App {
+                interface Locals {
+                        user: TUser;
+                }
 		// interface Error {}
 		// interface Locals {}
 		// interface PageData {}
@@ -11,3 +15,4 @@ declare global {
 }
 
 export {};
+

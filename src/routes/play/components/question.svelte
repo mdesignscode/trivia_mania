@@ -1,16 +1,23 @@
 <script lang="ts">
 	import { Icon, CheckCircle, XCircle } from 'svelte-hero-icons';
 	import { decodeHTMLEntities } from 'utils';
-	import { globalStore, playStore, questionStore } from 'store';
+	import { playStore, questionStore } from 'store';
 	import { Button } from 'components';
 	import Transition from 'svelte-transition';
-	import { goto } from '$app/navigation';
 	import QuestionControls from './questionControls.svelte';
 	import Timer from './timerCountdown.svelte';
 	import { colorMap } from 'utils';
+	import type { TQuestionAttributes } from 'models';
+	import type { IconSource } from 'svelte-hero-icons';
 
-	let { index, question: _question, setQuestionIndex } = $props();
-	let answerFeedback = $state([null, null, null, null]);
+	interface Props {
+		index: number;
+		question: TQuestionAttributes;
+	}
+	let { index, question: _question }: Props = $props();
+
+	let answerFeedback: (IconSource | null)[] = $state([null, null, null, null]);
+
 	const { answers: _answers, category, correctAnswer, difficulty, question, id } = _question;
 	const answers = _answers.map((entity) => decodeHTMLEntities(entity));
 
@@ -63,7 +70,7 @@
 		}
 	};
 
-	const handleUserAnswer = (answer, answerIndex) => {
+	const handleUserAnswer = (answer: string, answerIndex: number) => {
 		questionStore.timers[index].userAnswer = answer;
 		questionStore.timers[index].state = 'ended';
 		updateUserStats();
@@ -133,7 +140,7 @@
 					primary={!questionStore.timers[index].userAnswer &&
 						questionStore.timers[index].state === 'ended' &&
 						answer === correctAnswer}
-					testid={answer}
+					data-testid={answer}
 				>
 					{#if answerFeedback[i]}
 						<span
@@ -159,3 +166,4 @@
 		</audio>
 	</div>
 </Transition>
+

@@ -20,6 +20,10 @@ const config = {
                         models: 'src/models/index.ts',
                         utils: 'src/utils/',
                         store: 'src/utils/store/',
+                        // test aliases
+                        mockFunctions: 'tests/mockFunctions.ts',
+                        mockData: 'tests/mockData.ts',
+                        routes: 'src/routes/',
                 }
         }
 };

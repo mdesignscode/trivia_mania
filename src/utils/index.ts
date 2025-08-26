@@ -6,6 +6,7 @@ export function decodeHTMLEntities(text: string) {
                 element.innerHTML = text;
                 return element.textContent || "";
         }
+        return "";
 }
 
 export const colorMap: { [key: string]: string } = {
@@ -15,7 +16,7 @@ export const colorMap: { [key: string]: string } = {
 };
 
 export function capitalize(str: string): string {
-	if (!str) return '';
-	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+        if (!str) return '';
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 

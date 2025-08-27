@@ -126,12 +126,12 @@
 
 		<strong>{question}</strong>
 
-		<section aria-label="Question answers" class="grid grid-cols-2 grid-rows-2 gap-4">
+		<section aria-label="Question answers" class="grid grid-cols-2 grid-rows-2 gap-4 items-stretch">
 			{#each answers as answer, i}
 				<Button
 					parentStyles="self-center"
 					class={[
-						'animate__animated flex w-full items-center justify-center gap-2',
+						'animate__animated flex w-full h-full items-center justify-center gap-2',
 						questionStore.timers[index].state === 'ended' ? 'cursor-not-allowed' : ''
 					]}
 					onclick={() => handleUserAnswer(answer, i)}

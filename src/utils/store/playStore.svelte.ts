@@ -8,7 +8,7 @@ export type TPlayStore = {
         userStats: any,
         totalCorrect: number,
         answeredQuestions: TQuestionAttributes['id'][],
-        globalIndex: number
+        globalIndex: number,
 }
 
 export let playStore: TPlayStore = $state({

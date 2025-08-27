@@ -128,7 +128,7 @@ export const actions = {
         }
 } satisfies Actions;
 
-export type TPaginatedQuestions = Awaited<ReturnType<typeof actions.paginate>>;
+export type TPaginateSuccess = Awaited<ReturnType<typeof filterQuestions>>;
 
 function mergeObjects(existing: TCategoryStatAttributes, incoming: TNewStatsInput) {
         const allowedKeys = [

@@ -60,18 +60,18 @@
 	</div>
 {:else}
 	<div class="col h-full w-full items-center justify-center gap-2">
-                <div class="flex gap-4">
-                        <div class="flex flex-col font-bold">
-                                <span>Difficulty:</span>
-                                <span>Categories:</span>
-                                <span>Total Questions:</span>
-                        </div>
-                        <div class="flex flex-col">
-                                <span>{globalStore.difficulty}</span>
-                                <span>{globalStore.categories.join(', ')}</span>
-                                <span>{playStore.totalQuestions}</span>
-                        </div>
-                </div>
+		<div class="flex gap-4">
+			<div class="flex flex-col font-bold">
+				<span>Difficulty:</span>
+				<span>Categories:</span>
+				<span>Total Questions:</span>
+			</div>
+			<div class="flex flex-col">
+				<span>{globalStore.difficulty}</span>
+				<span>{globalStore.categories.join(', ')}</span>
+				<span>{playStore.totalQuestions}</span>
+			</div>
+		</div>
 
 		<div class="mt-2 flex justify-between gap-4">
 			<Button

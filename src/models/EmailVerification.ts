@@ -7,6 +7,8 @@ export default class EmailVerification extends Model<InferAttributes<EmailVerifi
         declare code: string;
         declare expiresAt: Date;
         declare used: CreationOptional<boolean>;
+        // wrong guesses at this code
+        declare attempts: CreationOptional<number>;
 };
 
 EmailVerification.init(
@@ -31,7 +33,12 @@ EmailVerification.init(
                 used: {
                         type: DataTypes.BOOLEAN,
                         defaultValue: false,
-                }
+                },
+                attempts: {
+                        type: DataTypes.INTEGER,
+                        allowNull: false,
+                        defaultValue: 0,
+                },
         }, {
         timestamps: true,
         sequelize,

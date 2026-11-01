@@ -2,20 +2,12 @@ import { redirect, fail } from '@sveltejs/kit';
 import { User } from 'models';
 import { sendEmail, validateEmailVerificationCode } from 'utils/emailVerification';
 
-export const load = async ({ url, locals }) => {
-        const sessionUser = locals.user;
-        if (!sessionUser) throw redirect(302, '/login');
-
-        const email = url.searchParams.get('email');
-        if (!email) throw redirect(302, '/login');
-
-        const user = await User.findOne({
-                where: { email }
-        });
-
+export const load = async ({ locals }) => {
+        // only ever the logged-in user's own address, never one from the URL
+        const user = locals.user;
         if (!user) throw redirect(302, '/login');
         if (user.get('isVerified')) throw redirect(302, '/');
-        return { email }
+        return { email: user.get('email') }
 }
 
 export const actions = {
@@ -54,14 +46,23 @@ export const actions = {
                 if (!user) throw redirect(302, '/login');
 
                 const formData = await request.formData();
-                const newEmail = formData.get('newEmail')?.toString();
+                // emails are stored lowercase (see the User model)
+                const newEmail = formData.get('newEmail')?.toString().trim().toLowerCase();
 
                 if (!newEmail) return fail(400, { error: 'Missing new email' });
 
-                const validateEmailUri = `/signup/validate-email?email=${newEmail}`;
+                const owner = await User.findOne({ where: { email: newEmail } });
+                if (owner && owner.get('id') !== user.get('id')) {
+                        return fail(400, { error: 'That email is already in use.' });
+                }
 
                 user.setDataValue('email', newEmail);
                 await user.save();
+
+                const { status, data } = await sendEmail({ username: user.get('username'), email: newEmail });
+                if (status === 'fail') return fail(500, { error: data });
+
+                const validateEmailUri = `/signup/validate-email?email=${encodeURIComponent(newEmail)}`;
                 return {
                         message: 'Email updated',
                         user: user.get(),

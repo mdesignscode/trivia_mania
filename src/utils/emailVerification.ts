@@ -1,6 +1,10 @@
+import { randomInt } from 'crypto';
 import { env } from '$env/dynamic/private';
 import { EmailVerification } from '../models';
 import nodemailer from 'nodemailer';
+
+// wrong guesses allowed per code; after that only a new code works
+export const MAX_ATTEMPTS = 5;
 
 const sender = env.EMAIL_ADDRESS;
 const pass = env.EMAIL_CODE;
@@ -22,7 +26,7 @@ export const sendEmail = async ({ email, username }: { username: string, email: 
         const code = await generateEmailVerificationCode(email);
 
         // email body
-        const textBody = `<p>Hi ${username},</p>
+        const textBody = `<p>Hi ${escapeHtml(username)},</p>
     <p>Thank you for signing up with <strong>Trivia Mania</strong>! To complete your registration, please use the verification code below:</p>
     <div class="code-box">${code}</div>
     <p>This code will expire in <strong>10 minutes</strong>. If you did not request this, you can safely ignore this email.</p>
@@ -51,7 +55,7 @@ export const sendEmail = async ({ email, username }: { username: string, email: 
 
 
 export async function generateEmailVerificationCode(email: string): Promise<string> {
-        const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
+        const code = randomInt(100000, 1000000).toString(); // 6-digit code
         const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
 
         // existing verification should be updated
@@ -62,6 +66,8 @@ export async function generateEmailVerificationCode(email: string): Promise<stri
         if (existingVerification) {
                 existingVerification.setDataValue('code', code);
                 existingVerification.setDataValue('expiresAt', expiresAt);
+                existingVerification.setDataValue('used', false);
+                existingVerification.setDataValue('attempts', 0);
                 await existingVerification.save();
                 return code;
         }
@@ -86,13 +92,23 @@ export async function validateEmailVerificationCode(email: string, inputCode: st
         const failedResponse = { success: false, message: 'Invalid or expired verification code.' };
 
         if (record) {
-                // if code hasn't expired yet
+                // a code works once, until it expires
+                if (record.getDataValue('used')) return failedResponse;
                 const codeExpired = record.getDataValue('expiresAt') < new Date();
                 if (codeExpired) return failedResponse;
 
+                // a 6-digit code can be guessed, so it only gets a few tries
+                if (record.getDataValue('attempts') >= MAX_ATTEMPTS) {
+                        return { success: false, message: 'Too many wrong codes. Request a new code.' };
+                }
+
                 // is code correct
                 const code = record.getDataValue('code');
-                if (code !== inputCode) return failedResponse;
+                if (code !== inputCode) {
+                        record.setDataValue('attempts', record.getDataValue('attempts') + 1);
+                        await record.save();
+                        return failedResponse;
+                }
 
                 // verified
                 record.setDataValue('used', true)
@@ -105,3 +121,11 @@ export async function validateEmailVerificationCode(email: string, inputCode: st
         return failedResponse;
 }
 
+function escapeHtml(text: string): string {
+        return text
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+}

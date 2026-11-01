@@ -48,12 +48,14 @@ export const actions: Actions = {
                 const arrayBuffer = await (avatar as any).arrayBuffer() as ArrayBuffer;
                 const buffer = Buffer.from(arrayBuffer);
 
-                if (!isImageBuffer(buffer)) return fail(400, { error: 'Upload images only' });
+                // the extension comes from the bytes, never from the uploaded name,
+                // so nothing but an image can be served from /images/uploads
+                const extension = imageExtension(buffer);
+                if (!extension) return fail(400, { error: 'Upload images only' });
 
                 // generate file name
                 const basePath = '/images/uploads/';
-                const extension = avatar.name.split('.').at(-1);
-                const filename = `${user.get.username}_${randomUUID()}.${extension}`;
+                const filename = `${user.get('username')}_${randomUUID()}.${extension}`;
 
                 // remove prev avatar
                 if (user.get('avatar') !== defaultPath)
@@ -67,7 +69,7 @@ export const actions: Actions = {
                 user.setDataValue('avatar', basePath + filename);
                 await user.save();
 
-                return { message: "Avatar updated", user: user.get };
+                return { message: "Avatar updated", user: user.get() };
         },
         changeUsername: async ({ request, locals }) => {
                 const user = locals.user;
@@ -95,7 +97,11 @@ export const actions: Actions = {
 
                 if (!newPassword || !currentPassword) return fail(400, { error: 'Missing password' });
 
-                const validPassword = await bcrypt.compare(currentPassword, user.get('password'));
+                // the session user is loaded without its password hash
+                const account = await User.findByPk(user.get('id'), { attributes: ['password'] });
+                if (!account) throw redirect(302, '/login');
+
+                const validPassword = await bcrypt.compare(currentPassword, account.get('password'));
                 if (!validPassword) {
                         return fail(400, { error: 'Invalid password.' });
                 }
@@ -128,22 +134,22 @@ export const actions: Actions = {
         },
 };
 
-function isImageBuffer(buffer: Buffer): boolean {
+function imageExtension(buffer: Buffer): string | null {
         const magicNumbers = [
-                { type: 'image/png', magic: [0x89, 0x50, 0x4E, 0x47] }, // PNG
-                { type: 'image/jpeg', magic: [0xFF, 0xD8, 0xFF, 0xE0] }, // JPEG (JFIF)
-                { type: 'image/gif', magic: [0x47, 0x49, 0x46, 0x38] }, // GIF
-                { type: 'image/webp', magic: [0x52, 0x49, 0x46, 0x46] }, // WebP
-                { type: 'image/bmp', magic: [0x42, 0x4D] } // BMP (BM)
+                { extension: 'png', magic: [0x89, 0x50, 0x4E, 0x47] }, // PNG
+                { extension: 'jpg', magic: [0xFF, 0xD8, 0xFF, 0xE0] }, // JPEG (JFIF)
+                { extension: 'gif', magic: [0x47, 0x49, 0x46, 0x38] }, // GIF
+                { extension: 'webp', magic: [0x52, 0x49, 0x46, 0x46] }, // WebP
+                { extension: 'bmp', magic: [0x42, 0x4D] } // BMP (BM)
         ];
 
         // Check the first few bytes of the buffer
         for (let img of magicNumbers) {
-                if (buffer.slice(0, img.magic.length).every((byte, index) => byte === img.magic[index])) {
-                        return true;
+                if (buffer.subarray(0, img.magic.length).every((byte, index) => byte === img.magic[index])) {
+                        return img.extension;
                 }
         }
 
-        return false;
+        return null;
 }
 

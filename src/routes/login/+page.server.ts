@@ -14,8 +14,9 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
         default: async ({ request, cookies }) => {
                 const form = await request.formData();
-                const email = form.get('email');
-                const password = form.get('password') as string;
+                // emails are stored lowercase (see the User model)
+                const email = form.get('email')?.toString().trim().toLowerCase();
+                const password = form.get('password')?.toString();
 
                 if (!email || !password) {
                         return fail(400, { error: 'Missing email or password.' });
@@ -27,7 +28,7 @@ export const actions: Actions = {
                         return fail(400, { error: 'Invalid email or password.' });
                 }
 
-                const validPassword = bcrypt.compare(password, user.get('password'));
+                const validPassword = await bcrypt.compare(password, user.get('password'));
 
                 if (!validPassword) {
                         return fail(400, { error: 'Invalid email or password.' });

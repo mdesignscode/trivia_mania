@@ -1,38 +1,41 @@
-# sv
+# Trivia Mania
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A trivia quiz game. Pick categories and a difficulty, answer timed questions, and track your progress by category on your stats page and against other players on the scoreboard.
 
-## Creating a project
+Built with SvelteKit, Tailwind CSS and Sequelize on SQLite. The questions come from [The Trivia API](https://the-trivia-api.com).
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Requirements
 
-```bash
-# create a new project in the current directory
-npx sv create
+* [Bun](https://bun.sh)
+* Node.js 20 or newer, to run the built server
 
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Setup
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+git clone https://github.com/mdesignscode/trivia_mania
+cd trivia_mania
+bun install
 ```
 
-## Building
+Create a `.env` file with the Gmail account that sends the sign-up verification codes:
 
-To create a production version of your app:
+```
+EMAIL_ADDRESS=you@gmail.com
+EMAIL_CODE=your-gmail-app-password
+```
+
+## Run
 
 ```bash
-npm run build
+bun run dev
 ```
 
-You can preview the production build with `npm run preview`.
+`bun run build` first syncs the database (`database.sqlite`): it creates the tables, loads the questions from `questionsCache.json` (or fetches them when the cache is missing) and adds sample players. Then it builds the app. Start the built server with `bun run start`.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## Test
+
+```bash
+bun run test        # run every test once
+bun run test:watch  # rerun on changes
+bun run check       # type check
+```

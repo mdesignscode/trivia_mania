@@ -10,7 +10,7 @@
 		handleSetDifficulty,
 		updateLocalPreferences
 	} from 'utils/uiHelpers.svelte';
-	import type { TProcessResult, TQuestionData } from 'utils/processCategories.js';
+	import type { TProcessResult, TQuestionData } from 'utils/processFilters';
 
 	let { data }: { data: TProcessResult } = $props();
 	const { allCategories, allDifficulties } = data;

@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import { Question } from 'models';
 import { Op } from 'sequelize';
-import { processCategories } from 'utils/processCategories';
+import { processCategories } from 'utils/processFilters';
 
 export const load = async ({ locals }) => {
         const user = locals.user;

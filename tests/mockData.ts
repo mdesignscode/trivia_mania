@@ -1,4 +1,4 @@
-import type { TAllCategories, TQuestionData } from "utils/processCategories";
+import type { TAllCategories, TQuestionData } from "utils/processFilters";
 import type { TUser } from "utils/store/global.svelte";
 
 export const mockCategoriesQuery: TQuestionData[] = [

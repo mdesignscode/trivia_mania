@@ -1,43 +1,16 @@
 import {
         CategoryStat,
-        Question,
         UserStats,
         NewStatsSchema,
         type TCategoryStatAttributes,
-        type TUserAttributes,
         type TUserStatsAttributes,
         type TNewStatsInput,
 } from 'models';
-import { fn, Op } from 'sequelize';
 import type { Actions, PageServerLoad } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
 import z from 'zod';
 import type { URL } from 'url';
-
-const filterQuestions = async (url: URL, userAnswered: TUserAttributes['answeredQuestions']) => {
-        const categories = (url.searchParams.get('categories') || 'All Categories').split(',');
-        const difficulty = url.searchParams.get('difficulty') || 'all difficulties';
-
-        const difficultyFilter = difficulty === 'all difficulties' ? {} : { difficulty };
-        const categoriesFilter = categories.includes('All Categories')
-                ? {}
-                : { category: { [Op.in]: categories } };
-
-        const allQuestions = await Question.findAndCountAll({
-                where: {
-                        ...difficultyFilter,
-                        ...categoriesFilter,
-                        id: {
-                                [Op.notIn]: userAnswered,
-                        }
-                },
-                limit: 5,
-                order: [fn('RANDOM')],
-        });
-
-        const questions = allQuestions.rows.map(q => q.get());
-        return { questions, total: allQuestions.count };
-};
+import { filterQuestions } from 'utils/processFilters';
 
 export const load: PageServerLoad = async ({ url, locals }) => {
         const user = locals.user;

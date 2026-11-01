@@ -1,5 +1,6 @@
 import { mockCategoriesQuery } from 'mockData';
-import { processCategories } from 'utils/processCategories';
+import { mockUrl } from 'mockFunctions';
+import { processCategories, filterQuestions } from 'utils/processFilters';
 import { describe, expect, test } from 'vitest';
 
 describe('processCategories', () => {
@@ -9,6 +10,12 @@ describe('processCategories', () => {
                 expect(allDifficulties).toContain('easy');
                 expect(allCategories['Science']['all difficulties'].count).toBe(3);
                 expect(allCategories['All Categories']['all difficulties'].count).toBe(5);
+        });
+});
+
+describe('filterQuestions', () => {
+        test('returns a list of questions based on categories and difficulty', async () => {
+                const filteredQuestions = await filterQuestions(mockUrl({}), []);
         });
 });
 

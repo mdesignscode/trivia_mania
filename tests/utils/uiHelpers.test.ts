@@ -1,6 +1,6 @@
 import { updateLocalPreferences, handleSelectCategory, handleSetDifficulty, handlePlay } from "utils/uiHelpers.svelte";
 import { mockAllCategories } from "mockData";
-import type { TQuestionData } from "utils/processCategories";
+import type { TQuestionData } from "utils/processFilters";
 import { globalStore } from "utils/store";
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { mockLocalStorage } from "mockFunctions";

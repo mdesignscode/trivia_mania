@@ -1,5 +1,5 @@
 import { globalStore } from 'store';
-import type { TAllCategories } from './processCategories';
+import type { TAllCategories } from './processFilters';
 
 export function updateLocalPreferences(allCategories: TAllCategories, localStorage: Storage) {
         const localDifficulty = localStorage.getItem('difficulty') || '';

@@ -5,13 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "npx tsx src/scripts/sync.ts && vite build",
+    "build": "tsx src/scripts/sync.ts && vite build",
     "start": "node build",
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "test": "vitest tests/**/*.ts"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@neoconfetti/svelte": "^2.0.0",
@@ -36,7 +37,6 @@
     "vite": "^6.0.0",
     "vitest": "^3.2.4"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
   "resolutions": {
     "rollup": "npm:@rollup/wasm-node"
   },
@@ -52,4 +52,3 @@
     "zod": "^4.1.1"
   }
 }
-

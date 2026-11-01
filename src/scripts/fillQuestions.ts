@@ -1,12 +1,14 @@
-import { Question } from "models";
+import { Question, type TQuestionAttributes } from "models";
 import { retrieveObject, storeObject } from "./cacheFillData";
 
-const allQuestions = [];
+type TNewQuestion = Omit<TQuestionAttributes, 'id'>;
+
+const allQuestions: TNewQuestion[] = [];
 
 export async function fillQuestions() {
         const filePath = "questionsCache.json";
 
-        const cache = await retrieveObject(filePath);
+        const cache = await retrieveObject<TNewQuestion[]>(filePath);
 
         if (cache) {
                 console.log('Cache found');
@@ -36,7 +38,7 @@ export async function fillQuestions() {
                                 [answers[i], answers[j]] = [answers[j], answers[i]];
                         }
 
-                        const newQuestion = {
+                        const newQuestion: TNewQuestion = {
                                 question: question.question.text,
                                 difficulty: question.difficulty,
                                 answers,

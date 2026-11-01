@@ -1,5 +1,5 @@
 <script>
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { createEventDispatcher, onMount, tick } from 'svelte';
 
 	let { length = 6, error } = $props();
 	const dispatch = createEventDispatcher();

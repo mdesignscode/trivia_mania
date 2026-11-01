@@ -36,7 +36,6 @@ export const actions: Actions = {
                         username,
                         password: hashedPassword,
                         email,
-                        correctAnswered: 0,
                         answeredQuestions: [],
                         avatar,
                 });
@@ -61,8 +60,7 @@ export const actions: Actions = {
 
                 const validateEmailUri = `/signup/validate-email?email=${email}`;
 
-                const userData = newUser.get();
-                delete userData.password;
+                const { password: _password, ...userData } = newUser.get();
 
                 return {
                         user: userData,

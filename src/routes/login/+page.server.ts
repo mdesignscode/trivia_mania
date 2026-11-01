@@ -45,8 +45,7 @@ export const actions: Actions = {
                         maxAge: 60 * 60 * 24 * 30 // 30 days
                 });
 
-                const userData = user.get();
-                delete userData.password;
+                const { password: _password, ...userData } = user.get();
 
                 return { user: userData };
         }

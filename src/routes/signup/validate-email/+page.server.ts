@@ -7,6 +7,8 @@ export const load = async ({ url, locals }) => {
         if (!sessionUser) throw redirect(302, '/login');
 
         const email = url.searchParams.get('email');
+        if (!email) throw redirect(302, '/login');
+
         const user = await User.findOne({
                 where: { email }
         });

@@ -110,8 +110,7 @@ export const actions: Actions = {
 
                 user.setDataValue('password', hashedPassword);
                 await user.save();
-                const userData = user.get();
-                delete userData.password;
+                const { password: _password, ...userData } = user.get();
 
                 return { user: userData, message: 'Password updated' }
         },

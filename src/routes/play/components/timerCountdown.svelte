@@ -35,10 +35,10 @@
                                                 el.style.opacity = '100';
                                         }
 
+					// only Firefox has getAutoplayPolicy; elsewhere play() rejects
+					// when autoplay is blocked, and that must not stop the timer
 					const audio = document.getElementById('error') as HTMLAudioElement;
-					if (navigator.getAutoplayPolicy(audio) === 'allowed') {
-						audio.play();
-					}
+					audio.play().catch(() => {});
 
 					clearInterval(store.timers[index].timer);
 					store.timers[index].timer = null;

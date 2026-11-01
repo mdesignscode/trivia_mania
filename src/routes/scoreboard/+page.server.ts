@@ -1,4 +1,4 @@
-import { CategoryStat, User, UserStats } from 'models';
+import { CategoryStat, User, UserStats, type TUserAttributes, type TUserStatsAttributes } from 'models';
 
 export const load = async () => {
         const topUsers = await UserStats.findAll({
@@ -19,9 +19,10 @@ export const load = async () => {
                         },
                 });
                 const categoryStats = userCategories.map(c => c.get());
-                const stats = { userStats: s.get(), user: s.get('User').get(), categoryStats }
-                delete stats.userStats.User;
-                return stats;
+                const { User: user, ...userStats } = s.get({ plain: true }) as TUserStatsAttributes & {
+                        User: Pick<TUserAttributes, 'username' | 'avatar'>;
+                };
+                return { userStats, user, categoryStats };
         }));
         return { topTen };
 }

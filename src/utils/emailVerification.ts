@@ -45,7 +45,7 @@ export const sendEmail = async ({ email, username }: { username: string, email: 
                 return { status: 'success', data: code };
         } catch (error) {
                 console.error('Error sending email:', error);
-                return { status: 'fail', data: error.message };
+                return { status: 'fail', data: error instanceof Error ? error.message : String(error) };
         }
 };
 

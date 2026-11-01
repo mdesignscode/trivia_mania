@@ -4,7 +4,7 @@ import type { TUser } from './models';
 declare global {
 	namespace App {
                 interface Locals {
-                        user: TUser;
+                        user: TUser | undefined;
                 }
 		// interface Error {}
 		// interface Locals {}

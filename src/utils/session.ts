@@ -48,7 +48,7 @@ export async function validateSessionToken(token: string | undefined) {
                 return;
         }
 
-        return user;
+        return user ?? undefined;
 }
 
 export async function invalidateSession(sessionId: string) {

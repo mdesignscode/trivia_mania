@@ -7,7 +7,7 @@
 
 	// set logged in user
         if (!globalStore.user)
-                globalStore.user = data.user;
+                globalStore.user = data.user ?? null;
 </script>
 
 <div class="col h-full">

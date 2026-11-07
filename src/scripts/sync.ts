@@ -16,6 +16,16 @@ async function addMissingColumns() {
                 });
                 console.log('Added EmailVerifications.attempts');
         }
+
+        // CategoryStat dropped its timestamps, but tables created before that
+        // still require them, so every new category stat failed to insert
+        const categoryStats = await queryInterface.describeTable('CategoryStats');
+        for (const column of ['createdAt', 'updatedAt']) {
+                if (column in categoryStats) {
+                        await sequelize.query(`ALTER TABLE \`CategoryStats\` DROP COLUMN \`${column}\``);
+                        console.log(`Removed CategoryStats.${column}`);
+                }
+        }
 }
 
 async function initDB() {

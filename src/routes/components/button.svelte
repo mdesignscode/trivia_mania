@@ -3,153 +3,46 @@
 
 	interface Props extends HTMLButtonAttributes {
 		primary?: boolean;
-		cta?: boolean;
 		play?: boolean;
 		danger?: boolean;
-		showCategories?: boolean;
-                parentStyles?: string;
+		parentStyles?: string;
 	}
-	let { primary, cta, play, danger, showCategories, children, parentStyles, ...nativeProps }: Props = $props();
+	let { primary, play, danger, children, parentStyles, ...nativeProps }: Props = $props();
 
-	const dark = '#2f2f2f';
-	const light = '#f6f6f6';
-
-	// Dynamic classes
-	const classes = [
-		'base',
-		danger && 'danger',
-		primary && 'primary',
-		cta && 'cta',
-		showCategories && 'show-categories',
-		play && 'play'
-	]
-		.filter(Boolean)
-		.join(' ');
+	const variant = $derived(danger ? 'danger' : primary || play ? 'primary' : 'default');
 </script>
 
-<button
-	{...nativeProps}
-	class={[classes, nativeProps.class, parentStyles]}
-	style={showCategories
-		? `--category-border-color: ${primary ? light : dark}; --category-hover-color: ${primary ? dark : light};`
-		: ''}
->
+<button {...nativeProps} class={['btn', variant, nativeProps.class, parentStyles]}>
 	{@render children?.()}
 </button>
 
 <style>
-	:global(button) {
-		font-family: inherit;
+	.btn {
+		@apply inline-flex min-h-11 items-center justify-center gap-3 rounded border px-5 py-2 font-display text-lg font-bold uppercase tracking-wider transition-colors duration-150;
 	}
 
-	button.base {
-		@apply flex items-center justify-center gap-4 disabled:opacity-60;
-		background: transparent;
-		border-radius: 5px;
-		border: 2px solid #ffcb74;
-		padding: 0.25em;
-		transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+	.btn:disabled {
+		@apply cursor-not-allowed opacity-45;
 	}
 
-	button.base:hover {
-		background-color: #ffcb74;
-		color: white;
+	.default {
+		@apply border-line bg-raised text-chalk;
+	}
+	.default:not(:disabled):hover {
+		@apply border-muted/60 bg-line;
 	}
 
-	@media (prefers-color-scheme: dark) {
-		button.base:hover {
-			color: #2f2f2f;
-		}
+	.primary {
+		@apply border-amber bg-amber text-ink;
+	}
+	.primary:not(:disabled):hover {
+		@apply border-amber-hi bg-amber-hi;
 	}
 
-	/* Primary */
-	button.primary {
-		background: #ffcb74;
-		color: white;
+	.danger {
+		@apply border-hard/70 bg-transparent text-hard;
 	}
-
-	button.primary:hover {
-		border-color: #2f2f2f;
-		background: transparent;
-		color: #2f2f2f;
-	}
-
-	@media (prefers-color-scheme: dark) {
-		button.primary {
-			color: #2f2f2f;
-		}
-
-		button.primary:hover {
-			border-color: #f6f6f6;
-			color: #f6f6f6;
-		}
-	}
-
-	/* Danger */
-	button.danger {
-		@apply border-red-400 bg-transparent p-2 text-red-400;
-	}
-
-	button.danger:hover {
-		@apply bg-red-400 text-white;
-	}
-
-	/* CTA */
-	button.cta {
-		color: #f6f6f6;
-		border: 2px solid #ffcb74;
-		padding: 0.75rem;
-		letter-spacing: 2px;
-		min-width: 160px;
-		height: 48px;
-		text-transform: uppercase;
-		white-space: normal;
-		font-weight: 700;
-		margin-top: 1.25rem;
-		display: inline-block;
-		background-color: #ffcb74;
-	}
-
-	button.cta:hover {
-		background-color: transparent;
-		color: #2f2f2f;
-		border-color: #2f2f2f;
-		border-radius: 500px;
-	}
-
-	@media (prefers-color-scheme: dark) {
-		button.cta {
-			color: #2f2f2f;
-		}
-
-		button.cta:hover {
-			border-color: #f6f6f6;
-			color: #f6f6f6;
-		}
-
-		button.cta.play:hover {
-			border-color: #2f2f2f;
-			color: #2f2f2f;
-		}
-	}
-
-	/* Show categories modifier */
-	button.show-categories {
-		border-color: var(--category-border-color);
-		opacity: 0.7;
-	}
-
-	button.show-categories.primary {
-		opacity: 1;
-	}
-
-	button.show-categories.primary:hover {
-		background-color: #f6f6f6;
-		@apply dark:border-dark dark:text-dark;
-	}
-
-	button.play {
-		@apply border-dark hover:bg-light hover:text-dark dark:border-light hover:dark:border-dark;
+	.danger:not(:disabled):hover {
+		@apply bg-hard text-ink;
 	}
 </style>
-

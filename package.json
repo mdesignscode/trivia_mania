@@ -41,6 +41,8 @@
     "rollup": "npm:@rollup/wasm-node"
   },
   "dependencies": {
+    "@fontsource/barlow": "^5.3.0",
+    "@fontsource/big-shoulders-display": "^5.3.0",
     "@sveltejs/adapter-node": "^5.2.12",
     "bcryptjs": "^3.0.2",
     "nodemailer": "^10.3.1",

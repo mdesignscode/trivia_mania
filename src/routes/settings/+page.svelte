@@ -1,11 +1,10 @@
 <script lang="ts">
 	import SettingForm from './components/settingForm.svelte';
-	import { Button, PasswordInput, SpinningLoader } from 'components';
+	import { PasswordInput } from 'components';
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { globalStore } from 'store';
 	import { createDisclosure } from 'svelte-headlessui';
-	import { Icon, XMark } from 'svelte-hero-icons';
 
 	const changeAvatar = createDisclosure({ expanded: false });
 	const logout = createDisclosure({ expanded: false });
@@ -63,126 +62,137 @@
 	};
 </script>
 
-<div class="mx-auto space-y-2 px-6 py-4 md:w-[55%] md:space-y-4 md:p-8">
-	<div class="mx-auto mb-4 flex w-fit items-center gap-4 md:mb-6">
-		<img
-			class="aspect-square size-12 rounded-full border"
-			src={globalStore.user?.avatar}
-			alt="User icon"
-		/>
+<svelte:head>
+	<title>Settings · Trivia Mania</title>
+</svelte:head>
 
-		<div>
-			<p class="text-xl">{globalStore.user?.username}</p>
-			<p class="text-xs italic text-gray-500 dark:text-gray-200">@{globalStore.user?.email}</p>
+<section class="mx-auto col max-w-2xl gap-8 px-4 py-8 md:px-8 md:py-10">
+	<div class="flex items-center gap-4">
+		<img
+			class="size-14 rounded-full object-cover ring-2 ring-line"
+			src={globalStore.user?.avatar}
+			alt=""
+		/>
+		<div class="col min-w-0 gap-0.5">
+			<h1 class="truncate text-3xl leading-none">{globalStore.user?.username}</h1>
+			<p class="truncate text-muted">{globalStore.user?.email}</p>
 		</div>
 	</div>
-	<h1 class="text-center text-lg font-bold md:text-xl">Settings</h1>
-	<div class="space-y-2 rounded-sm border p-2 md:rounded-md md:px-6 md:py-4">
-		<!-- change avatar -->
-		<div class="relative">
+
+	<div class="col gap-3">
+		<h2 class="text-xl">Profile</h2>
+		<div class="panel overflow-hidden">
 			<SettingForm
-				heading="Change avatar"
+				heading="Avatar"
+				description="Upload a picture for the scoreboard"
 				disclosure={changeAvatar}
 				action="?/changeAvatar"
 				handler={() => handleChangeUserInfo('avatar')}
 				{updating}
 				feedback={changeAvatarFeedback}
+				cta="Upload"
 			>
-				<input
-					required
-					class="mr-1 rounded-sm bg-white p-1"
-					type="file"
-					accept="image/*"
-					name="avatar"
-				/>
+				<label class="col gap-1.5">
+					<span class="label">Image file</span>
+					<input
+						required
+						class="field file:mr-3 file:rounded file:border-0 file:bg-raised file:px-3 file:py-1.5 file:font-semibold file:text-chalk"
+						type="file"
+						accept="image/*"
+						name="avatar"
+					/>
+				</label>
 			</SettingForm>
 
 			<!-- set to default if not already default avatar -->
 			{#if globalStore.user?.avatar !== '/images/icons8-user-64.png' && $changeAvatar.expanded}
 				<form
-					class="absolute bottom-4 right-4 px-2"
+					class="-mt-2 px-4 pb-5 md:px-5"
 					method="POST"
 					action="?/setDefaultAvatar"
-					use:enhance={handleChangeUserInfo}
+					use:enhance={() => handleChangeUserInfo('avatar')}
 				>
 					<input type="hidden" bind:value={globalStore.user.username} name="username" />
-					<Button disabled={updating}>Set default</Button>
+					<button class="link text-sm" disabled={updating}>Use the default avatar instead</button>
 				</form>
 			{/if}
+
+			<SettingForm
+				heading="Display name"
+				description="How you appear on the scoreboard"
+				disclosure={changeUsername}
+				action="?/changeUsername"
+				handler={() => handleChangeUserInfo('username')}
+				feedback={changeUsernameFeedback}
+				{updating}
+			>
+				<label class="col gap-1.5">
+					<span class="label">New display name</span>
+					<input required class="field" type="text" bind:value={newUsername} name="newUsername" />
+				</label>
+			</SettingForm>
+
+			<SettingForm
+				{updating}
+				heading="Password"
+				description="Change the password you sign in with"
+				disclosure={changePassword}
+				action="?/changePassword"
+				handler={() => handleChangeUserInfo('password')}
+				feedback={changePassFeedback}
+			>
+				<div class="col gap-1.5">
+					<label class="label" for="currentPassword">Current password</label>
+					<PasswordInput
+						label="Show current password"
+						name="currentPassword"
+						autocomplete="current-password"
+						show={showCurrentPass}
+						value={currentPass}
+					/>
+				</div>
+				<div class="col gap-1.5">
+					<label class="label" for="newPassword">New password</label>
+					<PasswordInput
+						label="Show new password"
+						name="newPassword"
+						autocomplete="new-password"
+						show={showNewPass}
+						value={newPass}
+					/>
+				</div>
+			</SettingForm>
 		</div>
-
-		<!-- change username -->
-		<SettingForm
-			heading="Change display name"
-			disclosure={changeUsername}
-			action="?/changeUsername"
-			handler={() => handleChangeUserInfo('username')}
-			feedback={changeUsernameFeedback}
-			{updating}
-		>
-			<input
-				required
-				class="mr-1 rounded-sm p-1"
-				type="text"
-				bind:value={newUsername}
-				name="newUsername"
-				placeholder="New display name"
-			/>
-		</SettingForm>
-
-		<!-- change password -->
-		<SettingForm
-			{updating}
-			heading="Change password"
-			disclosure={changePassword}
-			action="?/changePassword"
-			handler={() => handleChangeUserInfo('password')}
-			feedback={changePassFeedback}
-		>
-			<PasswordInput
-				label="Show current password"
-				name="currentPassword"
-				placeholder="Current password"
-				show={showCurrentPass}
-				value={currentPass}
-			/>
-			<PasswordInput
-				label="Show new password"
-				name="newPassword"
-				placeholder="New password"
-				show={showNewPass}
-				value={newPass}
-			/>
-		</SettingForm>
-
-		<!-- log out -->
-		<SettingForm
-			heading="Log out"
-			disclosure={logout}
-			action="?/logout"
-			handler={() => handleChangeUserInfo('logout')}
-			{updating}
-			cta="Confirm"
-			{sessionDestroyed}
-		/>
-
-		<!-- delete account -->
-		<SettingForm
-			heading="Delete my account"
-			disclosure={deleteAccount}
-			action="?/deleteAccount"
-			handler={() => handleChangeUserInfo('delete')}
-			{updating}
-			cta="I am sure"
-			{sessionDestroyed}
-		>
-			<p class="text-sm">Are you sure? This action cannot be undone</p>
-		</SettingForm>
 	</div>
-</div>
 
-<style>
-	input {
-		@apply dark:bg-gray-100 dark:text-dark;
-	}
-</style>
+	<div class="col gap-3">
+		<h2 class="text-xl">Account</h2>
+		<div class="panel overflow-hidden">
+			<SettingForm
+				heading="Log out"
+				description="Sign out on this device"
+				disclosure={logout}
+				action="?/logout"
+				handler={() => handleChangeUserInfo('logout')}
+				feedback={logoutFeedback}
+				{updating}
+				cta="Log out"
+				{sessionDestroyed}
+			/>
+
+			<SettingForm
+				heading="Delete account"
+				description="Remove your account and all your stats"
+				disclosure={deleteAccount}
+				action="?/deleteAccount"
+				handler={() => handleChangeUserInfo('delete')}
+				feedback={deleteAccountFeedback}
+				{updating}
+				cta="Delete my account"
+				{sessionDestroyed}
+			>
+				<p class="text-sm">This permanently deletes your account and stats. It cannot be undone.</p>
+			</SettingForm>
+		</div>
+	</div>
+</section>

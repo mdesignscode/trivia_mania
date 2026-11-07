@@ -1,9 +1,7 @@
 export const navStyles = {
-        active:
-                "bg-accent text-dark flex gap-2 content-center items-center hover:border-light border-2 border-accent hover:text-light hover:bg-accent-200",
-        inActive: [
-                "hover:bg-accent-100 hover:text-secondary",
-                "rounded-md px-3 py-2 text-sm font-medium flex gap-2 content-center items-center",
-        ],
+	base: 'flex min-h-11 items-center gap-2 rounded px-3 font-display text-lg font-bold uppercase tracking-wider transition-colors',
+	active: 'bg-ink/35 text-amber',
+	inactive: 'text-chalk/85 hover:bg-ink/20 hover:text-chalk'
 };
 
+export const isActive = (href: string, pathname: string) => href.split('?')[0] === pathname;

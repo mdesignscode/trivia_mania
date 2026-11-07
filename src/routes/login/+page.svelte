@@ -19,7 +19,7 @@
 				loading = false;
 				return;
 			}
-                        update();
+			update();
 
 			globalStore.user = result.data.user;
 			loading = false;
@@ -29,14 +29,23 @@
 	};
 </script>
 
-<AuthForm {error} {loading} handler={handleLogin} route="/login">
-	<input type="email" bind:value={email} name="email" placeholder="Email" required />
-	<PasswordInput
-		label="Enter password"
-		name="password"
-		placeholder="Password"
-		show={showPassword}
-		value={password}
-	/>
-</AuthForm>
+<svelte:head>
+	<title>Sign in · Trivia Mania</title>
+</svelte:head>
 
+<AuthForm {error} {loading} handler={handleLogin} route="/login">
+	<label class="col gap-1.5">
+		<span class="label">Email</span>
+		<input class="field" type="email" bind:value={email} name="email" autocomplete="email" required />
+	</label>
+	<div class="col gap-1.5">
+		<label class="label" for="password">Password</label>
+		<PasswordInput
+			label="Show password"
+			name="password"
+			autocomplete="current-password"
+			show={showPassword}
+			value={password}
+		/>
+	</div>
+</AuthForm>

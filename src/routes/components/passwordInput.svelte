@@ -1,29 +1,27 @@
 <script>
 	import { Icon, Eye, EyeSlash } from 'svelte-hero-icons';
 
-	let { show, value, name, placeholder, label } = $props();
+	let { show, value, name, placeholder = undefined, label, id = name, autocomplete = undefined } = $props();
 </script>
 
 <div class="relative w-full">
 	<input
 		required
-		class="w-full rounded-sm"
-		style="padding-right: 40px !important;"
+		class="field pr-12"
 		type={show ? 'text' : 'password'}
 		bind:value
+		{id}
 		{name}
 		{placeholder}
+		{autocomplete}
 	/>
 	<button
 		type="button"
-		class="absolute right-2 top-1/2 -translate-y-1/2 dark:text-dark"
+		class="absolute right-1 top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded text-muted hover:text-chalk"
 		aria-label={label}
+		aria-pressed={show}
 		onclick={() => (show = !show)}
 	>
-		{#if show}
-			<Icon src={EyeSlash} size="25" />
-		{:else}
-			<Icon src={Eye} size="25" />
-		{/if}
+		<Icon src={show ? EyeSlash : Eye} size="22" />
 	</button>
 </div>

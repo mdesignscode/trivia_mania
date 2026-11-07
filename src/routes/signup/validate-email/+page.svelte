@@ -3,20 +3,17 @@
 	import { createDisclosure } from 'svelte-headlessui';
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/state';
 	import { globalStore } from 'store';
 
 	const changeEmail = createDisclosure({ expanded: false });
 
-	let { data, form } = $props();
+	let { data } = $props();
 
-	let code = $state('');
 	let loading = $state(false);
-	let message = $state('');
 	let email = $state(data.email);
 	let newEmail = $state('');
 	let updatingEmail = $state({ loading: false, message: '', error: '' });
-	let resendingEmail = $state({ loading: false, mesage: '', error: '' });
+	let resendingEmail = $state({ loading: false, message: '', error: '' });
 	let verifyingEmail = $state({ loading: false, message: '', error: '' });
 
 	const handleUserAction = async (type, request) => {
@@ -39,6 +36,7 @@
 			if (type === 'change') {
 				email = result.data.newEmail;
 				newEmail = '';
+				request.error = '';
 				changeEmail.close();
 			} else if (type === 'resend') {
 				request.error = '';
@@ -51,88 +49,101 @@
 	};
 </script>
 
-<div class="col mx-auto gap-4 p-8 md:w-3/6">
-	<p>Enter the code sent to {email}</p>
+<svelte:head>
+	<title>Confirm your email · Trivia Mania</title>
+</svelte:head>
 
-	<div
-		class="col gap-2 space-y-2 overflow-y-auto rounded-lg border-2 p-4 shadow-md dark:border-transparent dark:bg-neutral-500"
-	>
+<section class="mx-auto flex min-h-full max-w-md flex-col justify-center gap-6 px-4 py-10">
+	<div class="col gap-2">
+		<h1 class="text-3xl leading-none">Check your inbox</h1>
+		<p class="text-muted">
+			Enter the 6-digit code we sent to <span class="font-semibold text-chalk">{email}</span>. It
+			works for 10 minutes.
+		</p>
+	</div>
+
+	<div class="panel col gap-5 p-5 md:p-6">
 		<form
 			id="verification-form"
 			action="?/verifyCode"
-			class="col gap-2"
+			class="col gap-4"
 			use:enhance={() => handleUserAction('verify', verifyingEmail)}
 			method="POST"
 		>
 			<VerificationCodeInput error={verifyingEmail.error} />
-			<Button primary disabled={loading}>
-				Send
-				{#if verifyingEmail.loading}
-					<SpinningLoader size="8" />
-				{/if}
-			</Button>
 
 			{#if verifyingEmail.error}
-				<p class="text-red-800">{verifyingEmail.error}</p>
+				<p class="rounded border border-hard/50 bg-hard/10 px-3 py-2 text-sm text-hard" role="alert">
+					{verifyingEmail.error}
+				</p>
 			{/if}
+
+			<Button primary disabled={loading} class="w-full">
+				Confirm email
+				{#if verifyingEmail.loading}
+					<SpinningLoader size="5" />
+				{/if}
+			</Button>
 		</form>
 
-		<form
-			id="verification-form"
-			use:enhance={() => handleUserAction('resend', resendingEmail)}
-			action="?/resendCode"
-			method="POST"
-		>
-			{#if resendingEmail.loading}
-				<div class="flex items-center gap-2">
-					Requesting new code
-					<SpinningLoader size="8" />
-				</div>
-			{:else}
-				<button class="underline">Request new code</button>
-			{/if}
-		</form>
+		<div class="col gap-3 border-t border-line pt-4 text-sm">
+			<form
+				use:enhance={() => handleUserAction('resend', resendingEmail)}
+				action="?/resendCode"
+				method="POST"
+				class="flex flex-wrap items-center gap-x-2 gap-y-1"
+			>
+				<span class="text-muted">No code yet?</span>
+				{#if resendingEmail.loading}
+					<span class="flex items-center gap-2">Sending a new code <SpinningLoader size="4" /></span>
+				{:else}
+					<button class="link min-h-8" disabled={loading}>Send a new code</button>
+				{/if}
+				{#if resendingEmail.error}
+					<span class="w-full text-hard" role="alert">{resendingEmail.error}</span>
+				{:else if resendingEmail.message}
+					<span class="w-full text-easy" role="status">{resendingEmail.message}</span>
+				{/if}
+			</form>
 
-		<div class="col gap-3">
-			<div class="flex gap-2 text-sm">
-				<p>Didn't receive a code?</p>
-				<button class={{ underline: !$changeEmail.expanded }} type="button" use:changeEmail.button
-					>Change email</button
-				>
+			<div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+				<span class="text-muted">Wrong address?</span>
+				<button class="link min-h-8" type="button" use:changeEmail.button>
+					{$changeEmail.expanded ? 'Keep this email' : 'Change email'}
+				</button>
 			</div>
 
 			{#if $changeEmail.expanded}
 				<form
 					use:changeEmail.panel
-					class="flex flex-wrap gap-2"
+					class="col gap-2"
 					action="?/changeEmail"
 					method="POST"
 					use:enhance={() => handleUserAction('change', updatingEmail)}
 				>
-					<input
-						class="rounded-md p-2 dark:text-dark"
-						placeholder="New email"
-						type="email"
-						bind:value={newEmail}
-						name="newEmail"
-					/>
-					<Button disabled={loading}>
-						Change
-						{#if updatingEmail.loading}
-							<SpinningLoader size="8" />
-						{/if}
-					</Button>
+					<label class="label" for="new-email">New email</label>
+					<div class="flex gap-2">
+						<input
+							id="new-email"
+							class="field"
+							type="email"
+							autocomplete="email"
+							required
+							bind:value={newEmail}
+							name="newEmail"
+						/>
+						<Button disabled={loading}>
+							Change
+							{#if updatingEmail.loading}
+								<SpinningLoader size="5" />
+							{/if}
+						</Button>
+					</div>
+					{#if updatingEmail.error}
+						<p class="text-hard" role="alert">{updatingEmail.error}</p>
+					{/if}
 				</form>
 			{/if}
 		</div>
 	</div>
-</div>
-
-<style>
-	@media (prefers-color-scheme: dark) {
-		:global(#verification-form button:hover) {
-			@apply border-dark text-dark;
-		}
-	}
-</style>
-
+</section>

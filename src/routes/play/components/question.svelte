@@ -2,13 +2,10 @@
 	import { Icon, CheckCircle, XCircle } from 'svelte-hero-icons';
 	import { decodeHTMLEntities } from 'utils';
 	import { playStore, questionStore } from 'store';
-	import { Button } from 'components';
 	import Transition from 'svelte-transition';
 	import QuestionControls from './questionControls.svelte';
 	import Timer from './timerCountdown.svelte';
-	import { colorMap } from 'utils';
 	import type { TQuestionAttributes } from 'models';
-	import type { IconSource } from 'svelte-hero-icons';
 
 	interface Props {
 		index: number;
@@ -16,10 +13,15 @@
 	}
 	let { index, question: _question }: Props = $props();
 
-	let answerFeedback: (IconSource | null)[] = $state([null, null, null, null]);
-
-	const { answers: _answers, category, correctAnswer, difficulty, question, id } = _question;
+	const { answers: _answers, category, difficulty, id } = _question;
 	const answers = _answers.map((entity) => decodeHTMLEntities(entity));
+	const correctAnswer = decodeHTMLEntities(_question.correctAnswer);
+	const question = decodeHTMLEntities(_question.question);
+	const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+	const team: Record<string, string> = { easy: 'text-easy', medium: 'text-medium', hard: 'text-hard' };
+
+	const timer = $derived(questionStore.timers[index]);
+	const ended = $derived(timer.state === 'ended');
 
 	const updateUserStats = () => {
 		const isEasy = difficulty === 'easy';
@@ -54,7 +56,7 @@
 				...categoryStat
 			} = playStore.userStats[category];
 
-			const updatedStat = {
+			playStore.userStats[category] = {
 				...categoryStat,
 				total: total + 1,
 				totalCorrect: totalCorrect + (answeredCorrect ? 1 : 0),
@@ -65,105 +67,106 @@
 				totalHard: totalHard + (isHard ? 1 : 0),
 				totalHardCorrect: totalHardCorrect + (isHard && answeredCorrect ? 1 : 0)
 			};
-
-			playStore.userStats[category] = updatedStat;
 		}
 	};
 
-	const handleUserAnswer = (answer: string, answerIndex: number) => {
+	const handleUserAnswer = (answer: string) => {
 		questionStore.timers[index].userAnswer = answer;
 		questionStore.timers[index].state = 'ended';
 		updateUserStats();
 		playStore.answeredQuestions.push(id);
-		console.debug({ playStore, questionStore });
 
-		if (answer === correctAnswer) playStore.totalCorrect++;
+		const correct = answer === correctAnswer;
+		if (correct) playStore.totalCorrect++;
 
-		// display icon based on correct answer
-		answerFeedback = answerFeedback.map((_, j) => {
-			if (answerIndex === j) {
-				return answer === correctAnswer ? CheckCircle : XCircle;
-			}
-
-			return j === answers.indexOf(correctAnswer) ? CheckCircle : null;
-		});
-
-		// give user feedback on answer
-		const el = document.getElementById(answer);
-
-		el?.style.setProperty('--animate-duration', '1s');
-		if (answer === correctAnswer) {
-			const audio = document.getElementById('success') as HTMLAudioElement;
-			audio.play();
-			el?.classList.add('animate__tada');
-		} else {
-			const audio = document.getElementById('error') as HTMLAudioElement;
-			audio.play();
-			el?.classList.add('animate__shakeX');
-		}
+		const audio = document.getElementById(correct ? 'success' : 'error') as HTMLAudioElement;
+		audio.play().catch(() => {});
 	};
 </script>
 
 <Transition
 	show={playStore.questionIndex === index}
-	enter="transform transition duration-[400ms] delay-500"
-	enterFrom="opacity-0 rotate-[-120deg] scale-50"
-	enterTo="opacity-100 rotate-0 scale-100"
-	leave="transform duration-200 transition ease-in-out"
-	leaveFrom="opacity-100 rotate-0 scale-100 "
-	leaveTo="opacity-0 scale-95"
+	enter="transform transition duration-500 ease-out delay-150"
+	enterFrom="opacity-0 translate-y-4"
+	enterTo="opacity-100 translate-y-0"
+	leave="transform duration-150 transition ease-in"
+	leaveFrom="opacity-100"
+	leaveTo="opacity-0"
 >
-	<div
-		class="col gap-4 rounded-lg border-2 p-4 dark:border-light"
-		style="min-width: 320px; max-width: 580px;"
-	>
-		<div class="flex justify-between">
-			<p>{category}</p>
-			<p style={`color: ${colorMap[difficulty]}`}>{difficulty}</p>
+	<div class="col w-full gap-6">
+		<div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+			<p class="label">
+				{category} · <span class={team[difficulty]}>{difficulty}</span>
+			</p>
+			<p class="label">
+				Question <span class="digits text-lg">{String(playStore.globalIndex).padStart(2, '0')}</span>
+				/ {String(playStore.totalQuestions).padStart(2, '0')}
+			</p>
 		</div>
 
-		<Timer {index} />
+		<div class="col items-center gap-6">
+			<Timer {index} />
+			<p class="max-w-[38ch] text-balance text-center text-xl font-semibold leading-snug">
+				{question}
+			</p>
+		</div>
 
-		<strong>{question}</strong>
-
-		<section aria-label="Question answers" class="grid grid-cols-2 grid-rows-2 gap-4 items-stretch">
+		<section aria-label="Answers" class="grid grid-cols-1 gap-3 md:grid-cols-2">
 			{#each answers as answer, i}
-				<Button
-					parentStyles="self-center"
-					class={[
-						'animate__animated flex w-full h-full items-center justify-center gap-2',
-						questionStore.timers[index].state === 'ended' ? 'cursor-not-allowed' : ''
-					]}
-					onclick={() => handleUserAnswer(answer, i)}
+				{@const isCorrect = answer === correctAnswer}
+				{@const chosen = timer.userAnswer === answer}
+				<button
+					onclick={() => handleUserAnswer(answer)}
 					id={answer}
-					disabled={questionStore.timers[index].state !== 'started'}
-					primary={!questionStore.timers[index].userAnswer &&
-						questionStore.timers[index].state === 'ended' &&
-						answer === correctAnswer}
+					disabled={timer.state !== 'started'}
 					data-testid={answer}
+					class={[
+						'group flex min-h-16 items-center gap-4 rounded border-2 px-4 py-3 text-left text-lg transition-colors',
+						!ended && 'border-line bg-panel hover:border-amber hover:bg-raised disabled:opacity-60',
+						ended && isCorrect && 'border-easy bg-easy/10',
+						ended && isCorrect && chosen && 'answer-correct',
+						ended && chosen && !isCorrect && 'answer-wrong border-hard bg-hard/10',
+						ended && !isCorrect && !chosen && 'border-line bg-panel opacity-45'
+					]}
 				>
-					{#if answerFeedback[i]}
+					<span
+						class={[
+							'grid size-9 shrink-0 place-items-center rounded bg-ink font-display text-xl font-extrabold',
+							!ended && 'text-muted group-hover:text-amber',
+							ended && isCorrect && 'text-easy',
+							ended && chosen && !isCorrect && 'text-hard'
+						]}
+						aria-hidden="true"
+					>
+						{letters[i]}
+					</span>
+					<span class="flex-1">{answer}</span>
+					{#if ended && (isCorrect || chosen)}
 						<span
-							data-testid={`feedback-${answer === correctAnswer ? 'correct' : 'incorrect'}-${i}`}
+							class={isCorrect ? 'text-easy' : 'text-hard'}
+							data-testid={`feedback-${isCorrect ? 'correct' : 'incorrect'}-${i}`}
 						>
-							<Icon src={answerFeedback[i]} size="20" />
+							<Icon src={isCorrect ? CheckCircle : XCircle} size="24" />
+							<span class="sr-only">{isCorrect ? 'Correct answer' : 'Your answer, incorrect'}</span>
 						</span>
 					{/if}
-					<p>{decodeHTMLEntities(answer)}</p>
-				</Button>
+				</button>
 			{/each}
 		</section>
 
+		{#if ended && !timer.userAnswer}
+			<p class="text-center font-display text-lg font-bold uppercase tracking-wider text-hard" role="status">
+				Shot clock violation, out of time
+			</p>
+		{/if}
+
 		<QuestionControls {index} />
 
-		<audio id="success">
+		<audio id="success" preload="auto">
 			<source src="/success.mp3" type="audio/mpeg" />
-			Your browser does not support the audio element.
 		</audio>
-		<audio id="error">
+		<audio id="error" preload="auto">
 			<source src="/error.mp3" type="audio/mpeg" />
-			Your browser does not support the audio element.
 		</audio>
 	</div>
 </Transition>
-

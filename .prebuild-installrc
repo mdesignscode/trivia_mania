@@ -1,0 +1,3 @@
+; sqlite3's prebuilt binary needs glibc 2.38+, newer than Render's build image,
+; so compile it on the machine that installs it
+buildFromSource=true

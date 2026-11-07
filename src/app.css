@@ -2,8 +2,114 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+	:root {
+		color-scheme: dark;
+		accent-color: theme('colors.amber');
+		caret-color: theme('colors.amber');
+	}
+
+	body {
+		@apply bg-ink font-sans text-base text-chalk antialiased;
+		font-variant-numeric: tabular-nums;
+	}
+
+	h1,
+	h2,
+	h3 {
+		@apply font-display font-bold uppercase tracking-wide;
+		text-wrap: balance;
+	}
+
+	::selection {
+		background: theme('colors.amber');
+		color: theme('colors.ink');
+	}
+
+	:focus-visible {
+		outline: 2px solid theme('colors.amber');
+		outline-offset: 2px;
+	}
+
+	a {
+		text-underline-offset: 0.2em;
+	}
+
+	* {
+		scrollbar-color: theme('colors.line') transparent;
+	}
+}
+
 @layer components {
-        .col {
-                @apply flex flex-col;
-        }
+	.col {
+		@apply flex flex-col;
+	}
+
+	/* scoreboard numerals */
+	.digits {
+		@apply font-display font-extrabold text-amber;
+		font-variant-numeric: tabular-nums;
+		letter-spacing: 0.02em;
+	}
+
+	.label {
+		@apply font-display text-sm font-semibold uppercase tracking-[0.12em] text-muted;
+	}
+
+	.panel {
+		@apply rounded border border-line bg-panel;
+	}
+
+	.field {
+		@apply w-full rounded border border-line bg-ink px-3 py-2.5 text-chalk placeholder:text-muted/70 transition-colors;
+	}
+
+	.field:hover {
+		@apply border-muted/60;
+	}
+
+	.field:focus {
+		@apply border-amber outline-none;
+	}
+
+	.link {
+		@apply text-amber underline decoration-amber/40 hover:decoration-amber;
+	}
+}
+
+/* answer feedback */
+@keyframes answer-pop {
+	0% { transform: scale(1); }
+	35% { transform: scale(1.05); }
+	100% { transform: scale(1); }
+}
+
+@keyframes answer-shake {
+	0%, 100% { transform: translateX(0); }
+	20% { transform: translateX(-8px); }
+	40% { transform: translateX(7px); }
+	60% { transform: translateX(-5px); }
+	80% { transform: translateX(3px); }
+}
+
+@keyframes clock-tick {
+	0% { transform: scale(1.06); }
+	100% { transform: scale(1); }
+}
+
+.answer-correct {
+	animation: answer-pop 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.answer-wrong {
+	animation: answer-shake 400ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 1ms !important;
+		transition-duration: 1ms !important;
+	}
 }

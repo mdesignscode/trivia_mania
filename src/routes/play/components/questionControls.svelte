@@ -63,7 +63,7 @@
 </script>
 
 {#snippet submitForm(context: typeof loadingContext)}
-	<form class="w-full" use:enhance={() => submitStats(context)} action="?/paginate" method="POST">
+	<form class="flex-1" use:enhance={() => submitStats(context)} action="?/paginate" method="POST">
 		<input type="hidden" bind:value={playStore.totalCorrect} name="totalCorrect" />
 		<input type="hidden" bind:value={() => globalStore.difficulty, () => {}} name="difficulty" />
 		<input
@@ -82,21 +82,22 @@
 			name="stats"
 		/>
 		<input type="hidden" bind:value={globalStore.user.username} name="username" />
-		<Button class="w-full" disabled={updating}>
+		<Button class="w-full" primary={context === 'next question'} disabled={updating}>
 			{#if updating && context === loadingContext}
-				Uploading results <SpinningLoader size="8" />
+				Saving results <SpinningLoader size="5" />
 			{:else if context === 'show stats'}
 				View progress
 			{:else}
-				Continue Playing
+				Next set
 			{/if}
 		</Button>
 	</form>
 {/snippet}
 
-<div class="col gap-2">
+<div class="flex flex-col-reverse gap-3 sm:flex-row">
 	{#if questionStore.timers[index].state === 'started'}
 		<Button
+			class="sm:ml-auto"
 			onclick={() => {
 				clearInterval(questionStore.timers[index].timer);
 				questionStore.timers[index].timer = null;
@@ -115,13 +116,15 @@
 			{@render submitForm('next question')}
 		{:else}
 			<Button
+				primary
+				class="flex-1"
 				onclick={() => {
 					playStore.questionIndex++;
 					questionStore.timers[index + 1].state = 'started';
 					playStore.globalIndex++;
 				}}
 			>
-				Next Question
+				Next question
 			</Button>
 		{/if}
 	{/if}

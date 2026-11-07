@@ -10,9 +10,9 @@ export function decodeHTMLEntities(text: string) {
 }
 
 export const colorMap: { [key: string]: string } = {
-        easy: "green",
-        medium: "gold",
-        hard: "red",
+        easy: "#2fd1c0",
+        medium: "#ffb627",
+        hard: "#ff6159",
 };
 
 export function capitalize(str: string): string {

@@ -65,11 +65,12 @@
 	}
 </script>
 
-<div onpaste={handlePaste} class="flex w-full gap-[0.5rem]">
+<div onpaste={handlePaste} class="flex w-full gap-2">
 	{#each inputs as value, i}
 		<input
 			bind:this={() => {}, (el) => (refs[i] = el)}
-			class="size-8 flex-1 rounded-md border border-dark text-center text-lg text-dark focus:outline-dark"
+			class="digits h-14 w-full min-w-0 flex-1 rounded border-2 border-line bg-ink text-center text-3xl text-amber transition-colors focus:border-amber focus:outline-none"
+			aria-label={`Digit ${i + 1}`}
 			type="text"
 			maxlength="1"
 			bind:value={inputs[i]}

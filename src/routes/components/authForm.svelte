@@ -6,55 +6,49 @@
 
 	const routeOptions = $derived({
 		'/signup': {
-			head: 'Create an account to save your progress',
+			head: 'Join the league',
+			sub: 'Create an account to save your stats and get on the scoreboard.',
 			footer: 'Already have an account?',
 			alt: 'Sign in',
 			altRoute: '/login',
-			cta: loading ? 'Creating account' : 'Sign up',
+			cta: loading ? 'Creating account' : 'Create account'
 		},
 		'/login': {
 			head: 'Welcome back',
+			sub: 'Sign in to keep your streak going.',
 			footer: "Don't have an account?",
 			alt: 'Sign up',
 			altRoute: '/signup',
-			cta: loading ? 'Signing in' : 'Sign in',
+			cta: loading ? 'Signing in' : 'Sign in'
 		}
 	});
 </script>
 
-<div class="col gap-4 px-8 py-6 md:mx-auto md:w-4/6">
-	<h1 class="text-lg">{routeOptions[route].head}</h1>
-	<form
-		id="auth-form"
-		use:enhance={handler}
-		method="POST"
-		class="col gap-2 rounded-lg border-2 bg-neutral-200 p-4 shadow-md dark:border-transparent dark:bg-neutral-500"
-	>
-		{@render children()}
-		<button
-			disabled={loading}
-			class="flex items-center justify-center gap-4 rounded-sm border border-accent bg-accent py-1 transition-all hover:bg-transparent disabled:opacity-60"
-		>
-			{routeOptions[route].cta}
+<section class="mx-auto flex min-h-full max-w-md flex-col justify-center gap-6 px-4 py-10">
+	<div class="col gap-2">
+		<h1 class="text-3xl leading-none">{routeOptions[route].head}</h1>
+		<p class="text-muted">{routeOptions[route].sub}</p>
+	</div>
 
-			{#if loading}
-				<SpinningLoader size="8" />
-			{/if}
-		</button>
+	<form id="auth-form" use:enhance={handler} method="POST" class="panel col gap-4 p-5 md:p-6">
+		{@render children()}
+
 		{#if error}
-			<p style="color:red">{error}</p>
+			<p class="rounded border border-hard/50 bg-hard/10 px-3 py-2 text-sm text-hard" role="alert">
+				{error}
+			</p>
 		{/if}
+
+		<Button primary disabled={loading} class="mt-1 w-full">
+			{routeOptions[route].cta}
+			{#if loading}
+				<SpinningLoader size="5" />
+			{/if}
+		</Button>
 	</form>
 
-	<p>
-		{routeOptions[route].footer}{' '}
-		<a class="underline" href={routeOptions[route].altRoute}>{routeOptions[route].alt}</a>
+	<p class="text-muted">
+		{routeOptions[route].footer}
+		<a class="link" href={routeOptions[route].altRoute}>{routeOptions[route].alt}</a>
 	</p>
-</div>
-
-<style>
-	:global(#auth-form input) {
-		@apply rounded-sm p-2 text-dark;
-	}
-</style>
-
+</section>
